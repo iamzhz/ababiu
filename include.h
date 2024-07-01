@@ -4,8 +4,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
+#include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
-#include "./debug/debug.h"
+#include "./Debug/Debug.h"
+#include "./Token/Token.h"
+#include "./Lexer/Lexer.h"
 
 
 #endif

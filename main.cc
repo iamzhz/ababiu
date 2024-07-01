@@ -1,15 +1,18 @@
+
 #include "include.h"
 int main() {
     FileManager f;
+    Lexer tkzer;
+    Token tk;
     f.setInputFile("hello.txt");
-    std::cout << f.isEof;
-    f.nextChar();
-    while (!f.isEof) {
-        std::cout << f.current();
-        f.nextChar();
+    //std::cout << f.isEof;
+    f.next();
+    tkzer.setFile(f);
+    tk = tkzer.getNextToken();
+    while (!tk.isEof()) {
+        std::cout << tk.typeToText() << '['<< tk.content << ']' << std::endl;
+        tk = tkzer.getNextToken();
     }
-    f.backChar();
-    ASSERT(f.current());
     f.closeFile();
     return 0;
 }

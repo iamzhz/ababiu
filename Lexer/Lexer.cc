@@ -1,0 +1,121 @@
+#include "../include.h"
+bool Lexer::isSpace(char ch) {
+    return 
+        ch == ' ' ||
+        ch == '\n' ||
+        ch == '\t';
+}
+bool Lexer::isDigit(char ch) {
+    return ch >= '0' && ch <= '9';
+}
+bool Lexer::isLetter(char ch) {
+    return (ch >= 'a' && ch <= 'z') ||
+            (ch >= 'A' && ch <= 'Z');
+}
+void Lexer::setFile(FileManager& file) {
+    this->file = &file;
+}
+Token Lexer::getNextToken() {
+    Token tk;
+    char cur;
+    do {
+        if (!isSpace(this->file->current())) break;
+    }while(this->file->next()); // skip space
+    if (this->file->isEof) {
+        tk.type = tokenTypeEof;
+        return tk;
+    }
+    cur = this->file->current();
+    if (this->isDigit(cur)) return this->intToken();
+    if (this->isLetter(cur) || cur == '_') return this->idToken();
+    if (cur == '\'') return this->charToken(); 
+    if (cur == '\"') return this->stringToken();
+    tk.type = tokenTypeUnknown;
+    return tk;
+}
+Token Lexer::intToken() {
+    Token tk;
+    char cur;
+    tk.type = tokenTypeInt;
+    do {
+        cur = this->file->current();
+        if (this->isDigit(cur)) {
+            tk.addToContent(cur);
+        }else break;
+    } while (this->file->next());
+    return tk;
+}
+Token Lexer::idToken() {
+    Token tk;
+    char cur;
+    tk.type = tokenTypeId;
+    do {
+        cur = this->file->current();
+        if (this->isLetter(cur) || this->isDigit(cur) || cur == '_') {
+            tk.addToContent(cur);
+        }else break;
+    } while (this->file->next());
+
+    tk.idToKeyword();
+    return tk;
+}
+char Lexer::readChar(char cannotBe, bool& tell) {
+    char ch = this->file->current();
+    if (ch != '\\') {
+        if (ch == cannotBe) tell = true;
+        this->file->next();
+        return ch;
+    }
+
+    if (this->file->next()) {
+        switch (this->file->current()) {
+            case 'n': ch = '\n'; break;
+            case 'r': ch = '\r';break;
+            case 'b': ch = '\b';break;
+            case '0': ch = '\0';break;
+            case '\\': ch = '\\';break;
+            case '\'': ch = '\'';break;
+            case '\"': ch = '\"';break;
+            default: return '\\'; // IMPORTANT: no `next()` here
+        }
+        this->file->next();
+        return ch;
+    }
+    sayError(this->file->curLine, this->file->curColumn, "Eof but not complete");
+    return '\0'; // 随便返回个值意思意思编译器
+}
+Token Lexer::charToken() {
+    Token tk;
+    bool tell = false;
+    this->file->next();
+    tk.addToContent(this->readChar('\'', tell));
+    if (tell) sayError(this->file->curLine, this->file->curColumn, "\'\'?");
+
+    if (this->file->current() == '\'') {
+        this->file->next(); // to make next token success
+        tk.type = tokenTypeChar;
+        return tk;
+    }
+    sayError(this->file->curLine, this->file->curColumn, 
+                "single quotation marks");
+    return tk;
+}
+Token Lexer::stringToken() {
+    bool tell = false;
+    Token tk;
+    char ch;
+    if (!this->file->next()) 
+        sayError(this->file->curLine, this->file->curColumn, "only one \"?");
+    
+    while (true) {
+        ch = this->readChar('\"', tell);
+        if (tell) {
+            tk.type = tokenTypeString;
+            return tk;
+        }
+        tk.addToContent(ch);
+    }
+    sayError(this->file->curLine, this->file->curColumn, "another \"?");
+    return tk;
+}
+Token signToken();

@@ -7,7 +7,7 @@
 class FileManager {
     private:
     std::ifstream inputFile;
-    std::ifstream outputFile;
+    std::ofstream outputFile;
     char bufferA[READFILE_BUFFER_SIZE];
     char bufferB[READFILE_BUFFER_SIZE];
     bool isBufferA = true; // true means bufferA, or bufferB
@@ -17,6 +17,8 @@ class FileManager {
     public:
     
     bool isEof = false;
+    int curLine = 1;
+    int curColumn = 1;
 
     bool setInputFile(std::string fileName); // return true is a success
     bool setOutputFile(std::string fileName); // return true is a success
@@ -24,8 +26,8 @@ class FileManager {
     char* getBuffer();
     void readToBuffer();
     char current();
-    void nextChar();
-    bool backChar(); // return true is a success
+    bool next(); // return false means eof
+    bool back(); // return true is a success
 };
 
 #endif

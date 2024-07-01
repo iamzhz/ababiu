@@ -36,7 +36,7 @@ char FileManager::current() {
     char* buffer = this->getBuffer();
     return buffer[this->readPoint];
 }
-void FileManager::nextChar() {
+bool FileManager::next() {
     int& bufferLength = this->bufferLengths[this->isBufferA];
     this->readPoint ++;
     if (this->readPoint >= bufferLength) { // ready to change buffer
@@ -44,9 +44,17 @@ void FileManager::nextChar() {
         if (this->notToReread) this->notToReread = false;
         else this->readToBuffer();
         this->readPoint = 0;
+        if (this->isEof) return false;
     }
+    if (this->current() == '\n') {
+        this->curLine ++;
+        this->curColumn = 1;
+    } else {
+        this->curColumn ++;
+    }
+    return true;
 }
-bool FileManager::backChar() {
+bool FileManager::back() {
     this->readPoint --;
     if (this->readPoint < 0) {
         this->isBufferA = this->isBufferA == false;
@@ -54,5 +62,6 @@ bool FileManager::backChar() {
         this->readPoint = this->bufferLengths[this->isBufferA] - 1;
         this->notToReread = true;
     }
+    this->curColumn --; // backChar always not jump to previous line
     return true;
 }
