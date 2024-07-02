@@ -10,7 +10,7 @@ int main() {
     tkzer.setFile(f);
     tk = tkzer.getNextToken();
     while (!tk.isEof()) {
-        std::cout << tk.typeToText() << '['<< tk.content << ']' << std::endl;
+        std::cout << tk.typeToText() << ' ' << tk.line << ' ' << tk.column << '['<< tk.content << ']' << std::endl;
         tk = tkzer.getNextToken();
     }
     f.closeFile();

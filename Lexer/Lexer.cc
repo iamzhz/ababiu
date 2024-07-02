@@ -18,6 +18,8 @@ void Lexer::setFile(FileManager& file) {
 Token Lexer::getNextToken() {
     Token tk;
     char cur;
+    int tokenLine, tokenColumn;
+
     do {
         if (!isSpace(this->file->current())) break;
     }while(this->file->next()); // skip space
@@ -25,12 +27,22 @@ Token Lexer::getNextToken() {
         tk.type = tokenTypeEof;
         return tk;
     }
+
+    tokenLine = this->file->curLine;
+    tokenColumn = this->file->curColumn;
     cur = this->file->current();
-    if (this->isDigit(cur)) return this->intToken();
-    if (this->isLetter(cur) || cur == '_') return this->idToken();
-    if (cur == '\'') return this->charToken(); 
-    if (cur == '\"') return this->stringToken();
-    tk.type = tokenTypeUnknown;
+    if (this->isDigit(cur)) tk = this->intToken();
+    else if (this->isLetter(cur) || cur == '_') tk = this->idToken();
+    else if (cur == '\'') tk = this->charToken(); 
+    else if (cur == '\"') tk = this->stringToken();
+    else if (this->isSign(cur)) tk = this->signToken();
+    else {
+        tk.type = tokenTypeUnknown;
+        this->file->next();
+    }
+
+    tk.line = tokenLine;
+    tk.column = tokenColumn;
     return tk;
 }
 Token Lexer::intToken() {
@@ -97,7 +109,7 @@ Token Lexer::charToken() {
         return tk;
     }
     sayError(this->file->curLine, this->file->curColumn, 
-                "single quotation marks");
+                std::string("Ah?")+this->file->current()+'?');
     return tk;
 }
 Token Lexer::stringToken() {
@@ -118,4 +130,3 @@ Token Lexer::stringToken() {
     sayError(this->file->curLine, this->file->curColumn, "another \"?");
     return tk;
 }
-Token signToken();

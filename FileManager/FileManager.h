@@ -18,7 +18,7 @@ class FileManager {
     
     bool isEof = false;
     int curLine = 1;
-    int curColumn = 1;
+    int curColumn = 0;
 
     bool setInputFile(std::string fileName); // return true is a success
     bool setOutputFile(std::string fileName); // return true is a success

@@ -48,7 +48,7 @@ bool FileManager::next() {
     }
     if (this->current() == '\n') {
         this->curLine ++;
-        this->curColumn = 1;
+        this->curColumn = 0;
     } else {
         this->curColumn ++;
     }
