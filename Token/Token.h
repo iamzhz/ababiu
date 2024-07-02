@@ -1,4 +1,7 @@
 #include "../include.h"
+#ifndef _ABANDON_TOKEN_H_
+#define _ABANDON_TOKEN_H_
+
 enum tokenType {
     tokenTypeString, 
     tokenTypeChar,
@@ -28,3 +31,4 @@ class Token {
     std::string typeToText();
     #endif
 };
+#endif
