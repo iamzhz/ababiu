@@ -14,6 +14,11 @@ class FileManager {
     int readPoint = READFILE_BUFFER_SIZE;
     int bufferLengths[2] = {0}; // [0] for bufferB, [1] for bufferA
     bool notToReread = false;
+
+    char* getBuffer();
+    void readToBuffer();
+
+    
     public:
     
     bool isEof = false;
@@ -23,8 +28,6 @@ class FileManager {
     bool setInputFile(std::string fileName); // return true is a success
     bool setOutputFile(std::string fileName); // return true is a success
     void closeFile();
-    char* getBuffer();
-    void readToBuffer();
     char current();
     bool next(); // return false means eof
     bool back(); // return true is a success
