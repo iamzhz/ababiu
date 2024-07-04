@@ -1,6 +1,7 @@
-#include "../include.h"
 #ifndef _ABANDON_TOKEN_H_
 #define _ABANDON_TOKEN_H_
+
+#include "../include.h"
 
 enum tokenType {
     tokenTypeString, 

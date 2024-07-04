@@ -1,11 +1,14 @@
-
+#define DEBUG
 #include "include.h"
-int main() {
+int main(int argc, char** argv) {
     FileManager f;
     Lexer tkzer;
     Token tk;
-    f.setInputFile("hello.txt");
-    //std::cout << f.isEof;
+    CmdLineParser clp(argc, argv);
+    clp.run();
+    clp.print();
+    f.setInputFile(clp.inputFiles[0]);
+    std::cout << f.isEof;
     f.next();
     tkzer.setFile(f);
     tk = tkzer.getNextToken();

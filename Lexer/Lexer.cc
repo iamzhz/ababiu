@@ -12,9 +12,13 @@ bool Lexer::isLetter(char ch) {
     return (ch >= 'a' && ch <= 'z') ||
             (ch >= 'A' && ch <= 'Z');
 }
+
+
 void Lexer::setFile(FileManager& file) {
     this->file = &file;
 }
+
+
 Token Lexer::getNextToken() {
     Token tk;
     char cur;
@@ -45,6 +49,8 @@ Token Lexer::getNextToken() {
     tk.column = tokenColumn;
     return tk;
 }
+
+
 Token Lexer::intToken() {
     Token tk;
     char cur;
@@ -57,6 +63,8 @@ Token Lexer::intToken() {
     } while (this->file->next());
     return tk;
 }
+
+
 Token Lexer::idToken() {
     Token tk;
     char cur;
@@ -71,6 +79,8 @@ Token Lexer::idToken() {
     tk.idToKeyword();
     return tk;
 }
+
+
 char Lexer::readChar(char cannotBe, bool& tell) {
     char ch = this->file->current();
     if (ch != '\\') {
@@ -96,6 +106,8 @@ char Lexer::readChar(char cannotBe, bool& tell) {
     sayError(this->file->curLine, this->file->curColumn, "Eof but not complete");
     return '\0'; // 随便返回个值意思意思编译器
 }
+
+
 Token Lexer::charToken() {
     Token tk;
     bool tell = false;
@@ -112,6 +124,8 @@ Token Lexer::charToken() {
                 std::string("Ah?")+this->file->current()+'?');
     return tk;
 }
+
+
 Token Lexer::stringToken() {
     bool tell = false;
     Token tk;

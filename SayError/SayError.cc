@@ -1,5 +1,9 @@
 #include "../include.h"
 void sayError(int line, int column, std::string info) {
-    std::cerr << "[ERROR] " << line << ',' << column << ' ' << info << std::endl;
+    std::cerr << "[Error] " << line << ',' << column << ' ' << info << std::endl;
+    std::exit(1);
+}
+void sayError(std::string info) {
+    std::cerr << "[Error] " << info << std::endl;
     std::exit(1);
 }

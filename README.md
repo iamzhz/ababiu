@@ -9,7 +9,7 @@ make
 ```
 or, you can run:
 ``` bash
-g++ main.cc FileManager/FileManager.cc Token/Token.cc Lexer/Lexer.cc Lexer/signToken.cc SayError/SayError.cc -o abandon -std=c++11 -DDEBUG
+g++ main.cc CmdLineParser/CmdLineParser.cc Debug/Debug.cc FileManager/FileManager.cc Lexer/signToken.cc Lexer/Lexer.cc SayError/SayError.cc Token/Token.cc -o abandon -std=c++11 -DDEBUG
 ```
 `-DDEBUG` means compile in debug mode (just in this project).  
-Since the project is under development, it is recommended to keep the -DDEBUG flag for ease of debugging.
+Since the project is under development, it is recommended to keep the `-DDEBUG` flag for ease of debugging.

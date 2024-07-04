@@ -1,7 +1,7 @@
-#include "../include.h"
-
 #ifndef _ABANDON_FILEMANAGER_H_
 #define _ABANDON_FILEMANAGER_H_
+
+#include "../include.h"
 
 #define READFILE_BUFFER_SIZE 51
 class FileManager {

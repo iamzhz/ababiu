@@ -1,4 +1,5 @@
 #include "../include.h"
+
 bool FileManager::setInputFile(std::string fileName) {
     this->inputFile.open(fileName);
     if (this->inputFile.is_open()) {
@@ -7,18 +8,26 @@ bool FileManager::setInputFile(std::string fileName) {
     }
     return false;
 }
+
+
 bool FileManager::setOutputFile(std::string fileName) {
     this->outputFile.open(fileName);
     return this->outputFile.is_open();
 }
+
+
 void FileManager::closeFile() {
     this->inputFile.close();
     this->outputFile.close();
 }
+
+
 char* FileManager::getBuffer() {
     if (this->isBufferA) return this->bufferA;
     return this->bufferB;
 }
+
+
 void FileManager::readToBuffer() {
     char* buffer = this->getBuffer();
     int& bufferLength = this->bufferLengths[this->isBufferA]; // choose right var for length
@@ -32,10 +41,14 @@ void FileManager::readToBuffer() {
     bufferLength = this->inputFile.gcount();
     buffer[bufferLength] = '\0';
 }
+
+
 char FileManager::current() {
     char* buffer = this->getBuffer();
     return buffer[this->readPoint];
 }
+
+
 bool FileManager::next() {
     int& bufferLength = this->bufferLengths[this->isBufferA];
     this->readPoint ++;
@@ -54,6 +67,8 @@ bool FileManager::next() {
     }
     return true;
 }
+
+
 bool FileManager::back() {
     this->readPoint --;
     if (this->readPoint < 0) {

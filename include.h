@@ -5,11 +5,14 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
+#include <utility>
 #include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
-#include "./Debug/Debug.h"
+#include "./debug/debug.h"
 #include "./Token/Token.h"
 #include "./Lexer/Lexer.h"
+#include "./CmdLineParser/CmdLineParser.h"
 
 
 #endif

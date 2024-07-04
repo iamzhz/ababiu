@@ -1,6 +1,7 @@
-#include "../include.h"
 #ifndef _ABANDON_LEXER_H_
 #define _ABANDON_LEXER_H_
+
+#include "../include.h"
 
 class Lexer {
     private:
