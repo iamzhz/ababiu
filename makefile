@@ -1,5 +1,5 @@
 cc := g++
 std := -std=c++11
 debug := -DDEBUG
-abandon: *.cc */*.cc
+abandon: src/*.cc src/*/*.cc
 	$(cc) $^ -o $@ $(std) $(debug)
