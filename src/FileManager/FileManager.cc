@@ -80,3 +80,13 @@ bool FileManager::back() {
     this->curColumn --; // backChar always not jump to previous line
     return true;
 }
+
+
+bool FileManager::skipToNextLine() {
+    while (this->next()) {
+        if (this->current() == '\n') {
+            return this->next();
+        }
+    }
+    return false;
+}

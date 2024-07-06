@@ -1,8 +1,8 @@
 #include "../include.h"
 
 bool Lexer::isSign(char ch) {
-    char signs[] = {'+', '-', '*', '/', '=', '{', '}', '[', ']'};
-    for (int i = 0;  i < sizeof(signs);  i ++) {
+    char signs[] = "=+-*/.`~!@#$%^&*()_{}[];:'\"\\|<>,?/";
+    for (int i = 0;  i < sizeof(signs) - 1;  i ++) {
         if (ch == signs[i]) return true;
     }
     return false;
@@ -19,13 +19,70 @@ Token Lexer::signToken() {
     cur = this->file->current();
     if (!this->isSign(cur)) return tk;
 
-    if (pre == '+' && cur == '=') tk.addToContent(cur);
-    else if (pre == '+' && cur == '+') tk.addToContent(cur);
-    else if (pre == '-' && cur == '=') tk.addToContent(cur);
-    else if (pre == '-' && cur == '-') tk.addToContent(cur);
-    else if (pre == '*' && cur == '=') tk.addToContent(cur);
-    else if (pre == '/' && cur == '=') tk.addToContent(cur);
-    else return tk;
+    switch (this->isSignTwoChars(pre, cur)) {
+        case signStateRight:
+            tk.addToContent(cur);
+            break;
+        case signStateWrong:
+            return tk;
+        case signStateCommit:
+            return this->getNextToken();
+    }
+
     this->file->next();
     return tk;
+}
+
+enum signState Lexer::isSignTwoChars(char a, char b) {
+    switch (a) {
+        case '+':
+            switch (b) {
+                case '+': return signStateRight;
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '-':
+            switch (b) {
+                case '-': return signStateRight;
+                case '=': return signStateRight;
+                case '>': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '*':
+            switch (b) {
+                case '*': return signStateRight;
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '/':
+            switch (b) {
+                case '=': return signStateRight;
+                case '/': // commit
+                    this->file->skipToNextLine();
+                    return signStateCommit;
+                default: return signStateWrong;
+            }
+        case '^':
+            switch (b) {
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '&':
+            switch (b) {
+                case '&': return signStateRight;
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '%':
+            switch (b) {
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        case '!':
+            switch (b) {
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
+        default: return signStateWrong;
+    }
 }

@@ -3,6 +3,12 @@
 
 #include "../include.h"
 
+enum signState {
+    signStateRight,
+    signStateWrong,
+    signStateCommit
+};
+
 class Lexer {
     private:
     FileManager* file;
@@ -20,5 +26,6 @@ class Lexer {
     public:
     void setFile(FileManager& file);
     Token getNextToken();
+    enum signState isSignTwoChars(char a, char b);
 };
 #endif

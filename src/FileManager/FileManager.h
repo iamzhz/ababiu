@@ -31,6 +31,7 @@ class FileManager {
     char current();
     bool next(); // return false means eof
     bool back(); // return true is a success
+    bool skipToNextLine(); // return false is EOF
 };
 
 #endif

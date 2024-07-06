@@ -2,6 +2,7 @@
 bool Lexer::isSpace(char ch) {
     return 
         ch == ' ' ||
+        ch == '\r' ||
         ch == '\n' ||
         ch == '\t';
 }
@@ -15,7 +16,7 @@ bool Lexer::isLetter(char ch) {
 
 
 void Lexer::setFile(FileManager& file) {
-    this->file = &file;
+    this->file = &file; // copy pointer
 }
 
 

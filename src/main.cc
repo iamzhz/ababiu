@@ -7,8 +7,8 @@ int main(int argc, char** argv) {
     CmdLineParser clp(argc, argv);
     clp.run();
     clp.print();
-    f.setInputFile(clp.inputFiles[0]);
-    std::cout << f.isEof;
+    if (!f.setInputFile(clp.inputFiles[0])) sayError("Cannot open input file");
+    
     f.next();
     tkzer.setFile(f);
     tk = tkzer.getNextToken();
