@@ -3,7 +3,7 @@
 #define v2 (argv[i+1])
 
 bool CmdLineParser::isOption(char *para) {
-    return (para[0] == '-');
+    return (para[0] == '-') && (para[1] != '\0');
 }
 
 
