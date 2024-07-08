@@ -53,6 +53,10 @@ void Token::addToContent(int newChar) {
     this->addToContent((char)(newChar+'0'));
 }
 
+void Token::addToContent(std::string newString) {
+    this->content += newString;
+}
+
 bool Token::isEof() {
     return this->type == tokenTypeEof;
 }

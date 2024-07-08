@@ -53,13 +53,22 @@ Token Lexer::getNextToken() {
 
 
 Token Lexer::intToken() {
-    Token tk;
+    Token tk, tmp;
     char cur;
     tk.type = tokenTypeInt;
+    if (!this->isDigit(this->file->current())) 
+            sayError(this->file->curLine, this->file->curColumn, "Should be a digit here");
     do {
         cur = this->file->current();
         if (this->isDigit(cur)) {
             tk.addToContent(cur);
+        }else if ('.' == cur) { // if is float
+        tk.type = tokenTypeFloat;
+            tk.addToContent(cur);
+            this->file->next();
+            tmp = this->intToken();
+            tk.addToContent(tmp.content);
+            break;
         }else break;
     } while (this->file->next());
     return tk;

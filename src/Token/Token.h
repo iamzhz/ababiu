@@ -26,6 +26,7 @@ class Token {
     bool matchKeyword(std::string content);
     void addToContent(char newChar);
     void addToContent(int newChar);
+    void addToContent(std::string newString);
     bool isEof();
 
     #ifdef DEBUG
