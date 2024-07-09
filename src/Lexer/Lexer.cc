@@ -67,6 +67,7 @@ Token Lexer::intToken() {
             tk.addToContent(cur);
             this->file->next();
             tmp = this->intToken();
+            if (tmp.type != tokenTypeInt) sayError("Syntax wrong");
             tk.addToContent(tmp.content);
             break;
         }else break;
