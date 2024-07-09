@@ -28,5 +28,7 @@
 > 先将 newChar 转化为字符的形式, 再调用 addToContent(char).
 #### bool isEof();
 > 判断该类中 type 是否是 tokenTypeEof, 返回相应的 bool 值.
-### std::string Token::typeToText();
+### std::string Token::typeToText(tokenType type);
 > 将 type 转化为对应的字符串, 并返回, 仅调试时会被编译.
+### std::string Token::typeToText();
+> 调用 typeToText(tokenType type)， 传入成员变量 type.

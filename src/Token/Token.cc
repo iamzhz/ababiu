@@ -61,9 +61,8 @@ bool Token::isEof() {
     return this->type == tokenTypeEof;
 }
 
-#ifdef DEBUG
-std::string Token::typeToText() {
-    switch (this->type) {
+std::string Token::typeToText(tokenType type) {
+    switch (type) {
         case tokenTypeEof:
             return "Eof";
         case tokenTypeChar:
@@ -85,4 +84,6 @@ std::string Token::typeToText() {
     }
     return "What?";
 }
-#endif
+std::string Token::typeToText() {
+    return typeToText(this->type);
+}
