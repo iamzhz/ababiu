@@ -24,6 +24,8 @@ class AST {
 
     bool match(std::string content); // return false is eof
     bool match(tokenType want); // return false is eof
+    bool isMatch(std::string content, bool& tell); // return false is eof
+    bool isMatch(tokenType want, bool& tell); // return false is eof
     #ifdef DEBUG
 
     void print();

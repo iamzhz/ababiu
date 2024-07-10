@@ -29,6 +29,29 @@ bool AST::match(tokenType want) {
     sayError(tk.line, tk.column, std::string("Should be `")+tk.typeToText(want)+"` here");
     return true;
 }
+
+bool AST::isMatch(std::string content, bool& tell) {
+    Token tk;
+    tk = this->lx->getNextToken();
+    if (tk.type == tokenTypeEof) return false;
+    if (tk.content == content) {
+        tell = true;
+        return true;
+    }
+    tell = false;
+    return true;
+}
+bool AST::isMatch(tokenType want, bool& tell) {
+    Token tk;
+    tk = this->lx->getNextToken();
+    if (tk.type == tokenTypeEof) return false;
+    if (tk.type == want) {
+        tell = true;
+        return true;
+    }
+    tell = false;
+    return true;
+}
 #ifdef DEBUG
 
 void AST::print() {
