@@ -14,7 +14,7 @@
 #include "./Lexer/Lexer.h"
 #include "./CmdLineParser/CmdLineParser.h"
 #include "./AST/AST.h"
-//#include "./Parser/Parser.h"
+#include "./Parser/Parser.h"
 
 
 #endif

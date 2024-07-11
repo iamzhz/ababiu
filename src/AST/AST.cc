@@ -3,8 +3,13 @@
 AST::AST(Lexer* lx) {
     this->lx = lx;
 }
-void AST::addChild(AST child) {
-    this->children.push_back(child);
+
+
+AST* AST::addChild(ast_type label, Lexer* lx) {
+    AST* ret = new AST(lx);
+    ret->label = label;
+    this->children.push_back(ret);
+    return ret;
 }
 
 
@@ -55,13 +60,13 @@ bool AST::isMatch(tokenType want, bool& tell) {
 #ifdef DEBUG
 
 void AST::print() {
-    if (this->type == ast_token) {
+    if (this->label == ast_token) {
         std::cout << this->tk.content;
         return;
     }
-    std::cout << this->type << '\t' << this->tk.content;
+    std::cout << this->label << '\t' << this->tk.content;
     for (auto a : this->children) {
-        a.print();
+        a->print();
     }
 }
 

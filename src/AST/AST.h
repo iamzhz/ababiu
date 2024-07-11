@@ -12,13 +12,13 @@ enum ast_type { // _
 class AST {
     public:
     Lexer* lx;
-    ast_type type;
-    std::vector<AST> children;
-    Token tk;
+    ast_type label;
+    std::vector<AST*> children;
+    Token tk; 
 
 
     AST(Lexer* lx);
-    void addChild(AST child);
+    AST* addChild(ast_type label, Lexer* lx);
     void setToken(Token tk);
 
 
