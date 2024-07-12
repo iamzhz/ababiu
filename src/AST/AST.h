@@ -19,6 +19,7 @@ class AST {
 
     AST(Lexer* lx);
     AST* addChild(ast_type label, Lexer* lx);
+    AST* addTokenChild(Token tk, Lexer* lx);
     void setToken(Token tk);
 
 
@@ -28,10 +29,9 @@ class AST {
     bool isMatch(tokenType want, bool& tell); // return false is eof
     #ifdef DEBUG
 
-    void print();
+    void print(int indent = 0);
 
     #endif
 
 };
-
 #endif

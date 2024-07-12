@@ -3,6 +3,7 @@
 
 #include "../include.h"
 class Parser {
+    public:
     Lexer* lx;
     bool parser(AST* ast);
     bool parser_value_tail(AST* ast);
