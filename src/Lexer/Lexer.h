@@ -11,7 +11,6 @@ enum signState {
 
 class Lexer {
     private:
-    FileManager* file;
     Token intToken();
     Token idToken();
     char readChar(char cannotBe, bool& tell); // is char is CB, then tell'll be true
@@ -22,10 +21,14 @@ class Lexer {
     bool isDigit(char ch);
     bool isLetter(char ch);
     bool isSign(char ch);
+    std::vector<Token> stream; // has gotten
+    int pointer = -1; // -1 conutine get, or stream[pointer]
     
     public:
+    FileManager* file;
     void setFile(FileManager& file);
     Token getNextToken();
+    void backToken();
     enum signState isSignTwoChars(char a, char b);
 };
 #endif

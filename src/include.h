@@ -1,6 +1,7 @@
 #ifndef _ABANDON_INCLUDE_H_
 #define _ABANDON_INCLUDE_H_
 
+#define DEBUG
 #include <iostream>
 #include <string>
 #include <fstream>

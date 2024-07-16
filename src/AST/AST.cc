@@ -26,8 +26,10 @@ void AST::setToken(Token tk) {
 bool AST::match(std::string content) {
     Token tk;
     tk = this->lx->getNextToken();
+    ASSERT(content << '|' << tk.content);
     if (tk.type == tokenTypeEof) return false;
     if (tk.content == content) {
+        ASSERT(content);
         this->addTokenChild(tk, this->lx);
         return true;
     }
@@ -38,6 +40,7 @@ bool AST::match(std::string content) {
 bool AST::match(tokenType want) {
     Token tk;
     tk = this->lx->getNextToken();
+    ASSERT(tk.typeToText(want) << '|' << tk.typeToText());
     if (tk.type == tokenTypeEof) return false;
     if (tk.type == want) {
         this->addTokenChild(tk, this->lx);
@@ -50,38 +53,32 @@ bool AST::match(tokenType want) {
 bool AST::isMatch(std::string content, bool& tell) {
     Token tk;
     tk = this->lx->getNextToken();
+    ASSERT(content << '|' << tk.content);
     if (tk.type == tokenTypeEof) return false;
     if (tk.content == content) {
+        this->addTokenChild(tk, this->lx);
         tell = true;
         return true;
     }
+    this->lx->backToken();
     tell = false;
     return true;
 }
 bool AST::isMatch(tokenType want, bool& tell) {
     Token tk;
     tk = this->lx->getNextToken();
+    ASSERT(tk.typeToText(want) << '|' << tk.typeToText());
     if (tk.type == tokenTypeEof) return false;
     if (tk.type == want) {
+        this->addTokenChild(tk, this->lx);
         tell = true;
         return true;
     }
+    this->lx->backToken();
     tell = false;
     return true;
 }
 #ifdef DEBUG
-
-/*void AST::print() {
-    if (this->label == ast_token) {
-        std::cout << this->tk.content << std::endl;
-        ASSERT("token");
-        return;
-    }
-    std::cout << this->label << '\t' << this->tk.content << std::endl;
-    for (auto a : this->children) {
-        a->print();
-    }
-}*/
 
 void AST::print(int indent) {
     for (int i = 0; i < indent; ++i) {

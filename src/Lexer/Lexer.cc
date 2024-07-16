@@ -24,12 +24,23 @@ Token Lexer::getNextToken() {
     Token tk;
     char cur;
     int tokenLine, tokenColumn;
+    // has something back
+    if (this->pointer != (-1)) {
+        pointer ++;
+        if (this->pointer != this->stream.size())
+            ASSERT(this->stream[pointer].content);
+            return this->stream[pointer];
+        this->pointer = -1;
+    }
 
     do {
         if (!isSpace(this->file->current())) break;
     }while(this->file->next()); // skip space
+
+
     if (this->file->isEof) {
         tk.type = tokenTypeEof;
+        this->stream.push_back(tk);
         return tk;
     }
 
@@ -48,6 +59,9 @@ Token Lexer::getNextToken() {
 
     tk.line = tokenLine;
     tk.column = tokenColumn;
+
+    this->stream.push_back(tk);
+    ASSERT(this->pointer);
     return tk;
 }
 
@@ -154,4 +168,13 @@ Token Lexer::stringToken() {
     }
     sayError(this->file->curLine, this->file->curColumn, "another \"?");
     return tk;
+}
+
+
+void Lexer::backToken() {
+    if (this->pointer == (-1)) {
+        this->pointer = this->stream.size() - 1;
+    }
+    this->pointer --;
+    if (this->pointer < 0) sayError(0, 0, "Syntax wrong");
 }

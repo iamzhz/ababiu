@@ -6,7 +6,10 @@
 enum ast_type { // _
     ast_token,
     ast_value,
-    ast_value_tail
+    ast_term,
+    ast_factor,
+    ast_add_op_tail,
+    ast_mul_op_tail
 };
 
 class AST {

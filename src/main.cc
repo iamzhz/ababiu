@@ -1,4 +1,3 @@
-#define DEBUG
 #include "include.h"
 int main(int argc, char** argv) {
     FileManager f;
@@ -14,7 +13,7 @@ int main(int argc, char** argv) {
     f.next();
     lx.setFile(f);
 
-    parser.parser(&tree);
+    ASSERT(parser.parser(&tree));
     tree.print();
 
     f.closeFile();
