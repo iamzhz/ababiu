@@ -28,9 +28,6 @@ class Token {
     void addToContent(int newChar);
     void addToContent(std::string newString);
     bool isEof();
-
-    #ifdef DEBUG
     std::string typeToText();
-    #endif
 };
 #endif
