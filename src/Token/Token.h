@@ -30,4 +30,7 @@ class Token {
     bool isEof();
     std::string typeToText();
 };
+
+extern Token noneTokenClass; // to cheat compiler
+
 #endif

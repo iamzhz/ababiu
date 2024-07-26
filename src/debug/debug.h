@@ -3,8 +3,8 @@
 
 #ifdef DEBUG // use -DDEBUG
 
-#define ASSERT(info) std::cout << "[" << __FILE__ << \
-    "," << __LINE__ << "]" << info << std::endl;
+#define ASSERT(info) std::cout << "\e[0;31m[" << __FILE__ << \
+    "," << __LINE__ << "]" << info << "\e[0m" <<std::endl;
 
 #else
 

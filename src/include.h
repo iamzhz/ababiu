@@ -14,6 +14,9 @@
 #include "./Token/Token.h"
 #include "./Lexer/Lexer.h"
 #include "./CmdLineParser/CmdLineParser.h"
+#include "./PointerManager/PointerManager.h"
+#include "./AST/AST.h"
 
+// pay attention to the order!! (to myself)
 
 #endif
