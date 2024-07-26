@@ -79,8 +79,6 @@ std::string Token::typeToText() {
             return "Sign";
         case tokenTypeString:
             return "String";
-        case tokenTypeUnknown:
-            return "Unknown";
     }
     return "What?";
 }

@@ -32,7 +32,7 @@ Token Lexer::getNextToken() {
         tk.type = tokenTypeEof;
         return tk;
     }
-
+    
     tokenLine = this->file->curLine;
     tokenColumn = this->file->curColumn;
     cur = this->file->current();
@@ -42,7 +42,7 @@ Token Lexer::getNextToken() {
     else if (cur == '\"') tk = this->stringToken();
     else if (this->isSign(cur)) tk = this->signToken();
     else {
-        tk.type = tokenTypeUnknown;
+        tk.type = tokenTypeEof;
         this->file->next();
     }
 

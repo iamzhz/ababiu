@@ -11,8 +11,7 @@ enum tokenType {
     tokenTypeId, 
     tokenTypeKeyword, 
     tokenTypeSign,
-    tokenTypeEof,
-    tokenTypeUnknown
+    tokenTypeEof
 };
 
 class Token {
