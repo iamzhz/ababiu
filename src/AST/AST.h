@@ -3,27 +3,6 @@
 
 #include "../include.h"
 
-enum treeType {
-    treeTypeEnd,
-    treeTypeToken,
-    treeTypeNode
-};
-
-enum treeTypeNodeLabel {
-    treeTypeNodeMain,
-    treeTypeNodeAdd,
-    treeTypeNodeSub
-};
-
-extern PointerManager<Tree*> pmTree;
-struct Tree {
-    treeType type;
-    Token tk;
-    treeTypeNodeLabel label;
-    std::vector<Tree*> children;
-};
-
-
 Tree* createNodeTree(treeType type, Token tk);
 Tree* createNodeTree();
 Tree* createNodeTree(treeType type);

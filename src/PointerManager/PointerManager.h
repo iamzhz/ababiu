@@ -12,7 +12,11 @@ class PointerManager {
         }
         void free() {
             for (auto ptr : this->ptrs) {
-                if (ptr != nullptr) delete ptr;
+                if (ptr != nullptr) {
+                delete ptr;
+                INFO("[free] " << ptr);
+                ptr = nullptr;
+                }
             }
         }
         ~PointerManager() {

@@ -1,6 +1,5 @@
 #include "../include.h"
 
-PointerManager<Tree*> pmTree;
 /* createNodeTree() begin */
 Tree* createNodeTree(treeType type, Token tk) {
     Tree *tr = new Tree;
@@ -56,6 +55,7 @@ void AST::print(Tree* tr, int indent) {
     }
     // is Node
     for (auto child : tr->children) {
+        std::cout << "Node " << treeTypeNodeLabelToText(child->label) << std::endl;
         this->print(child, indent + 1);
     }
 }
