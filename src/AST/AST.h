@@ -1,12 +1,8 @@
 #ifndef _ABANDON_AST_H_
 #define _ABANDON_AST_H_
 
-#include "../include.h"
 
-Tree* createNodeTree(treeType type, Token tk);
-Tree* createNodeTree();
-Tree* createNodeTree(treeType type);
-Tree* createNodeTree(Token tk);
+#include "../include.h"
 
 class AST {
     public:

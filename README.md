@@ -9,9 +9,7 @@ make
 ```
 or, you can run:
 ``` bash
-g++ src/main.cc src/CmdLineParser/CmdLineParser.cc src/debug/debug.cc src/FileManag
-er/FileManager.cc src/Lexer/signToken.cc src/Lexer/Lexer.cc src/SayError/SayError.c
-c src/Token/Token.cc -o abandon -std=c++11
+g++ src/main.cc src/AST/AST.cc src/AST/Tree.cc src/CmdLineParser/CmdLineParser.cc src/FileManager/FileManager.cc src/Lexer/Lexer.cc src/Lexer/signToken.cc src/PointerManager/PointerManager.cc src/SayError/SayError.cc src/Token/Token.cc src/debug/debug.cc -o abandon -std=c++11
 ```
 `-DDEBUG` means compile in debug mode (just in this project).  
 Since the project is under development, it is recommended to keep the `-DDEBUG` flag for ease of debugging.

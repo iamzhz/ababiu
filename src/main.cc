@@ -1,3 +1,4 @@
+#include "AST/Tree.h"
 #define DEBUG
 #include "include.h"
 int main(int argc, char** argv) {
@@ -20,20 +21,19 @@ int main(int argc, char** argv) {
 
 
     /* s */
-    Tree* m = createNodeTree(), *t2;
-    Token ta, tb, tc;
-    ta.content = "1"; ta.type = tokenTypeInt;
-    tb.content = "\"hello\""; tb.type = tokenTypeString;
-    tc.content = "3"; tc.type = tokenTypeInt;
-    t2 = createNodeTree(treeTypeNode);
-    t2->label = treeTypeNodeAdd;
-    t2->add(createNodeTree(tb));
-    t2->add(createNodeTree(tc));
-    m->add(createNodeTree(treeTypeToken, ta));
-    m->add(t2);
-    m->label = treeTypeNodeSub;
-    ast.tr = m;
-    ast.print();
+    Tree root;
+    Token token1("1", tokenTypeInt, 0, 0);
+    Token token2("2", tokenTypeInt, 0, 0);
+    Token token3("2", tokenTypeInt, 0, 0);
+    Tree ttoken1(token1);
+    Tree ttoken2(token2);
+    Tree ttoken3(token3);
+    Tree ttokenSub(treeTypeNodeSub);
+    ttokenSub.add(&ttoken2); ttokenSub.add(&ttoken3);
+    root.label = treeTypeNodeAdd;
+    root.add(&ttoken1);
+    root.add(&ttokenSub);
+    root.print(0);
     /* e */
 
     f.closeFile();

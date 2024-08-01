@@ -1,4 +1,20 @@
 #include "../include.h"
+
+Token::Token() {
+    // nothing now
+}
+Token::Token(std::string content, enum tokenType type, int line, int column) {
+    this->content = content;
+    this->type = type;
+    this->line = line;
+    this->column = column;
+}
+Token::Token(const Token& other) {
+    this->content = other.content;
+    this->type = other.type;
+    this->line = other.line;
+    this->column = other.column;
+}
 bool Token::idToKeyword() {
     // fn, int, float, string
     switch (this->content.length()) {
