@@ -1,3 +1,4 @@
+#include "Tree/Tree.h"
 #define DEBUG
 #include "include.h"
 int main(int argc, char** argv) {
@@ -19,19 +20,19 @@ int main(int argc, char** argv) {
 
 
     /* s */
-    Tree root;
+    Tree *root = createTree();
     Token token1("1", tokenTypeInt, 0, 0);
     Token token2("2", tokenTypeInt, 0, 0);
     Token token3("2", tokenTypeInt, 0, 0);
-    Tree ttoken1(token1);
-    Tree ttoken2(token2);
-    Tree ttoken3(token3);
-    Tree ttokenSub(treeTypeNodeSub);
-    ttokenSub.add(&ttoken2); ttokenSub.add(&ttoken3);
-    root.label = treeTypeNodeAdd;
-    root.add(&ttoken1);
-    root.add(&ttokenSub);
-    root.display(0);
+    Tree *ttoken1 = createTree(token1);
+    Tree *ttoken2 = createTree(token2);
+    Tree *ttoken3 = createTree(token3);
+    Tree *ttokenSub = createTree(treeTypeNodeSub);
+    ttokenSub->add(ttoken2); ttokenSub->add(ttoken3);
+    root->label = treeTypeNodeAdd;
+    root->add(ttoken1);
+    root->add(ttokenSub);
+    root->display(0);
     /* e */
 
     f.closeFile();

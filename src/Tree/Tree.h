@@ -12,6 +12,7 @@ enum treeType {
 
 enum treeTypeNodeLabel {
     treeTypeNodeMain,
+    treeTypeNodeNone,
     treeTypeNodeAdd,
     treeTypeNodeSub
 };
@@ -26,8 +27,6 @@ class Tree {
 
     Tree();
     Tree(treeType type);
-    Tree(treeTypeNodeLabel label);
-    Tree(Token tk);
     void add(Tree* tr);
 
     #ifdef DEBUG
@@ -37,8 +36,9 @@ class Tree {
 
 std::string treeTypeNodeLabelToText(treeTypeNodeLabel label);
 
-Tree* createNodeTree(treeType type, Token tk);
-Tree* createNodeTree();
-Tree* createNodeTree(treeType type);
-Tree* createNodeTree(Token tk);
+Tree* createTree(treeType type, Token tk, treeTypeNodeLabel label);
+Tree* createTree();
+Tree* createTree(treeType type);
+Tree* createTree(Token tk);
+Tree* createTree(treeTypeNodeLabel label);
 #endif
