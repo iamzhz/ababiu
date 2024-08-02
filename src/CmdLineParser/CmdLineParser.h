@@ -19,7 +19,7 @@ class CmdLineParser {
     void run();
 
     #ifdef DEBUG
-    void print();
+    void display();
     #endif
 };
 

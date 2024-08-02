@@ -58,7 +58,7 @@ void CmdLineParser::run() {
 
 
 #ifdef DEBUG
-void CmdLineParser::print() {
+void CmdLineParser::display() {
     std::cout << "Input File: ";
     for (int i = 0;  i < this->inputFiles.size();  i ++) {
         std::cout << this->inputFiles[i] << " ";

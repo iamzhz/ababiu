@@ -20,11 +20,11 @@ Tree* AST::addToNodeTree(Tree* tr, Tree* child) {
 }
 
 #ifdef DEBUG
-void AST::print(Tree* tr, int indent) {
-    tr->print(indent);
+void AST::display(Tree* tr, int indent) {
+    tr->display(indent);
 }
-void AST::print() {
-    this->print(this->tr);
+void AST::display() {
+    this->display(this->tr);
 }
 #endif
 

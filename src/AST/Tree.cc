@@ -55,7 +55,7 @@ Tree* createNodeTree(Token tk) {
 }
 /* createNodeTree() end */
 
-void Tree::print(int indent) {
+void Tree::display(int indent) {
     int i;
     for (i = 0;  i < indent;  i ++) { // for beauty
         std::cout << ' ';
@@ -68,6 +68,6 @@ void Tree::print(int indent) {
     // is Node
     std::cout << "Node " << treeTypeNodeLabelToText(this->label) << std::endl;
     for (auto child : this->children) {
-        child->print(indent + 1);
+        child->display(indent + 1);
     }
 }

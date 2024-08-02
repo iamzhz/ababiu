@@ -28,7 +28,7 @@ class Tree {
     Tree(treeTypeNodeLabel label);
     Tree(Token tk);
     void add(Tree* tr);
-    void print(int indent = 0);
+    void display(int indent = 0);
 };
 
 std::string treeTypeNodeLabelToText(treeTypeNodeLabel label);

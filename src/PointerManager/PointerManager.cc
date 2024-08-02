@@ -25,7 +25,7 @@ PointerManager<T>::~PointerManager() {
 
 #ifdef DEBUG
 template <class T>
-void PointerManager<T>::print() {
+void PointerManager<T>::display() {
     for (auto ptr : this->ptrs) {
         std::cout << ptr << std::endl;
     }

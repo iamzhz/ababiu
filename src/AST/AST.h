@@ -15,8 +15,8 @@ class AST {
     Tree* addToNodeTree(Tree* tr, Tree* child);
 
     #ifdef DEBUG
-    void print(Tree* tr, int indent = 0);
-    void print();
+    void display(Tree* tr, int indent = 0);
+    void display();
     #endif
 };
 

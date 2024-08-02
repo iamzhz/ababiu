@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
     CmdLineParser clp(argc, argv);
     AST ast(&tkzer);
     clp.run();
-    clp.print();
+    clp.display();
     if (!f.setInputFile(clp.inputFiles[0])) sayError("Cannot open input file");
     
     f.next();
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     root.label = treeTypeNodeAdd;
     root.add(&ttoken1);
     root.add(&ttokenSub);
-    root.print(0);
+    root.display(0);
     /* e */
 
     f.closeFile();

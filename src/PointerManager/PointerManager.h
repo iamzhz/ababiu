@@ -24,7 +24,7 @@ class PointerManager {
         }
 
         #ifdef DEBUG
-        void print() {
+        void display() {
             for (auto ptr : this->ptrs) {
                 std::cout << ptr << std::endl;
             }
