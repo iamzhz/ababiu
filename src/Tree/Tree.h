@@ -3,6 +3,7 @@
 
 #include "../include.h"
 
+extern Token noneTokenClass;
 enum treeType {
     treeTypeEnd,
     treeTypeToken,
@@ -28,7 +29,10 @@ class Tree {
     Tree(treeTypeNodeLabel label);
     Tree(Token tk);
     void add(Tree* tr);
+
+    #ifdef DEBUG
     void display(int indent = 0);
+    #endif
 };
 
 std::string treeTypeNodeLabelToText(treeTypeNodeLabel label);

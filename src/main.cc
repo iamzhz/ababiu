@@ -1,4 +1,3 @@
-#include "AST/Tree.h"
 #define DEBUG
 #include "include.h"
 int main(int argc, char** argv) {
@@ -6,7 +5,6 @@ int main(int argc, char** argv) {
     Lexer tkzer;
     Token tk;
     CmdLineParser clp(argc, argv);
-    AST ast(&tkzer);
     clp.run();
     clp.display();
     if (!f.setInputFile(clp.inputFiles[0])) sayError("Cannot open input file");

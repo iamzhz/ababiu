@@ -1,10 +1,9 @@
 #include "../include.h"
 
 PointerManager<Tree*> pmTree;
+Token noneTokenClass;
 
-Tree::Tree() {
-    // nothing here
-}
+Tree::Tree() {}
 
 Tree::Tree(treeType type) {
     this->type = type;
@@ -35,6 +34,27 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
     return "Unkown";
 }
 
+#ifdef DEBUG
+void Tree::display(int indent) {
+    int i;
+    for (i = 0;  i < indent;  i ++) { // for beauty
+        std::cout << ' ';
+    }
+    if (this->type == treeTypeToken) {
+        std::cout << "Token " << this->tk.typeToText() << 
+                " [" << this->tk.content << ']' << std::endl;
+        return ;
+    }
+    // is Node
+    std::cout << "Node " << treeTypeNodeLabelToText(this->label) << std::endl;
+    for (auto child : this->children) {
+        child->display(indent + 1);
+    }
+}
+#endif
+
+
+
 /* createNodeTree() begin */
 Tree* createNodeTree(treeType type, Token tk) {
     Tree *tr = new Tree(type);
@@ -54,20 +74,3 @@ Tree* createNodeTree(Token tk) {
     return createNodeTree(treeTypeToken, tk);
 }
 /* createNodeTree() end */
-
-void Tree::display(int indent) {
-    int i;
-    for (i = 0;  i < indent;  i ++) { // for beauty
-        std::cout << ' ';
-    }
-    if (this->type == treeTypeToken) {
-        std::cout << "Token " << this->tk.typeToText() << 
-                " [" << this->tk.content << ']' << std::endl;
-        return ;
-    }
-    // is Node
-    std::cout << "Node " << treeTypeNodeLabelToText(this->label) << std::endl;
-    for (auto child : this->children) {
-        child->display(indent + 1);
-    }
-}
