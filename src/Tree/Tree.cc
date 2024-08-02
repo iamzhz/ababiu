@@ -15,10 +15,10 @@ void Tree::add(Tree* tr) {
 
 std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
     switch (label) {
-        case treeTypeNodeMain: return "Main";
-        case treeTypeNodeNone: return "None";
-        case treeTypeNodeAdd: return "Add";
-        case treeTypeNodeSub: return "Sub";
+        case treeTypeNode_Main: return "Main";
+        case treeTypeNode_None: return "None";
+        case treeTypeNode_Add: return "Add";
+        case treeTypeNode_Sub: return "Sub";
     }
     return "Unkown";
 }
@@ -29,7 +29,7 @@ void Tree::display(int indent) {
     for (i = 0;  i < indent;  i ++) { // for beauty
         std::cout << ' ';
     }
-    if (this->type == treeTypeToken) {
+    if (this->type == treeType_Token) {
         std::cout << "Token " << this->tk.typeToText() << 
                 " [" << this->tk.content << ']' << std::endl;
         return ;
@@ -49,21 +49,21 @@ Tree* createTree(treeType type, Token tk, treeTypeNodeLabel label) {
     Tree *tr = new Tree(type);
     tr->label = label;
     pmTree.add(tr);
-    if (type == treeTypeToken) {
+    if (type == treeType_Token) {
         tr->tk = tk;
     }
     return tr;
 }
 Tree* createTree() {
-    return createTree(treeTypeNode, noneTokenClass, treeTypeNodeNone);
+    return createTree(treeType_Node, noneTokenClass, treeTypeNode_None);
 }
 Tree* createTree(treeType type) {
-    return createTree(type, noneTokenClass, treeTypeNodeNone);
+    return createTree(type, noneTokenClass, treeTypeNode_None);
 }
 Tree* createTree(Token tk) {
-    return createTree(treeTypeToken, tk, treeTypeNodeNone);
+    return createTree(treeType_Token, tk, treeTypeNode_None);
 }
 Tree* createTree(treeTypeNodeLabel label) {
-    return createTree(treeTypeNode, noneTokenClass, label);
+    return createTree(treeType_Node, noneTokenClass, label);
 }
 /* createTree() end */

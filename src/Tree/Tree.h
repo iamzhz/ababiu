@@ -5,16 +5,16 @@
 
 extern Token noneTokenClass;
 enum treeType {
-    treeTypeEnd,
-    treeTypeToken,
-    treeTypeNode
+    treeType_End,
+    treeType_Token,
+    treeType_Node
 };
 
 enum treeTypeNodeLabel {
-    treeTypeNodeMain,
-    treeTypeNodeNone,
-    treeTypeNodeAdd,
-    treeTypeNodeSub
+    treeTypeNode_Main,
+    treeTypeNode_None,
+    treeTypeNode_Add,
+    treeTypeNode_Sub
 };
 
 extern PointerManager<Tree*> pmTree;

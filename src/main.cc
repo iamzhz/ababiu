@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
     Tree *ttoken1 = createTree(token1);
     Tree *ttoken2 = createTree(token2);
     Tree *ttoken3 = createTree(token3);
-    Tree *ttokenSub = createTree(treeTypeNodeSub);
+    Tree *ttokenSub = createTree(treeTypeNode_Sub);
     ttokenSub->add(ttoken2); ttokenSub->add(ttoken3);
-    root->label = treeTypeNodeAdd;
+    root->label = treeTypeNode_Add;
     root->add(ttoken1);
     root->add(ttokenSub);
     root->display(0);
