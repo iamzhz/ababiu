@@ -24,7 +24,7 @@ class Lexer {
     bool isSign(char ch);
     
     public:
-    Token content;
+    Token current;
     void setFile(FileManager& file);
     Token getNextToken();
     enum signState isSignTwoChars(char a, char b);

@@ -33,7 +33,6 @@ void Tree::display(int indent) {
     this->display(indent, true);
 }
 void Tree::display(int indent, bool last) {
-    // 打印当前节点前的前缀
     for (int i = 0; i < indent - 1; ++i) {
         std::cout << (i < indent - 1 ? "│   " : "    ");
     }

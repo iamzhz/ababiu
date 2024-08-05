@@ -1,4 +1,3 @@
-#include "Tree/Tree.h"
 #define DEBUG
 #include "include.h"
 int main(int argc, char** argv) {
@@ -25,8 +24,5 @@ int main(int argc, char** argv) {
     Tree *root = psr.parse_Expr();
     root->display();
     /* e */
-    Tree* abc = nullptr;
-    abc->display();
-    f.closeFile();
     return 0;
 }

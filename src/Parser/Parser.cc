@@ -15,21 +15,21 @@ Tree* Parser::parse_Expr() {
     if (tr_Term == noneTreeClass) return noneTreeClass;
     tr->add(tr_Term);
 
-    tr_Expr_ = this->parse_Expr_();
+    tr_Expr_ = this->parse_Expr_();// here
     if (tr_Expr_ == noneTreeClass) return noneTreeClass;
     tr->add(tr_Expr_);
     return tr;
 }
 
 Tree* Parser::parse_Expr_() {
-    Token tk = this->lx->content;
-    this->lx->getNextToken();
+    Token tk = this->lx->current;
     
     Tree* tr = createTree(treeTypeNode_Expr_);
     Tree* tr_Term;
     Tree* tr_Expr_;
     if (tk.matchSign("+") || tk.matchSign("-")) {
         tr->add(createTree(tk));
+        this->lx->getNextToken();
     } else {
         return epsilonTreeClass; 
     }
@@ -54,19 +54,20 @@ Tree* Parser::parse_Term() {
 
     tr_Term_ = this->parse_Term_();
     if (tr_Term_ == noneTreeClass) return noneTreeClass;
+    // TODO: ' no add
     tr->add(tr_Term_);
     return tr;
 }
 
 Tree* Parser::parse_Term_() {
-    Token tk = this->lx->content;
-    this->lx->getNextToken();
+    Token tk = this->lx->current;
     
     Tree* tr = createTree(treeTypeNode_Term_);
     Tree* tr_Factor;
     Tree* tr_Term_;
     if (tk.matchSign("*") || tk.matchSign("/")) {
         tr->add(createTree(tk));
+        this->lx->getNextToken();
     } else {
         return epsilonTreeClass; 
     }
@@ -84,21 +85,21 @@ Tree* Parser::parse_Term_() {
 Tree* Parser::parse_Factor() {
     Tree* tr = createTree(treeTypeNode_Factor);
     Tree* tr_Expr;
-    Token tk = this->lx->content;
-    this->lx->getNextToken();
+    Token tk = this->lx->current;
     if (tk.match(tokenTypeInt)) {
         tr->add(createTree(tk));
+        this->lx->getNextToken();
         return tr;
     }
     if (tk.matchSign("(")) {
+        this->lx->getNextToken();
         tr_Expr = this->parse_Expr();
         tr->add(tr_Expr);
-        if (this->lx->content.matchSign(")")) {
+        if (this->lx->current.matchSign(")")) {
             this->lx->getNextToken();
         } else {
-            sayError(") expected");
+            sayError("`)` expected");
         }
-        this->lx->getNextToken();
         return tr;
     }
     sayError("int or ( expected");
@@ -106,13 +107,13 @@ Tree* Parser::parse_Factor() {
 }
 /*
 Tree* Parser::parseAdd() {
-    Token tk = this->lx->content;
+    Token tk = this->lx->current;
     Tree* tr = createTree(treeTypeNode_Add);
     if (tk.match(tokenTypeInt)) {
         tr->add(createTree(tk));
     } else {
         return noneTreeClass;
-    }
+    } 
     tk = this->lx->getNextToken();
     if (!tk.matchSign("+")) return noneTreeClass;
     tk = this->lx->getNextToken();
