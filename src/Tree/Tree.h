@@ -13,8 +13,13 @@ enum treeType {
 enum treeTypeNodeLabel {
     treeTypeNode_Main,
     treeTypeNode_None,
-    treeTypeNode_Add,
-    treeTypeNode_Sub
+    treeTypeNode_Epsilon,
+    treeTypeNode_Expr,
+    treeTypeNode_Expr_,
+    treeTypeNode_Term,
+    treeTypeNode_Term_,
+    treeTypeNode_Factor,
+    treeTypeNode_Factor_,
 };
 
 extern PointerManager<Tree*> pmTree;
@@ -31,6 +36,7 @@ class Tree {
 
     #ifdef DEBUG
     void display(int indent = 0);
+    void display(int indent, bool last);
     #endif
 };
 

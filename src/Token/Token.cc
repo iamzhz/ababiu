@@ -59,6 +59,10 @@ bool Token::matchKeyword(std::string content) {
     return true;
 }
 
+bool Token::match(tokenType type) {
+    return this->type == type;
+}
+
 void Token::addToContent(char newChar) {
     char tmp[2] = {0};
     tmp[0] = newChar;

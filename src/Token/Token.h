@@ -17,7 +17,7 @@ enum tokenType {
 class Token {
     public:
     std::string content;
-    enum tokenType type;
+    tokenType type;
     int line;
     int column;
     Token();
@@ -26,6 +26,7 @@ class Token {
     bool idToKeyword(); // return true says `content` is a keyword, or not
     bool matchSign(std::string content);
     bool matchKeyword(std::string content);
+    bool match(tokenType type);
     void addToContent(char newChar);
     void addToContent(int newChar);
     void addToContent(std::string newString);

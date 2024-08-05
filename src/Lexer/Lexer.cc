@@ -30,6 +30,7 @@ Token Lexer::getNextToken() {
     }while(this->file->next()); // skip space
     if (this->file->isEof) {
         tk.type = tokenTypeEof;
+        this->content = tk;
         return tk;
     }
     
@@ -48,6 +49,7 @@ Token Lexer::getNextToken() {
 
     tk.line = tokenLine;
     tk.column = tokenColumn;
+    this->content = tk;
     return tk;
 }
 
