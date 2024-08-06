@@ -8,6 +8,7 @@ class Parser {
     public:
     Lexer* lx;
     Parser(Lexer* lx);
+    Tree* cst2ast(Tree* tr);
     Tree* parse_Expr();
     Tree* parse_Expr_();
     Tree* parse_Term();

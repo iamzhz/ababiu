@@ -117,7 +117,7 @@ char Lexer::readChar(char cannotBe, bool& tell) {
         return ch;
     }
     sayError(this->file->curLine, this->file->curColumn, "Eof but not complete");
-    return '\0'; // 随便返回个值意思意思编译器
+    return '\0'; // to cheat compiler
 }
 
 

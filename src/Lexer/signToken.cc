@@ -2,7 +2,7 @@
 
 bool Lexer::isSign(char ch) {
     char signs[] = "=+-*/.`~!@#$%^&*()_{}[];:'\"\\|<>,?/";
-    for (int i = 0;  i < sizeof(signs) - 1;  i ++) {
+    for (std::size_t i = 0;  i < sizeof(signs) - 1;  i ++) {
         if (ch == signs[i]) return true;
     }
     return false;

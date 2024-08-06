@@ -1,6 +1,1 @@
-fn int main(void) {
-    float hey;
-    hey += 2; // add 2 to hey
-    print("hello");
-    return 0;
-}
+(10-2)*4

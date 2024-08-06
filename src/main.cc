@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
 
     /* s */
     Tree *root = psr.parse_Expr();
+    root = psr.cst2ast(root);
     root->display();
     /* e */
     return 0;

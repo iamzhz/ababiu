@@ -7,6 +7,28 @@ Parser::Parser(Lexer* lx) {
     this->lx = lx;
 }
 
+Tree* Parser::cst2ast(Tree* tr) {
+    if (tr->type == treeType_Token) return tr;
+    
+    std::vector<Tree*> & c = tr->children;
+    for (auto it = c.begin();  it != c.end();  ) {
+        if ((*it)->type == treeType_Node && (*it)->label == treeTypeNode_Epsilon) {
+            it = c.erase(it);
+        } else {
+            Tree* result = cst2ast(*it);
+            if (result == nullptr) it = c.erase(it);
+            else {
+                *it = result;
+                it ++;
+            }
+        }
+    }
+    if (c.empty()) return nullptr;
+    if (c.size() == 1) return c[0];
+    return tr;
+}
+
+
 Tree* Parser::parse_Expr() {
     Tree* tr = createTree(treeTypeNode_Expr);
     Tree* tr_Term = this->parse_Term();

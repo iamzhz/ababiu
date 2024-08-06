@@ -19,7 +19,6 @@ enum treeTypeNodeLabel {
     treeTypeNode_Term,
     treeTypeNode_Term_,
     treeTypeNode_Factor,
-    treeTypeNode_Factor_,
 };
 
 extern PointerManager<Tree*> pmTree;
