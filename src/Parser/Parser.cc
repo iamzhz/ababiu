@@ -1,10 +1,35 @@
 #include "../include.h"
 
-Tree* noneTreeClass = createTree(treeTypeNode_None);
+Tree* noneTreeClass = createTree(treeType_None);
 Tree* epsilonTreeClass = createTree(treeTypeNode_Epsilon);
 
 Parser::Parser(Lexer* lx) {
     this->lx = lx;
+}
+
+void Parser::addToBack(Token tk) {
+    this->backtracking.push_back(tk);
+}
+Token Parser::getToken() {
+    Token tk;
+    if (this->fromBeginIndex != -1) {
+        return this->backtracking[this->fromBeginIndex];
+        this->fromBeginIndex ++;
+    }
+    tk = this->lx->getNextToken();
+    this->addToBack(tk);
+    return tk;
+}
+Token Parser::clearBack() {
+    Token lastToken;
+    lastToken = this->backtracking.back();
+    this->backtracking.clear(); // only save the last one
+    this->backtracking.push_back(lastToken);
+    this->fromBeginIndex = -1;
+    return lastToken;
+}
+Token Parser::fromBegin() {
+    this->fromBeginIndex = 0;
 }
 
 Tree* Parser::cst2ast(Tree* tr) {
@@ -127,22 +152,16 @@ Tree* Parser::parse_Factor() {
     sayError("int or ( expected");
     return noneTreeClass;
 }
-/*
-Tree* Parser::parseAdd() {
-    Token tk = this->lx->current;
-    Tree* tr = createTree(treeTypeNode_Add);
-    if (tk.match(tokenTypeInt)) {
-        tr->add(createTree(tk));
-    } else {
-        return noneTreeClass;
-    } 
-    tk = this->lx->getNextToken();
-    if (!tk.matchSign("+")) return noneTreeClass;
-    tk = this->lx->getNextToken();
-    if (tk.match(tokenTypeInt)) {
-        tr->add(createTree(tk));
-    } else {
-        return noneTreeClass;
-    }
-    return tr;
-} */
+Tree* Parser::parse_Sentence() {
+    Tree* tr = createTree(treeTypeNode_Sentence);
+    Tree* tr_Expr;
+    Token tk;
+    tr_Expr = this->parse_Expr();
+    if (tr_Expr == noneTreeClass) return noneTreeClass;
+    tr->add(tr_Expr);
+
+    tk = this->lx->current;
+    this->lx->getNextToken();
+    if (tk.matchSign(";")) return tr;
+    return noneTreeClass;
+}

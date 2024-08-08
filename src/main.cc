@@ -21,7 +21,8 @@ int main(int argc, char** argv) {
 
 
     /* s */
-    Tree *root = psr.parse_Expr();
+    Tree *root = psr.parse_Sentence();
+    if (root->type == treeType_None) return 1;
     root = psr.cst2ast(root);
     root->display();
     /* e */

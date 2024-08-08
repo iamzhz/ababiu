@@ -17,7 +17,6 @@ void Tree::add(Tree* tr) {
 std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
     switch (label) {
         case treeTypeNode_Main: return "Main";
-        case treeTypeNode_None: return "None";
         case treeTypeNode_Epsilon: return "ε";
         case treeTypeNode_Expr: return "Expr";
         case treeTypeNode_Expr_: return "Expr'";

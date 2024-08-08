@@ -7,7 +7,8 @@ extern Token noneTokenClass;
 enum treeType {
     treeType_End,
     treeType_Token,
-    treeType_Node
+    treeType_Node,
+    treeType_None,
 };
 
 enum treeTypeNodeLabel {
@@ -19,6 +20,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_Term,
     treeTypeNode_Term_,
     treeTypeNode_Factor,
+    treeTypeNode_Sentence, // Expr ;
 };
 
 extern PointerManager<Tree*> pmTree;

@@ -5,6 +5,13 @@
 extern Tree* noneTreeClass;
 extern Tree* epsilonTreeClass;
 class Parser {
+    private:
+    std::vector<Token> backtracking;
+    int fromBeginIndex = -1;
+    void addToBack(Token tk);
+    Token getToken();
+    Token clearBack();
+    Token fromBegin();
     public:
     Lexer* lx;
     Parser(Lexer* lx);
@@ -14,7 +21,7 @@ class Parser {
     Tree* parse_Term();
     Tree* parse_Term_();
     Tree* parse_Factor();
-    bool parseSub();
+    Tree* parse_Sentence();
 };
 
 #endif
