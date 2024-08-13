@@ -1,35 +1,11 @@
 #include "../include.h"
 
-Tree* noneTreeClass = createTree(treeType_None);
+Tree* noneTreeClass = createTree(treeTypeNode_None);
 Tree* epsilonTreeClass = createTree(treeTypeNode_Epsilon);
 
 Parser::Parser(Lexer* lx) {
     this->lx = lx;
-}
-
-void Parser::addToBack(Token tk) {
-    this->backtracking.push_back(tk);
-}
-Token Parser::getToken() {
-    Token tk;
-    if (this->fromBeginIndex != -1) {
-        return this->backtracking[this->fromBeginIndex];
-        this->fromBeginIndex ++;
-    }
-    tk = this->lx->getNextToken();
-    this->addToBack(tk);
-    return tk;
-}
-Token Parser::clearBack() {
-    Token lastToken;
-    lastToken = this->backtracking.back();
-    this->backtracking.clear(); // only save the last one
-    this->backtracking.push_back(lastToken);
-    this->fromBeginIndex = -1;
-    return lastToken;
-}
-Token Parser::fromBegin() {
-    this->fromBeginIndex = 0;
+    this->getNextToken();
 }
 
 Tree* Parser::cst2ast(Tree* tr) {
@@ -69,14 +45,14 @@ Tree* Parser::parse_Expr() {
 }
 
 Tree* Parser::parse_Expr_() {
-    Token tk = this->lx->current;
+    Token tk = this->current;
     
     Tree* tr = createTree(treeTypeNode_Expr_);
     Tree* tr_Term;
     Tree* tr_Expr_;
     if (tk.matchSign("+") || tk.matchSign("-")) {
         tr->add(createTree(tk));
-        this->lx->getNextToken();
+        this->getNextToken();
     } else {
         return epsilonTreeClass; 
     }
@@ -107,14 +83,14 @@ Tree* Parser::parse_Term() {
 }
 
 Tree* Parser::parse_Term_() {
-    Token tk = this->lx->current;
+    Token tk = this->current;
     
     Tree* tr = createTree(treeTypeNode_Term_);
     Tree* tr_Factor;
     Tree* tr_Term_;
     if (tk.matchSign("*") || tk.matchSign("/")) {
         tr->add(createTree(tk));
-        this->lx->getNextToken();
+        this->getNextToken();
     } else {
         return epsilonTreeClass; 
     }
@@ -132,36 +108,81 @@ Tree* Parser::parse_Term_() {
 Tree* Parser::parse_Factor() {
     Tree* tr = createTree(treeTypeNode_Factor);
     Tree* tr_Expr;
-    Token tk = this->lx->current;
+    Token tk = this->current;
     if (tk.match(tokenTypeInt)) {
         tr->add(createTree(tk));
-        this->lx->getNextToken();
+        this->getNextToken();
         return tr;
     }
     if (tk.matchSign("(")) {
-        this->lx->getNextToken();
+        this->getNextToken();
         tr_Expr = this->parse_Expr();
         tr->add(tr_Expr);
-        if (this->lx->current.matchSign(")")) {
-            this->lx->getNextToken();
+        if (this->current.matchSign(")")) {
+            this->getNextToken();
         } else {
-            sayError("`)` expected");
+            this->parserError("`)` expected");
+            return noneTreeClass;
         }
         return tr;
     }
-    sayError("int or ( expected");
+    this->parserError("int or ( expected");
     return noneTreeClass;
 }
+
+
 Tree* Parser::parse_Sentence() {
     Tree* tr = createTree(treeTypeNode_Sentence);
     Tree* tr_Expr;
-    Token tk;
     tr_Expr = this->parse_Expr();
     if (tr_Expr == noneTreeClass) return noneTreeClass;
     tr->add(tr_Expr);
 
-    tk = this->lx->current;
-    this->lx->getNextToken();
-    if (tk.matchSign(";")) return tr;
-    return noneTreeClass;
+    if (!this->current.matchSign(";")) return noneTreeClass;
+    tr->add(createTree(this->current));
+    this->getNextToken();
+
+    return tr;
+}
+
+Tree* Parser::parse_Sentences() {
+    Tree* tr = createTree(treeTypeNode_Sentences);
+    Tree* tr_Sentence;
+    Tree* tr_Sentences;
+    
+    tr_Sentence = this->parse_Sentence();
+    if (tr_Sentence == noneTreeClass) return noneTreeClass;
+    tr->add(tr_Sentence);
+
+    this->record();
+    tr_Sentences = this->parse_Sentences();
+    this->unrecord();
+    if (tr_Sentences == noneTreeClass) {
+        this->restart();
+    } else {
+        tr->add(tr_Sentences);
+    }
+    return tr;
+}
+
+Tree* Parser::parse_Statements() {
+    Tree* tr = createTree(treeTypeNode_Statements);
+    Tree* tr_Sentences;
+    if (!this->current.matchSign("{")) {
+        this->parserError("`{` expected");
+        return noneTreeClass;
+    }
+    this->getNextToken();
+
+    tr_Sentences = this->parse_Sentences();
+    if (tr_Sentences == noneTreeClass) return noneTreeClass;
+    tr->add(tr_Sentences);
+
+    if (!this->current.matchSign("}")) {
+        this->parserError("`}` expected");
+        return noneTreeClass;
+    }
+    this->getNextToken();
+
+    return tr;
 }

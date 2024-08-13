@@ -23,6 +23,9 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Term: return "Term";
         case treeTypeNode_Term_: return "Term'";
         case treeTypeNode_Factor: return "Factor";
+        case treeTypeNode_Sentence: return "Sentence";
+        case treeTypeNode_Sentences: return "Sentences";
+        case treeTypeNode_Statements: return "Statements";
     }
     return "Unkown";
 }

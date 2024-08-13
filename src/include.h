@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <vector>
 #include <utility>
+#include <list>
 #include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
 #include "./debug/debug.h"

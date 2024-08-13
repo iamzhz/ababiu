@@ -5,14 +5,14 @@ int main(int argc, char** argv) {
     Lexer tkzer;
     Token tk;
     CmdLineParser clp(argc, argv);
-    Parser psr(&tkzer);
     clp.run();
-    clp.display();
     if (!f.setInputFile(clp.inputFiles[0])) sayError("Cannot open input file");
-    
     f.next();
     tkzer.setFile(f);
-    tk = tkzer.getNextToken();
+    Parser psr(&tkzer);
+    clp.display();
+
+    //tk = tkzer.getNextToken();
     /*
     while (!tk.isEof()) {
         std::cout << tk.typeToText() << ' ' << tk.line << ' ' << tk.column << '['<< tk.content << ']' << std::endl;
@@ -21,8 +21,8 @@ int main(int argc, char** argv) {
 
 
     /* s */
-    Tree *root = psr.parse_Sentence();
-    if (root->type == treeType_None) return 1;
+    Tree *root = psr.parse_Statements(); 
+    if (root == noneTreeClass) sayError("what??");
     root = psr.cst2ast(root);
     root->display();
     /* e */
