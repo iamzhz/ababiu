@@ -109,7 +109,8 @@ Tree* Parser::parse_Factor() {
     Tree* tr = createTree(treeTypeNode_Factor);
     Tree* tr_Expr;
     Token tk = this->current;
-    if (tk.match(tokenTypeInt)) {
+    if (tk.match(tokenTypeInt) || tk.match(tokenTypeFloat) || tk.match(tokenTypeChar) || 
+        tk.match(tokenTypeId) || tk.match(tokenTypeString)) {
         tr->add(createTree(tk));
         this->getNextToken();
         return tr;
@@ -126,7 +127,7 @@ Tree* Parser::parse_Factor() {
         }
         return tr;
     }
-    this->parserError("int or ( expected");
+    this->parserError("Something or ( expected");
     return noneTreeClass;
 }
 
