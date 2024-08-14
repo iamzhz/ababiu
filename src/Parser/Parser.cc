@@ -168,9 +168,14 @@ Tree* Parser::parse_Sentences() {
 Tree* Parser::parse_Statements() {
     Tree* tr = createTree(treeTypeNode_Statements);
     Tree* tr_Sentences;
-    if (!this->current.matchSign("{")) {
-        this->parserError("`{` expected");
-        return noneTreeClass;
+    Tree* tr_Sentence;
+    if (!this->current.matchSign("{")) { // try { Sentences }
+        tr_Sentence = this->parse_Sentence();
+        if (tr_Sentence == noneTreeClass) { // try Sentence
+            this->parserError("Statements expected");
+        }
+        tr->add(tr_Sentence);
+        return tr;
     }
     this->getNextToken();
 

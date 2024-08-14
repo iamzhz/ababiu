@@ -90,3 +90,8 @@ bool FileManager::skipToNextLine() {
     }
     return false;
 }
+
+FileManager::~FileManager() {
+    this->inputFile.close();
+    INFO("[file] Input file closed");
+}

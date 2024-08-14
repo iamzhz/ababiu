@@ -32,6 +32,8 @@ class FileManager {
     bool next(); // return false means eof
     bool back(); // return true is a success
     bool skipToNextLine(); // return false is EOF
+
+    ~FileManager();
 };
 
 #endif
