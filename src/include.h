@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility>
 #include <list>
+#include <stack>
 #include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
 #include "./debug/debug.h"

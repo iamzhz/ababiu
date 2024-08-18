@@ -6,7 +6,11 @@ void Parser::getNextToken() {
         this->current = *this->it;
         this->it ++;
         if (this->it == this->backtracks.end()) { // reset restart mode
-            this->restartMode = false;
+            if (this->itStack.empty())  {
+                this->restartMode = false;
+            } else {
+                this->over();
+            }
         }
         return ;
     }
@@ -19,17 +23,28 @@ void Parser::getNextToken() {
 
 void Parser::restart() {
     this->restartMode = true;
-    this->it = this->backtracks.begin();
+    this->it = this->itStack.top();
     this->backtracks.push_back(this->current);
 } 
 
 void Parser::record() {
     this->backtracks.push_back(this->current);
     this->recordMode = true;
+    this->itStack.push(-- this->backtracks.end());
 }
 
 void Parser::unrecord() {
-    this->recordMode = false;
+    if (this->itStack.empty()) 
+        this->recordMode = false;
+}
+
+void Parser::over() {
+    this->itStack.pop(); 
+    if (this->itStack.empty()) {
+        this->restartMode = false;
+    } else {
+        this->it = itStack.top();
+    }
 }
 
 void Parser::parserError(Token tk, std::string info) {
