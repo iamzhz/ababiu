@@ -7,28 +7,11 @@ class PointerManager {
     private:
         std::vector<T> ptrs;
     public:
-        void add(T ptr) {
-            this->ptrs.push_back(ptr);
-        }
-        void free() {
-            for (auto ptr : this->ptrs) {
-                if (ptr != nullptr) {
-                delete ptr;
-                INFO("[free] " << ptr);
-                ptr = nullptr;
-                }
-            }
-        }
-        ~PointerManager() {
-            this->free();
-        }
-
+        void add(T ptr);
+        void free();
+        ~PointerManager();
         #ifdef DEBUG
-        void display() {
-            for (auto ptr : this->ptrs) {
-                std::cout << ptr << std::endl;
-            }
-        }
+        void display();
         #endif
 };
 
