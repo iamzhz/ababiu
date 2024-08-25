@@ -17,7 +17,10 @@ class Parser {
     Parser(Lexer* lx);
     Tree* cst2ast(Tree* tr);
     Tree* parse_Expr();
-    Tree* parse_Expr_();
+    Tree* parse_Assign();
+    Tree* parse_Assign_();
+    Tree* parse_Add();
+    Tree* parse_Add_();
     Tree* parse_Term();
     Tree* parse_Term_();
     Tree* parse_Power();

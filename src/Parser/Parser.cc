@@ -30,26 +30,70 @@ Tree* Parser::cst2ast(Tree* tr) {
 }
 
 
+
 Tree* Parser::parse_Expr() {
     Tree* tr = createTree(treeTypeNode_Expr);
+    Tree* tr_Assign = this->parse_Assign();
+    ERROR_noneTreeClass(Assign);
+    tr->add(tr_Assign);
+    return tr;
+}
+Tree* Parser::parse_Assign() {
+    Tree* tr = createTree(treeTypeNode_Assign);
+    Tree* tr_Add;
+    Tree* tr_Assign_;
+
+    tr_Add = this->parse_Add();
+    ERROR_noneTreeClass(Add);
+    tr->add(tr_Add);
+
+    tr_Assign_ = this->parse_Assign_();
+    tr->add(tr_Assign_);
+    return tr;
+}
+Tree* Parser::parse_Assign_() {
+    Token tk = this->current;
+    
+    Tree* tr = createTree(treeTypeNode_Assign_);
+    Tree* tr_Add;
+    Tree* tr_Assign_;
+    if (tk.matchSign("=")) {
+        tr->add(createTree(tk));
+        this->getNextToken();
+    } else {
+        return epsilonTreeClass; 
+    }
+
+    tr_Add = this->parse_Add();
+    ERROR_noneTreeClass(Add);
+    tr->add(tr_Add);
+
+    tr_Assign_ = this->parse_Assign_();
+    // if (tr_Expr_ == noneTreeClass) return noneTreeClass; (I believe it'll never run)
+    tr->add(tr_Assign_);
+    return tr;
+}
+
+Tree* Parser::parse_Add() {
+    Tree* tr = createTree(treeTypeNode_Add);
     Tree* tr_Term = this->parse_Term();
-    Tree* tr_Expr_;
+    Tree* tr_Add_;
 
     ERROR_noneTreeClass(Term);
     tr->add(tr_Term);
 
-    tr_Expr_ = this->parse_Expr_();// here
+    tr_Add_ = this->parse_Add_();// here
     //if (tr_Expr_ == noneTreeClass) return noneTreeClass;
-    tr->add(tr_Expr_);
+    tr->add(tr_Add_);
     return tr;
 }
 
-Tree* Parser::parse_Expr_() {
+Tree* Parser::parse_Add_() {
     Token tk = this->current;
     
-    Tree* tr = createTree(treeTypeNode_Expr_);
+    Tree* tr = createTree(treeTypeNode_Add_);
     Tree* tr_Term;
-    Tree* tr_Expr_;
+    Tree* tr_Add_;
     if (tk.matchSign("+") || tk.matchSign("-")) {
         tr->add(createTree(tk));
         this->getNextToken();
@@ -61,9 +105,9 @@ Tree* Parser::parse_Expr_() {
     ERROR_noneTreeClass(Term);
     tr->add(tr_Term);
 
-    tr_Expr_ = this->parse_Expr_();
+    tr_Add_ = this->parse_Add_();
     // if (tr_Expr_ == noneTreeClass) return noneTreeClass; (I believe it'll never run)
-    tr->add(tr_Expr_);
+    tr->add(tr_Add_);
     return tr;
 }
 

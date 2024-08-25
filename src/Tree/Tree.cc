@@ -19,7 +19,10 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Main: return "Main";
         case treeTypeNode_Epsilon: return "ε";
         case treeTypeNode_Expr: return "Expr";
-        case treeTypeNode_Expr_: return "Expr'";
+        case treeTypeNode_Assign: return "Assign";
+        case treeTypeNode_Assign_: return "Assign'";
+        case treeTypeNode_Add: return "Add";
+        case treeTypeNode_Add_: return "Add'";  
         case treeTypeNode_Term: return "Term";
         case treeTypeNode_Term_: return "Term'";
         case treeTypeNode_Factor: return "Factor";
