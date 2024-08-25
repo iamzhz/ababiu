@@ -25,6 +25,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_ExprList,
     treeTypeNode_ExprList_,
     treeTypeNode_FunctionCall,
+    treeTypeNode_DefineFunction,
 };
 
 extern PointerManager<Tree*> pmTree;

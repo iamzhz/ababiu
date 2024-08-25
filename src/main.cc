@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 
     /* s */
-    Tree *root = psr.parse_Statements(); 
+    Tree *root = psr.parse_DefineFunction(); 
     if (root == noneTreeClass) sayError("what??");
     root = psr.cst2ast(root);
     root->display();

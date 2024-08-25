@@ -29,6 +29,7 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_ExprList: return "ExprList";
         case treeTypeNode_ExprList_: return "ExprList'";
         case treeTypeNode_FunctionCall: return "FunctionCall";
+        case treeTypeNode_DefineFunction: return "DefineFunction";
     }
     return "Unkown";
 }
