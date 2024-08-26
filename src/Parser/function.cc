@@ -70,6 +70,10 @@ Tree* Parser::parse_DefineFunction() {
     if (!this->current.matchKeyword("fn")) EXPECTED_ERROR("fn");
     this->getNextToken();
 
+    if (!this->current.match(tokenTypeType)) EXPECTED_ERROR("Type");
+    tr->add(createTree(this->current));
+    this->getNextToken();
+
     if (!this->current.match(tokenTypeId)) EXPECTED_ERROR("Id");
     tr_Id = createTree(this->current);
     tr->add(tr_Id);

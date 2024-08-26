@@ -92,6 +92,7 @@ Token Lexer::idToken() {
     } while (this->file->next());
 
     tk.idToKeyword();
+    tk.idToType();
     return tk;
 }
 
