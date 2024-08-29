@@ -1,4 +1,10 @@
-fn main(void) {
+fn int main(void) {
+    if (x) {
+        @print("It is true");
+        1 + 1;
+    } else {
+       @print("It is not true");
+    }
     @hello("hello");
     x = 1 + 2;
 }

@@ -6,14 +6,8 @@ Tree* Parser::parse_ExprList() {
     Tree* tr_ExprList_;
     Token tk = this->current;
 
-    this->record();
     tr_Expr = this->parse_Expr();
-    // ERROR_noneTreeClass(Expr);
-    if (tr_Expr == noneTreeClass) {
-        this->unrecord();
-        this->restart();
-        return noneTreeClass;
-    }
+    ERROR_noneTreeClass(Expr);
     tr->add(tr_Expr);
 
     tr_ExprList_ = this->parse_ExprList_();

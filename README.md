@@ -11,7 +11,7 @@ make
 ```
 or, you can run:
 ``` bash
-g++ src/main.cc src/CmdLineParser/CmdLineParser.cc src/FileManager/FileManager.cc src/Lexer/Lexer.cc src/Lexer/signToken.cc src/Parser/Parser.cc src/Parser/backtrack.cc src/Parser/function.cc src/PointerManager/PointerManager.cc src/SayError/SayError.cc src/Token/Token.cc src/Tree/Tree.cc src/debug/debug.cc -o abandon -std=c++11 -g -finput-charset=UTF-8 -fexec-charset=GBK
+g++ src/main.cc src/CmdLineParser/CmdLineParser.cc src/FileManager/FileManager.cc src/Lexer/Lexer.cc src/Lexer/signToken.cc src/Parser/Parser.cc src/Parser/function.cc src/Parser/if_else.cc src/Parser/utils.cc src/PointerManager/PointerManager.cc src/SayError/SayError.cc src/Token/Token.cc src/Tree/Tree.cc src/debug/debug.cc -o abandon -std=c++11 -g -finput-charset=UTF-8 -fexec-charset=GBK
 ```
 
 ## Run this project

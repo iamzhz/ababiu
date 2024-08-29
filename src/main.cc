@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     /* s */
     Tree *root = psr.parse_DefineFunction(); 
     if (root == noneTreeClass) sayError("what??");
-    root = psr.cst2ast(root);
+    //root = psr.cst2ast(root);
     root->display();
     /* e */
     return 0;

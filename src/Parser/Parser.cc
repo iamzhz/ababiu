@@ -224,6 +224,19 @@ Tree* Parser::parse_Factor() {
 Tree* Parser::parse_Sentence() {
     Tree* tr = createTree(treeTypeNode_Sentence);
     Tree* tr_Expr;
+
+    if (this->current.matchKeyword("if")) {
+        Tree* tr_If = this->parse_If();
+        ERROR_noneTreeClass(If);
+        tr->add(tr_If);
+        return tr;
+    } else if (this->current.matchKeyword("else")) {
+        Tree* tr_Else = this->parse_Else();
+        ERROR_noneTreeClass(Else);
+        tr->add(tr_Else);
+        return tr;
+    }
+        
     tr_Expr = this->parse_Expr();
     ERROR_noneTreeClass(Expr);
     tr->add(tr_Expr);
@@ -242,18 +255,19 @@ Tree* Parser::parse_Sentences() {
     Tree* tr_Sentence;
     Tree* tr_Sentences;
     
+    if (this->current.matchSign("}")) {
+        return tr;
+    }
+
     tr_Sentence = this->parse_Sentence();
     ERROR_noneTreeClass(Sentence);
     tr->add(tr_Sentence);
 
-    this->record();
+    
     tr_Sentences = this->parse_Sentences();
-    this->unrecord();
-    if (tr_Sentences == noneTreeClass) {
-        this->restart();
-    } else {
-        tr->add(tr_Sentences);
-    }
+    ERROR_noneTreeClass(Sentences);
+    tr->add(tr_Sentences);
+
     return tr;
 }
 
@@ -261,9 +275,9 @@ Tree* Parser::parse_Statements() {
     Tree* tr = createTree(treeTypeNode_Statements);
     Tree* tr_Sentences;
     Tree* tr_Sentence;
-    if (!this->current.matchSign("{")) { // try { Sentences }
+    if (!this->current.matchSign("{")) { // try not { Sentences }
         tr_Sentence = this->parse_Sentence();
-        if (tr_Sentence == noneTreeClass) { // try Sentence
+        if (tr_Sentence == noneTreeClass) { // try is Sentence
             this->parserError("Statements expected");
         }
         tr->add(tr_Sentence);
@@ -275,9 +289,6 @@ Tree* Parser::parse_Statements() {
     ERROR_noneTreeClass(Sentences);
     tr->add(tr_Sentences);
 
-    if (!this->current.matchSign("}")) {
-        EXPECTED_ERROR("}");
-    }
     this->getNextToken();
 
     return tr;

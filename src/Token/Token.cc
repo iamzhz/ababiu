@@ -21,12 +21,14 @@ bool Token::idToKeyword() {
         case 2:
             if ("fn" == this->content) break;
             if ("do" == this->content) break;
+            if ("if" == this->content) break;
             return false;
         case 3:
             if ("for" == this->content) break;
             return false;
         case 4:
             if ("void" == this->content) break;
+            if ("else" == this->content) break;
             return false;
         case 5:
             if ("while" == this->content) break;
@@ -77,7 +79,7 @@ bool Token::matchKeyword(std::string content) {
     if (this->type == tokenTypeKeyword) {
         if (this->content == content) return true;
     }
-    return true;
+    return false;
 }
 
 bool Token::match(tokenType type) {
