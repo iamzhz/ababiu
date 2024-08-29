@@ -1,10 +1,7 @@
 fn int main(void) {
-    if (x) {
-        @print("It is true");
-        1 + 1;
-    } else {
-       @print("It is not true");
+    for (x; x+1; x+2) {
+        @print("hello");
+        break;
     }
-    @hello("hello");
-    x = 1 + 2;
+    return 0;
 }

@@ -35,6 +35,12 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_DefineFunction: return "DefineFunction";
         case treeTypeNode_If: return "If";
         case treeTypeNode_Else: return "Else";
+        case treeTypeNode_While: return "While";
+        case treeTypeNode_DoWhile: return "DoWhile";
+        case treeTypeNode_For: return "For";
+        case treeTypeNode_Break: return "Break";
+        case treeTypeNode_Continue: return "Continue";
+        case treeTypeNode_Return: return "Return";
     }
     return "Unkown";
 }

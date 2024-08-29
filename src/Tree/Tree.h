@@ -32,6 +32,13 @@ enum treeTypeNodeLabel {
 
     treeTypeNode_If,
     treeTypeNode_Else,
+    treeTypeNode_While,
+    treeTypeNode_DoWhile,
+    treeTypeNode_For,
+
+    treeTypeNode_Break,
+    treeTypeNode_Continue,
+    treeTypeNode_Return,
 };
 
 extern PointerManager<Tree*> pmTree;

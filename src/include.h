@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <vector>
 #include <utility>
-#include <list>
-#include <stack>
+#include <unordered_map>
+#include <functional>
 #include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
 #include "./debug/debug.h"

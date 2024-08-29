@@ -93,3 +93,20 @@ Tree* Parser::parse_DefineFunction() {
 
     return tr;
 }
+
+Tree* Parser::parse_Return() {
+    Tree* tr = createTree(treeTypeNode_Return);
+    Tree* tr_Expr;
+    
+    if (!this->current.matchKeyword("return")) EXPECTED_ERROR("return");
+    this->getNextToken();
+
+    tr_Expr = this->parse_Expr();
+    ERROR_noneTreeClass(Expr);
+    tr->add(tr_Expr);
+
+    if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
+    this->getNextToken();
+
+    return tr;
+}

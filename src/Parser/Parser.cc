@@ -224,17 +224,48 @@ Tree* Parser::parse_Factor() {
 Tree* Parser::parse_Sentence() {
     Tree* tr = createTree(treeTypeNode_Sentence);
     Tree* tr_Expr;
-
-    if (this->current.matchKeyword("if")) {
-        Tree* tr_If = this->parse_If();
-        ERROR_noneTreeClass(If);
-        tr->add(tr_If);
-        return tr;
-    } else if (this->current.matchKeyword("else")) {
-        Tree* tr_Else = this->parse_Else();
-        ERROR_noneTreeClass(Else);
-        tr->add(tr_Else);
-        return tr;
+    if (this->current.type == tokenTypeKeyword) {
+        if (this->current.matchKeyword("if")) {
+            Tree* tr_If = this->parse_If();
+            ERROR_noneTreeClass(If);
+            tr->add(tr_If);
+            return tr;
+        } else if (this->current.matchKeyword("else")) {
+            Tree* tr_Else = this->parse_Else();
+            ERROR_noneTreeClass(Else);
+            tr->add(tr_Else);
+            return tr;
+        } else if (this->current.matchKeyword("while")) {
+            Tree* tr_While = this->parse_While();
+            ERROR_noneTreeClass(While);
+            tr->add(tr_While);
+            return tr;
+        } else if (this->current.matchKeyword("do")) {
+            Tree* tr_DoWhile = this->parse_DoWhile();
+            ERROR_noneTreeClass(DoWhile);
+            tr->add(tr_DoWhile);
+            return tr;
+        } else if (this->current.matchKeyword("for")) {
+            Tree* tr_For = this->parse_For();
+            ERROR_noneTreeClass(For);
+            tr->add(tr_For);
+            return tr;
+        } else if (this->current.matchKeyword("continue")) {
+            Tree* tr_Continue = this->parse_Continue();
+            ERROR_noneTreeClass(Continue);
+            tr->add(tr_Continue);
+            return tr;
+        } else if (this->current.matchKeyword("break")) {
+            Tree* tr_Break = this->parse_Break();
+            ERROR_noneTreeClass(Break);
+            tr->add(tr_Break);
+            return tr;
+        } else if (this->current.matchKeyword("return")) {
+            Tree* tr_Return = this->parse_Return();
+            ERROR_noneTreeClass(Return);
+            tr->add(tr_Return);
+            return tr;
+        }
     }
         
     tr_Expr = this->parse_Expr();

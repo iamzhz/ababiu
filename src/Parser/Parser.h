@@ -5,12 +5,6 @@
 extern Tree* noneTreeClass;
 extern Tree* epsilonTreeClass;
 
-struct valsForBacktrack {
-    std::list<Token>::iterator it;
-    bool restartMode = false;
-    bool recordModeChanged = false; // whether change `mainRecordMode` or not
-};
-
 class Parser {
     public:
     Token current;
@@ -38,6 +32,13 @@ class Parser {
 
     Tree* parse_If();
     Tree* parse_Else();
+    Tree* parse_While();
+    Tree* parse_DoWhile();
+    Tree* parse_For();
+
+    Tree* parse_Break();
+    Tree* parse_Continue();
+    Tree* parse_Return();
     
     void getNextToken(); // to replace lx->getNextToken()
     void parserError(Token tk, std::string info);
