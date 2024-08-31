@@ -15,6 +15,8 @@ class Parser {
     Tree* parse_Expr();
     Tree* parse_Assign();
     Tree* parse_Assign_();
+    Tree* parse_Compare();
+    Tree* parse_Compare_();
     Tree* parse_Add();
     Tree* parse_Add_();
     Tree* parse_Term();
@@ -29,6 +31,7 @@ class Parser {
     Tree* parse_ExprList_();
     Tree* parse_FunctionCall();
     Tree* parse_DefineFunction();
+    Tree* parse_DefineVariable();
 
     Tree* parse_If();
     Tree* parse_Else();

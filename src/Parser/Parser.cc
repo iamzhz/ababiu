@@ -40,12 +40,12 @@ Tree* Parser::parse_Expr() {
 }
 Tree* Parser::parse_Assign() {
     Tree* tr = createTree(treeTypeNode_Assign);
-    Tree* tr_Add;
+    Tree* tr_Compare;
     Tree* tr_Assign_;
 
-    tr_Add = this->parse_Add();
-    ERROR_noneTreeClass(Add);
-    tr->add(tr_Add);
+    tr_Compare = this->parse_Compare();
+    ERROR_noneTreeClass(Compare);
+    tr->add(tr_Compare);
 
     tr_Assign_ = this->parse_Assign_();
     tr->add(tr_Assign_);
@@ -55,9 +55,45 @@ Tree* Parser::parse_Assign_() {
     Token tk = this->current;
     
     Tree* tr = createTree(treeTypeNode_Assign_);
-    Tree* tr_Add;
+    Tree* tr_Compare;
     Tree* tr_Assign_;
     if (tk.matchSign("=")) {
+        tr->add(createTree(tk));
+        this->getNextToken();
+    } else {
+        return epsilonTreeClass; 
+    }
+
+    tr_Compare = this->parse_Compare();
+    ERROR_noneTreeClass(Compare);
+    tr->add(tr_Compare);
+
+    tr_Assign_ = this->parse_Assign_();
+    // if (tr_Expr_ == noneTreeClass) return noneTreeClass; (I believe it'll never run)
+    tr->add(tr_Assign_);
+    return tr;
+}
+
+Tree* Parser::parse_Compare() {
+    Tree* tr = createTree(treeTypeNode_Compare);
+    Tree* tr_Add;
+    Tree* tr_Compare_;
+
+    tr_Add = this->parse_Add();
+    ERROR_noneTreeClass(Add);
+    tr->add(tr_Add);
+
+    tr_Compare_ = this->parse_Compare_();
+    tr->add(tr_Compare_);
+    return tr;
+}
+Tree* Parser::parse_Compare_() {
+    Token tk = this->current;
+    
+    Tree* tr = createTree(treeTypeNode_Compare_);
+    Tree* tr_Add;
+    Tree* tr_Compare_;
+    if (tk.matchSign("==") || tk.matchSign("<") || tk.matchSign(">") || tk.matchSign(">=") || tk.matchSign("<=")) {
         tr->add(createTree(tk));
         this->getNextToken();
     } else {
@@ -68,9 +104,9 @@ Tree* Parser::parse_Assign_() {
     ERROR_noneTreeClass(Add);
     tr->add(tr_Add);
 
-    tr_Assign_ = this->parse_Assign_();
+    tr_Compare_ = this->parse_Compare_();
     // if (tr_Expr_ == noneTreeClass) return noneTreeClass; (I believe it'll never run)
-    tr->add(tr_Assign_);
+    tr->add(tr_Compare_);
     return tr;
 }
 
@@ -266,6 +302,14 @@ Tree* Parser::parse_Sentence() {
             tr->add(tr_Return);
             return tr;
         }
+    }
+    if (this->current.type == tokenTypeType) {
+        Tree* tr_DefineVariable = this->parse_DefineVariable();
+        ERROR_noneTreeClass(DefineVariable);
+        if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
+        this->getNextToken();
+        tr->add(tr_DefineVariable);
+        return tr;
     }
         
     tr_Expr = this->parse_Expr();

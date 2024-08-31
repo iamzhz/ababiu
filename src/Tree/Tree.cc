@@ -21,6 +21,8 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Expr: return "Expr";
         case treeTypeNode_Assign: return "Assign";
         case treeTypeNode_Assign_: return "Assign'";
+        case treeTypeNode_Compare: return "Compare";
+        case treeTypeNode_Compare_: return "Compare'";
         case treeTypeNode_Add: return "Add";
         case treeTypeNode_Add_: return "Add'";  
         case treeTypeNode_Term: return "Term";
@@ -33,6 +35,7 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_ExprList_: return "ExprList'";
         case treeTypeNode_FunctionCall: return "FunctionCall";
         case treeTypeNode_DefineFunction: return "DefineFunction";
+        case treeTypeNode_DefineVariable: return "DefineVariable";
         case treeTypeNode_If: return "If";
         case treeTypeNode_Else: return "Else";
         case treeTypeNode_While: return "While";

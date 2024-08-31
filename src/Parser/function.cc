@@ -97,7 +97,7 @@ Tree* Parser::parse_DefineFunction() {
 Tree* Parser::parse_Return() {
     Tree* tr = createTree(treeTypeNode_Return);
     Tree* tr_Expr;
-    
+
     if (!this->current.matchKeyword("return")) EXPECTED_ERROR("return");
     this->getNextToken();
 
@@ -108,5 +108,17 @@ Tree* Parser::parse_Return() {
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
     this->getNextToken();
 
+    return tr;
+}
+
+Tree* Parser::parse_DefineVariable() {
+    Tree* tr = createTree(treeTypeNode_DefineVariable);
+    if (!this->current.match(tokenTypeType)) EXPECTED_ERROR("Type");
+    this->getNextToken();
+
+    if (!this->current.match(tokenTypeId)) EXPECTED_ERROR("Id");
+    tr->add(createTree(this->current));
+    this->getNextToken();
+    
     return tr;
 }

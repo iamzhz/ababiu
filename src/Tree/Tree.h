@@ -17,6 +17,8 @@ enum treeTypeNodeLabel {
     treeTypeNode_Expr,
     treeTypeNode_Assign,
     treeTypeNode_Assign_,
+    treeTypeNode_Compare,
+    treeTypeNode_Compare_,
     treeTypeNode_Add,
     treeTypeNode_Add_,
     treeTypeNode_Term,
@@ -29,6 +31,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_ExprList_,
     treeTypeNode_FunctionCall,
     treeTypeNode_DefineFunction,
+    treeTypeNode_DefineVariable,
 
     treeTypeNode_If,
     treeTypeNode_Else,

@@ -83,6 +83,11 @@ enum signState Lexer::isSignTwoChars(char a, char b) {
                 case '=': return signStateRight;
                 default: return signStateWrong;
             }
+        case '=':
+            switch (b) {
+                case '=': return signStateRight;
+                default: return signStateWrong;
+            }
         default: return signStateWrong;
     }
 }
