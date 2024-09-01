@@ -82,6 +82,7 @@ Tree* Parser::parse_DefineFunction() {
     } else {
         tr_ExprList = this->parse_ExprList();
         ERROR_noneTreeClass(ExprList);
+        tr->add(tr_ExprList);
     }
 
     if (!this->current.matchSign(")")) EXPECTED_ERROR(")");
@@ -114,6 +115,7 @@ Tree* Parser::parse_Return() {
 Tree* Parser::parse_DefineVariable() {
     Tree* tr = createTree(treeTypeNode_DefineVariable);
     if (!this->current.match(tokenTypeType)) EXPECTED_ERROR("Type");
+    tr->add(createTree(this->current));
     this->getNextToken();
 
     if (!this->current.match(tokenTypeId)) EXPECTED_ERROR("Id");

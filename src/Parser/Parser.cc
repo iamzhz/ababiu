@@ -235,7 +235,13 @@ Tree* Parser::parse_Factor() {
             return tr;
         }
     }
-
+    if (this->current.type == tokenTypeType) {
+        Tree* tr_DefineVariable = this->parse_DefineVariable();
+        ERROR_noneTreeClass(DefineVariable);
+        tr->add(tr_DefineVariable);
+        return tr;
+    }
+    
     if (tk.match(tokenTypeInt) || tk.match(tokenTypeFloat) || tk.match(tokenTypeChar) || 
         tk.match(tokenTypeId) || tk.match(tokenTypeString)) {
         tr->add(createTree(tk));
@@ -302,14 +308,6 @@ Tree* Parser::parse_Sentence() {
             tr->add(tr_Return);
             return tr;
         }
-    }
-    if (this->current.type == tokenTypeType) {
-        Tree* tr_DefineVariable = this->parse_DefineVariable();
-        ERROR_noneTreeClass(DefineVariable);
-        if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
-        this->getNextToken();
-        tr->add(tr_DefineVariable);
-        return tr;
     }
         
     tr_Expr = this->parse_Expr();
