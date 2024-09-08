@@ -25,8 +25,8 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Compare_: return "Compare'";
         case treeTypeNode_Add: return "Add";
         case treeTypeNode_Add_: return "Add'";  
-        case treeTypeNode_Term: return "Term";
-        case treeTypeNode_Term_: return "Term'";
+        case treeTypeNode_Times: return "Times";
+        case treeTypeNode_Times_: return "Times'";
         case treeTypeNode_Factor: return "Factor";
         case treeTypeNode_Sentence: return "Sentence";
         case treeTypeNode_Sentences: return "Sentences";

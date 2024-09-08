@@ -112,11 +112,11 @@ Tree* Parser::parse_Compare_() {
 
 Tree* Parser::parse_Add() {
     Tree* tr = createTree(treeTypeNode_Add);
-    Tree* tr_Term = this->parse_Term();
+    Tree* tr_Times = this->parse_Times();
     Tree* tr_Add_;
 
-    ERROR_noneTreeClass(Term);
-    tr->add(tr_Term);
+    ERROR_noneTreeClass(Times);
+    tr->add(tr_Times);
 
     tr_Add_ = this->parse_Add_();// here
     //if (tr_Expr_ == noneTreeClass) return noneTreeClass;
@@ -128,7 +128,7 @@ Tree* Parser::parse_Add_() {
     Token tk = this->current;
     
     Tree* tr = createTree(treeTypeNode_Add_);
-    Tree* tr_Term;
+    Tree* tr_Times;
     Tree* tr_Add_;
     if (tk.matchSign("+") || tk.matchSign("-")) {
         tr->add(createTree(tk));
@@ -137,9 +137,9 @@ Tree* Parser::parse_Add_() {
         return epsilonTreeClass; 
     }
 
-    tr_Term = this->parse_Term();
-    ERROR_noneTreeClass(Term);
-    tr->add(tr_Term);
+    tr_Times = this->parse_Times();
+    ERROR_noneTreeClass(Times);
+    tr->add(tr_Times);
 
     tr_Add_ = this->parse_Add_();
     // if (tr_Expr_ == noneTreeClass) return noneTreeClass; (I believe it'll never run)
@@ -147,26 +147,26 @@ Tree* Parser::parse_Add_() {
     return tr;
 }
 
-Tree* Parser::parse_Term() {
-    Tree* tr = createTree(treeTypeNode_Term);
+Tree* Parser::parse_Times() {
+    Tree* tr = createTree(treeTypeNode_Times);
     Tree* tr_Power = this->parse_Power();
-    Tree* tr_Term_;
+    Tree* tr_Times_;
 
     ERROR_noneTreeClass(Power);
     tr->add(tr_Power);
 
-    tr_Term_ = this->parse_Term_();
-    // if (tr_Term_ == noneTreeClass) return noneTreeClass;
-    tr->add(tr_Term_);
+    tr_Times_ = this->parse_Times_();
+    // if (tr_Times_ == noneTreeClass) return noneTreeClass;
+    tr->add(tr_Times_);
     return tr;
 }
 
-Tree* Parser::parse_Term_() {
+Tree* Parser::parse_Times_() {
     Token tk = this->current;
     
-    Tree* tr = createTree(treeTypeNode_Term_);
+    Tree* tr = createTree(treeTypeNode_Times_);
     Tree* tr_Power;
-    Tree* tr_Term_;
+    Tree* tr_Times_;
     if (tk.matchSign("*") || tk.matchSign("/")) {
         tr->add(createTree(tk));
         this->getNextToken();
@@ -178,14 +178,14 @@ Tree* Parser::parse_Term_() {
     ERROR_noneTreeClass(Power);
     tr->add(tr_Power);
 
-    tr_Term_ = this->parse_Term_();
-    // if (tr_Term_ == noneTreeClass) return noneTreeClass;
-    tr->add(tr_Term_);
+    tr_Times_ = this->parse_Times_();
+    // if (tr_Times_ == noneTreeClass) return noneTreeClass;
+    tr->add(tr_Times_);
     return tr;
 }
 
 Tree* Parser::parse_Power() {
-    Tree* tr = createTree(treeTypeNode_Term);
+    Tree* tr = createTree(treeTypeNode_Times);
     Tree* tr_Factor = this->parse_Factor();
     Tree* tr_Power_;
 
@@ -201,7 +201,7 @@ Tree* Parser::parse_Power() {
 Tree* Parser::parse_Power_() {
     Token tk = this->current;
     
-    Tree* tr = createTree(treeTypeNode_Term_);
+    Tree* tr = createTree(treeTypeNode_Times_);
     Tree* tr_Factor;
     Tree* tr_Power_;
     if (tk.matchSign("**")) {

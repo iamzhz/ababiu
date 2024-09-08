@@ -19,8 +19,8 @@ class Parser {
     Tree* parse_Compare_();
     Tree* parse_Add();
     Tree* parse_Add_();
-    Tree* parse_Term();
-    Tree* parse_Term_();
+    Tree* parse_Times();
+    Tree* parse_Times_();
     Tree* parse_Power();
     Tree* parse_Power_();
     Tree* parse_Factor();
