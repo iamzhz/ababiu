@@ -1,7 +1,19 @@
-fn int main(void) {
-    for (x; x+1; x+2) {
-        @print("hello");
-        break;
+fn int main(int something) {
+    int x;
+    int i;
+    string s1;
+    string s2;
+    x = 2;
+    while (x > 10) {
+        @print(x + '\n');
+        x = x + 1;
     }
+    s1 = "hi, there!\n";
+    s2 = "I am zhz!\n";
+    for (i = 0;  i < 12;  i = i + 1) {
+        if (i < 6) @print(s1);
+        else @print(s2);
+    }
+    x = 2 * a;
     return 0;
 }

@@ -12,6 +12,8 @@ class Parser {
     Lexer* lx;
     Parser(Lexer* lx);
     Tree* cst2ast(Tree* tr);
+    Tree* parse_Unit(); // a unit is a function or a variable definition
+
     Tree* parse_Expr();
     Tree* parse_Assign();
     Tree* parse_Assign_();
