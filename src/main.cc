@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 
     /* s */
     Tree *root = psr.parse_Unit(); 
-    if (root == noneTreeClass) sayError("what??");
+    if (root == nullptr) sayError("what??");
     root->display();
     /* e */
     return 0;

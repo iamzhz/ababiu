@@ -9,11 +9,11 @@ Tree* Parser::parse_While() {
     this->getNextToken();
     
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_Statements = this->parse_Statements();
-    ERROR_noneTreeClass(Statements);
+    ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
     return tr;
@@ -28,14 +28,14 @@ Tree* Parser::parse_DoWhile() {
     this->getNextToken();
     
     tr_Statements = this->parse_Statements();
-    ERROR_noneTreeClass(Statements);
+    ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
     if (!this->current.matchKeyword("while")) EXPECTED_ERROR("while");
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
@@ -56,26 +56,26 @@ Tree* Parser::parse_For() {
     this->getNextToken();
 
     tr_Expr0 = this->parse_Expr(); // 0
-    ERROR_noneTreeClass(Expr0);
+    ERROR_nullptr(Expr0);
     tr->add(tr_Expr0);
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
     this->getNextToken();
 
     tr_Expr1 = this->parse_Expr(); // 1
-    ERROR_noneTreeClass(Expr1);
+    ERROR_nullptr(Expr1);
     tr->add(tr_Expr1);
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
     this->getNextToken();
 
     tr_Expr2 = this->parse_Expr(); // 2
-    ERROR_noneTreeClass(Expr2);
+    ERROR_nullptr(Expr2);
     tr->add(tr_Expr2);
 
     if (!this->current.matchSign(")")) EXPECTED_ERROR(")");
     this->getNextToken();
 
     tr_Statements = this->parse_Statements();
-    ERROR_noneTreeClass(Statements);
+    ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
     return tr;

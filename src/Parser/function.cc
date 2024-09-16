@@ -7,7 +7,7 @@ Tree* Parser::parse_ExprList() {
     Token tk = this->current;
 
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_ExprList_ = this->parse_ExprList_();
@@ -25,7 +25,7 @@ Tree* Parser::parse_ExprList_() {
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_ExprList_ = this->parse_ExprList_();
@@ -47,7 +47,7 @@ Tree* Parser::parse_FunctionCall() {
     this->getNextToken();
 
     tr_ExprList = this->parse_ExprList();
-    if (tr_ExprList == noneTreeClass) EXPECTED_ERROR("ExprList");
+    if (tr_ExprList == nullptr) EXPECTED_ERROR("ExprList");
     tr->add(tr_ExprList);
 
     if (!this->current.matchSign(")")) EXPECTED_ERROR(")");
@@ -81,7 +81,7 @@ Tree* Parser::parse_DefineFunction() {
         this->getNextToken();
     } else {
         tr_ExprList = this->parse_ExprList();
-        ERROR_noneTreeClass(ExprList);
+        ERROR_nullptr(ExprList);
         tr->add(tr_ExprList);
     }
 
@@ -89,7 +89,7 @@ Tree* Parser::parse_DefineFunction() {
     this->getNextToken();
 
     tr_Statements = this->parse_Statements();
-    if (tr_Statements == noneTreeClass) EXPECTED_ERROR("Statements");
+    if (tr_Statements == nullptr) EXPECTED_ERROR("Statements");
     tr->add(tr_Statements);
 
     return tr;
@@ -103,7 +103,7 @@ Tree* Parser::parse_Return() {
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");

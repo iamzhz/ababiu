@@ -9,11 +9,11 @@ Tree* Parser::parse_If() {
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_noneTreeClass(Expr);
+    ERROR_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_Statements = this->parse_Statements();
-    ERROR_noneTreeClass(Statements);
+    ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
     return tr;
@@ -27,7 +27,7 @@ Tree* Parser::parse_Else() {
     this->getNextToken();
 
     tr_Statements = this->parse_Statements();
-    ERROR_noneTreeClass(Statements);
+    ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
     return tr;

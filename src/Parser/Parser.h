@@ -2,7 +2,6 @@
 #define _ABANDON_PARSER_H_
 #include "../include.h"
 
-extern Tree* noneTreeClass;
 extern Tree* epsilonTreeClass;
 
 class Parser {
@@ -50,7 +49,7 @@ class Parser {
 };
 
 #define EXPECTED_ERROR(STH) { this->parserError(STH " expected"); \
-return noneTreeClass; } 
+return nullptr; } 
 
-#define ERROR_noneTreeClass(TER) if (tr_##TER == noneTreeClass) EXPECTED_ERROR(#TER); 
+#define ERROR_nullptr(TER) if (tr_##TER == nullptr) EXPECTED_ERROR(#TER); 
 #endif
