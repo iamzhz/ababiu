@@ -1,4 +1,4 @@
-fn int main(int something) {
+fn int main() {
     int x;
     int i;
     string s1;
