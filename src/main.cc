@@ -1,6 +1,6 @@
 #define DEBUG
 #include "include.h"
-int main(int argc, char** argv) {
+int program_main(int argc, char** argv) {
     FileManager f;
     Lexer tkzer;
     Token tk;

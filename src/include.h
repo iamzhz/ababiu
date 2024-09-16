@@ -23,4 +23,10 @@
 
 // pay attention to the order!! (to myself)
 
+#ifdef TEST
+#define test_main main
+#else
+#define program_main main
+#endif
+
 #endif
