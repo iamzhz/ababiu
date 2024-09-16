@@ -19,6 +19,7 @@
 #include "./PointerManager/PointerManager.h"
 #include "./Tree/Tree.h"
 #include "./Parser/Parser.h"
+#include "./SymbolTable/SymbolTable.h"
 
 // pay attention to the order!! (to myself)
 
