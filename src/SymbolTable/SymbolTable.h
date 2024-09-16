@@ -1,3 +1,6 @@
+#ifndef _ABANDON_SYMBOLTABLE_H_
+#define _ABANDON_SYMBOLTABLE_H_
+
 #include "../include.h"
 
 enum SymbolValueType {
@@ -17,3 +20,5 @@ class SymbolTable {
     bool exsit(std::string name);
     void insert(std::string name, SymbolValue value);
 };
+
+#endif
