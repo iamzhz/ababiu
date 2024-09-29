@@ -1,5 +1,5 @@
-#ifndef _ABANDON_FILEMANAGER_H_
-#define _ABANDON_FILEMANAGER_H_
+#ifndef _FILEMANAGER_H_
+#define _FILEMANAGER_H_
 
 #include "../include.h"
 

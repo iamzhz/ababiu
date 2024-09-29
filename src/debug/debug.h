@@ -1,5 +1,5 @@
-#ifndef _ABANDON_DEBUG_H_
-#define _ABANDON_DEBUG_H_
+#ifndef _DEBUG_H_
+#define _DEBUG_H_
 
 #ifdef DEBUG // use -DDEBUG
 

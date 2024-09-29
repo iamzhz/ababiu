@@ -1,5 +1,5 @@
-#ifndef _ABANDON_POINTERMANAGER_H_
-#define _ABANDON_POINTERMANAGER_H_
+#ifndef _POINTERMANAGER_H_
+#define _POINTERMANAGER_H_
 #include "../include.h"
 struct Tree;
 template <class T>

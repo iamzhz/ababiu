@@ -1,5 +1,5 @@
-#ifndef _ABANDON_SAYERROR_H_
-#define _ABANDON_SAYERROR_H_
+#ifndef _SAYERROR_H_
+#define _SAYERROR_H_
 
 #include "../include.h"
 

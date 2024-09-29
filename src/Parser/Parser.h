@@ -1,5 +1,5 @@
-#ifndef _ABANDON_PARSER_H_
-#define _ABANDON_PARSER_H_
+#ifndef _PARSER_H_
+#define _PARSER_H_
 #include "../include.h"
 
 extern Tree* epsilonTreeClass;

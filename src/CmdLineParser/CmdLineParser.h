@@ -1,5 +1,5 @@
-#ifndef _ABANDON_CMDLINEPARSER_H_
-#define _ABANDON_CMDLINEPARSER_H_
+#ifndef _CMDLINEPARSER_H_
+#define _CMDLINEPARSER_H_
 
 #include "../include.h"
 

@@ -1,5 +1,5 @@
-#ifndef _ABANDON_TREE_H_
-#define _ABANDON_TREE_H_
+#ifndef _TREE_H_
+#define _TREE_H_
 
 #include "../include.h"
 
