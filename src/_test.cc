@@ -1,4 +1,4 @@
-#ifdef TEST
+#ifndef TEST
 
 #define private public
 #include "include.h"
@@ -12,6 +12,10 @@ int test_main() {
     if (_SymbolTable.exsit("test") == false) log("insert or exsit error");
     if (_SymbolTable.exsit("test2") == true) log("exsit error");
     if (_SymbolTable.table["test"].ptr != nullptr) log("insert error");
+
+
+    // IRs
+    IRs _irs()
 
 
 

@@ -9,14 +9,18 @@ enum IROp {
     Op_Div,
     Op_Assign,
 };
+enum IRisGetAdress {IsGetAdress = 1, NotGetAdress = 0}; // `&` or not
 enum OpNumberType {
-    OpNumberType_value,
-    OpNumberType_variable,
-    OpNumberType_reg,
+    OpNumberType_int, // pointer to int
+    OpNumberType_float, // pointer to float
+    OpNumberType_string, // pointer to std::string
+    OpNumberType_isGetAdress, // pointer to IRisGetAdress
+    OpNumberType_variable, // pointer to std::string (variable name)
+    OpNumberType_reg, // pointer to int (register number)
 };
 struct OpNumber {
     OpNumberType type;
-    int val;
+    void * ptr;
 };
 struct IR {
     IROp op;
@@ -26,15 +30,26 @@ struct IR {
 };
 
 enum IRsType {IRsType_Main, IRsType_Func};
+
+#ifdef DEBUG
+std::string IROpToText(IROp op);
+std::string OpNumberToText(OpNumber & n);
+#endif
 class IRs {
     public:
     IRsType type;
     SymbolTable st;
-    std::vector<IRs> funcs;
-    std::vector<IR> content;
+    std::vector<IRs> funcs; // when type is IRsType_Main
+    std::vector<IR> content; // when type is IRsType_Func
+    std::string name; // when type is IRsType_Func
 
     IRs(IRsType type);
     IRs();
+    void setFuncName(std::string name);
     void add(IR ir);
+    void 
+    #ifdef DEBUG
+    void display();
+    #endif
 };
 #endif
