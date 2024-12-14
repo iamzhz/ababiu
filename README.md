@@ -1,8 +1,8 @@
 # Abandon
 It is a program for a programming language named `Abandon`.
-> I believe all Chinese English learners can spell it. So I named it `Abandon`, but that doesn’t mean I intend to abandon the project.  
+> ~~I believe all Chinese English learners can spell it. So I named it `Abandon`, but that doesn’t mean I intend to abandon the project.~~ Alright, I really abandoned it.  
 
-This project is WIP.
+This project is ~~WIP~~abandoned.
 You can see more about it [here](https://iamzhz.github.io/t/).  It was written by Chinese.
 ## Compile this project
 If you have `makefile` in your computer, you can run:
