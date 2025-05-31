@@ -1,17 +1,12 @@
 # Abandon
 It is a program for a programming language named `Abandon`.
-> ~~I believe all Chinese English learners can spell it. So I named it `Abandon`, but that doesn’t mean I intend to abandon the project.~~ Alright, I really abandoned it.  
+> I believe all China's English learners can spell it. So I named it `Abandon`, but that doesn’t mean I intend to abandon the project.
 
-This project is ~~WIP~~abandoned.
+This project is WIP.
 You can see more about it [here](https://iamzhz.github.io/t/).  It was written by Chinese.
 ## Compile this project
-If you have `makefile` in your computer, you can run:
 ``` bash
 make
-```
-or, you can run:
-``` bash
-g++ src/main.cc src/CmdLineParser/CmdLineParser.cc src/debug/debug.cc src/FileManagerFileManager.cc src/Lexer/signToken.cc src/Lexer/Lexer.cc src/Parser/Parser.cc src/Parser/utils.cc src/Parser/if_else.cc src/Parser/function.cc src/Parser/loop.cc src/Parser/unit.cc src/PointerManager/PointerManager.cc src/SayError/SayError.cc src/SymbolTable/SymbolTable.cc src/Token/Token.cc src/Tree/Tree.cc -o abandon -std=c++11 -g
 ```
 
 ## Run this project
