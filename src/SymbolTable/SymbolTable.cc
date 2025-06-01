@@ -20,6 +20,6 @@ int SymbolTable::getIndex(std::string name) {
     return table[name].index;
 }
 
-int getType(std::string name) {
+int SymbolTable::getType(std::string name) {
     return table[name].type;
 }
