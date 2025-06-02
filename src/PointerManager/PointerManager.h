@@ -1,7 +1,7 @@
 #ifndef _POINTERMANAGER_H_
 #define _POINTERMANAGER_H_
 #include "../include.h"
-struct Tree;
+class Tree;
 template <class T>
 class PointerManager {
     private:

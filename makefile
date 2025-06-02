@@ -12,7 +12,7 @@ abandon: $(OBJ_FILES)
 	$(cc) $^ -o $@ $(debug)
 # compile
 %.o: %.cc
-	$(cc) -c $< -o $@ $(std) $(debug)
+	$(cc) -c $< -o $@ $(std) $(debug) -Wall -Wextra -Wpedantic
 
 
 # clean

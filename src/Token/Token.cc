@@ -38,7 +38,7 @@ bool Token::idToKeyword() {
             if ("return" == this->content) break;
             return false;
         case 8:
-            if ("continue" == this->content) break;
+            if ("continue" == this->content) break; // fall through
         default:
             return false;
     }

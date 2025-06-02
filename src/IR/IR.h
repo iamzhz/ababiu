@@ -3,51 +3,44 @@
 #include "../include.h"
 
 enum IROp {
-    Op_Add,
-    Op_Sub,
-    Op_Mul,
-    Op_Div,
-    Op_Assign,
+    /*
+    qn -> quicknumber
+    iv -> id.variable
+    if -> id.function
+    */
+    Op_pop_qn,
+    Op_pop_iv,
+    Op_push_iv,
+    Op_mov_iv_iv,
+    Op_mov_iv_qn,
+    Op_add,
+    Op_sub,
+    Op_mul,
+    OP_div,
+    Op_call_if,
 };
-enum IRisGetAdress {IsGetAdress = 1, NotGetAdress = 0}; // `&` or not
-enum OpNumberType {
-    OpNumberType_int, // pointer to int
-    OpNumberType_float, // pointer to float
-    OpNumberType_string, // pointer to std::string
-    OpNumberType_isGetAdress, // pointer to IRisGetAdress
-    OpNumberType_variable, // pointer to std::string (variable name)
-    OpNumberType_reg, // pointer to int (register number)
+
+struct Quicknumber {
+    // TODO: somrthing to store
 };
-struct OpNumber {
-    OpNumberType type;
-    void * ptr;
+struct IdVariable {
+    int index;
 };
 struct IR {
     IROp op;
-    OpNumber n1;
-    OpNumber n2;
-    OpNumber n3;
+    IdVariable iv0;
+    IdVariable iv1;
+    Quicknumber qn0;
 };
 
-enum IRsType {IRsType_Main, IRsType_Func};
-
-#ifdef DEBUG
-std::string IROpToText(IROp op);
-std::string OpNumberToText(OpNumber & n);
-#endif
 class IRs {
     public:
-    IRsType type;
     SymbolTable st;
-    std::vector<IRs> funcs; // when type is IRsType_Main
-    std::vector<IR> content; // when type is IRsType_Func
-    std::string name; // when type is IRsType_Func
+    std::vector<IR> content;
 
-    IRs(IRsType type);
     IRs();
-    void setFuncName(std::string name);
     void add(IR ir);
-    void 
+    //void 
     #ifdef DEBUG
     void display();
     #endif

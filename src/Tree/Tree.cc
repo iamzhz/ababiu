@@ -44,6 +44,7 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Break: return "Break";
         case treeTypeNode_Continue: return "Continue";
         case treeTypeNode_Return: return "Return";
+        case treeTypeNode_None: return "None";
     }
     return "Unkown";
 }

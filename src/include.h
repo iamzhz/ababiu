@@ -19,6 +19,8 @@
 #include "./PointerManager/PointerManager.h"
 #include "./Tree/Tree.h"
 #include "./Parser/Parser.h"
+#include "./SymbolTable/VariableMap.h"
+#include "./SymbolTable/FunctionMap.h"
 #include "./SymbolTable/SymbolTable.h"
 #include "./IR/IR.h"
 

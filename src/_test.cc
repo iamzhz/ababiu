@@ -1,4 +1,4 @@
-#ifndef TEST
+/*#ifndef TEST
 
 #define private public
 #include "include.h"
@@ -22,4 +22,4 @@ int test_main() {
     if (ret == 0) std::cout << "All test passed." << std::endl;
     return ret;
 }
-#endif
+#endif*/

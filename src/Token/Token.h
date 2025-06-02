@@ -24,6 +24,7 @@ class Token {
     Token();
     Token(std::string content, enum tokenType type, int line, int column);
     Token(const Token& other);
+    Token& operator=(const Token&) = default;
     bool idToKeyword(); // return true says `content` is a keyword, or not
     bool idToType(); // return true says `content` is a type, or not
     bool matchSign(std::string content);

@@ -1,63 +1,29 @@
 #include "../include.h"
-IRs::IRs(IRsType type) {
-    this->type = type;
-}
-IRs::IRs() {
-    this->type = IRsType_Main;
-}
 void IRs::add(IR ir) {
     content.push_back(ir);
 }
-void IRs::setFuncName(std::string name) {
-    this->name = name;
-}
 
 #ifdef DEBUG
-void IRs::display() {
-    if (this->type == IRsType_Main) {
-        for (auto func : this->funcs) {
-            func.display();
-        }
-        return ;
+std::string IROpToText(IROp n) {
+    switch (n) {
+        case Op_pop_qn: return "pop_qn";
+        case Op_pop_iv: return "pop_iv";
+        case Op_push_iv: return "push_iv";
+        case Op_mov_iv_iv: return "mov_iv_iv";
+        case Op_mov_iv_qn: return "mov_iv_qn";
+        case Op_add: return "add";
+        case Op_sub: return "sub";
+        case Op_mul: return "mul";
+        case OP_div: return "div";
+        case Op_call_if: return "call_if";
     }
-    // display content of one function
-    std::cout << "[" << this->name << "]\n";
+    return "Error: IR.cc::IRs::display();\n";
+}
+void IRs::display() {
     for (auto ir : this->content) {
-        std::cout << IROpToText(ir.op) << " " 
-            << OpNumberToText(ir.n1) << " " 
-            << OpNumberToText(ir.n2) << " " 
-            << OpNumberToText(ir.n3) << "\n";
+        std::cout << IROpToText(ir.op) << " \n" ;
     }
     return ;
-}
-
-std::string IROpToText(IROp op) {
-    switch (op) {
-        case Op_Add: return "Add";
-        case Op_Sub: return "Sub";
-        case Op_Mul: return "Mul";
-        case Op_Div: return "Div";
-        case Op_Assign: return "Assign";
-    }
-    return "Unknown";
-}
-
-std::string OpNumberToText(OpNumber & n) {
-    switch (n.type) {
-        case OpNumberType_int:
-            return std::to_string(*(int*)(n.ptr));
-        case OpNumberType_float:
-            return std::to_string(*(float*)(n.ptr));
-        case OpNumberType_string:
-            return *(std::string*)(n.ptr);
-        case OpNumberType_isGetAdress:
-            return (*(IRisGetAdress*)(n.ptr))   ? "&" : "";
-        case OpNumberType_variable:
-            return *(std::string*)(n.ptr);
-        case OpNumberType_reg:
-            return "Reg" + std::to_string(*(int*)(n.ptr));
-    }
-    return "Unknown";
 }
 
 #endif
