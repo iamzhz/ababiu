@@ -10,6 +10,7 @@
 #include <utility>
 #include <unordered_map>
 #include <functional>
+#include <variant>
 #include "./SayError/SayError.h"
 #include "./FileManager/FileManager.h"
 #include "./debug/debug.h"
@@ -19,10 +20,9 @@
 #include "./PointerManager/PointerManager.h"
 #include "./Tree/Tree.h"
 #include "./Parser/Parser.h"
-#include "./SymbolTable/VariableMap.h"
-#include "./SymbolTable/FunctionMap.h"
-#include "./SymbolTable/SymbolTable.h"
+#include "./Syntax/Symbol.h"
 #include "./IR/IR.h"
+#include "./Syntax/Syntax.h"
 
 // pay attention to the order!! (to myself)
 

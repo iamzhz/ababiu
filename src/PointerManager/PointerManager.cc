@@ -33,3 +33,5 @@ void PointerManager<T>::display() {
 #endif
 
 template class PointerManager<Tree*>;
+template class PointerManager<VarSymbol*>;
+template class PointerManager<FuncSymbol*>;

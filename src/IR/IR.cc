@@ -3,6 +3,28 @@ void IRs::add(IR ir) {
     content.push_back(ir);
 }
 
+QuicknumberType getQuicknumberType(const Quicknumber& qn) {
+    switch (qn.index()) {
+        case 0: return QN_UNKNOWN;
+        case 1: return QN_INT;
+        case 2: return QN_CHAR;
+        case 3: return QN_FLOAT;
+        case 4: return QN_STRING;
+        default: return QN_UNKNOWN;
+    }
+}
+
+Quicknumber makeQuicknumber(int i) { return i;}
+Quicknumber makeQuicknumber(char c) { return c;}
+Quicknumber makeQuicknumber(double f)  { return f;}
+Quicknumber makeQuicknumber(std::string s) { return s;}
+
+IdVariable makeIdVariable(std::string content) {
+    IdVariable iv;
+    iv.content = content;
+    return iv;
+}
+
 #ifdef DEBUG
 std::string IROpToText(IROp n) {
     switch (n) {

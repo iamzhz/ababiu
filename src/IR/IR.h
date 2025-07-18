@@ -6,7 +6,7 @@ enum IROp {
     /*
     qn -> quicknumber
     iv -> id.variable
-    if -> id.function
+    if -> id.function (but use `iv`)
     */
     Op_pop_qn,
     Op_pop_iv,
@@ -20,11 +20,26 @@ enum IROp {
     Op_call_if,
 };
 
-struct Quicknumber {
-    // TODO: somrthing to store
+enum QuicknumberType {
+    QN_UNKNOWN, 
+    QN_INT, 
+    QN_CHAR, 
+    QN_FLOAT, 
+    QN_STRING
 };
+
+using Quicknumber = std::variant<
+    std::monostate, 
+    int,
+    char,
+    double,
+    std::string
+>;
+
+QuicknumberType getQuicknumberType(const Quicknumber& qn) ;
+
 struct IdVariable {
-    int index;
+    std::string content;
 };
 struct IR {
     IROp op;
@@ -33,9 +48,14 @@ struct IR {
     Quicknumber qn0;
 };
 
+Quicknumber makeQuicknumber(int i);
+Quicknumber makeQuicknumber(char c);
+Quicknumber makeQuicknumber(double f);
+Quicknumber makeQuicknumber(std::string s);
+IdVariable makeIdVariable(std::string content);
+
 class IRs {
     public:
-    SymbolTable st;
     std::vector<IR> content;
 
     IRs();
