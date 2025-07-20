@@ -32,7 +32,6 @@ Tree* Parser::parse_Assign_() {
     
     Tree* tr = createTree(treeTypeNode_Assign_);
     Tree* tr_Compare;
-    Tree* tr_Assign_;
     if (tk.matchSign("=")) {
         tr->add(createTree(tk));
         this->getNextToken();
@@ -44,9 +43,7 @@ Tree* Parser::parse_Assign_() {
     ERROR_nullptr(Compare);
     tr->add(tr_Compare);
 
-    tr_Assign_ = this->parse_Assign_();
     // if (tr_Expr_ == nullptr) return nullptr; (I believe it'll never run)
-    tr->add(tr_Assign_);
     return tr;
 }
 

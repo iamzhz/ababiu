@@ -4,6 +4,11 @@
 
 enum IROp {
     /*
+    TIP ~n:
+    ~n (n is a digit) means the n-th of the stack (isn't a var).
+    ~n's value poped when it is used.
+    
+    Other Tip:
     qn -> quicknumber
     iv -> id.variable
     if -> id.function (but use `iv`)
@@ -11,13 +16,19 @@ enum IROp {
     Op_pop_qn,
     Op_pop_iv,
     Op_push_iv,
-    Op_mov_iv_iv,
+    Op_mov_iv_iv, // iv0 = iv1
     Op_mov_iv_qn,
     Op_add,
     Op_sub,
     Op_mul,
-    OP_div,
+    Op_div,
     Op_call_if,
+    Op_equal, // push (~1 == ~0)
+    Op_bigger, // push (~1 > ~0)
+    Op_biggerEqual, // push (~1 >= ~0)
+    Op_smaller, // push (~1 < ~0)
+    Op_smallerEqual, // push (~1 <= ~0)
+    Op_notEqual, // push (~1 != ~0)
 };
 
 enum QuicknumberType {
@@ -57,8 +68,7 @@ IdVariable makeIdVariable(std::string content);
 class IRs {
     public:
     std::vector<IR> content;
-
-    IRs();
+    
     void add(IR ir);
     //void 
     #ifdef DEBUG

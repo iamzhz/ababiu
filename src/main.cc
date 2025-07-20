@@ -24,6 +24,11 @@ int program_main(int argc, char** argv) {
     Tree *root = psr.parse_Unit(); 
     if (root == nullptr) sayError("what??");
     root->display();
+    std::cout << " ------------- " << std::endl;
+    IRs irs;
+    Syntax syn(root, &irs);
+    syn.analyze_unit();
+    irs.display();
     /* e */
     return 0;
 }

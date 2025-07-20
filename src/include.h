@@ -3,6 +3,7 @@
 
 #define DEBUG
 #include <iostream>
+#include <print>
 #include <string>
 #include <fstream>
 #include <cstdlib>

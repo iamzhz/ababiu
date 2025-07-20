@@ -1,5 +1,5 @@
 cc := g++
-std := -std=c++17
+std := -std=c++23
 debug := -g
 
 SRC_FILES := $(wildcard src/*.cc src/*/*.cc)

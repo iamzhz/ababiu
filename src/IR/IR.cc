@@ -1,6 +1,6 @@
 #include "../include.h"
 void IRs::add(IR ir) {
-    content.push_back(ir);
+    content.push_back(std::move(ir));
 }
 
 QuicknumberType getQuicknumberType(const Quicknumber& qn) {
@@ -36,14 +36,38 @@ std::string IROpToText(IROp n) {
         case Op_add: return "add";
         case Op_sub: return "sub";
         case Op_mul: return "mul";
-        case OP_div: return "div";
+        case Op_div: return "div";
         case Op_call_if: return "call_if";
+        case Op_equal: return "Op_equal";
+        case Op_bigger: return "Op_bigger";
+        case Op_biggerEqual: return "Op_biggerEqual";
+        case Op_smaller: return "Op_smaller";
+        case Op_smallerEqual: return "Op_smallerEqual";
+        case Op_notEqual: return "Op_notEqual";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
+void outIdVaiable(IdVariable iv) {
+    std::print("  {}", iv.content);
+}
+void outQuicknumber(Quicknumber qn) {
+    std::visit([](auto&& arg) {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+            std::print("\n");
+        } else if constexpr (std::is_same_v<T, double>) {
+            std::print("  {:.2f}\n", arg);
+        } else {
+            std::print("  {}\n", arg);
+        }
+    }, qn);
+}
 void IRs::display() {
     for (auto ir : this->content) {
-        std::cout << IROpToText(ir.op) << " \n" ;
+        std::cout << IROpToText(ir.op) << " \n";
+        outIdVaiable(ir.iv0);
+        outIdVaiable(ir.iv1);
+        outQuicknumber(ir.qn0);
     }
     return ;
 }
