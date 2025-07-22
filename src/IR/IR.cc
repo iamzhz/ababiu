@@ -30,6 +30,7 @@ std::string IROpToText(IROp n) {
     switch (n) {
         case Op_pop_qn: return "pop_qn";
         case Op_pop_iv: return "pop_iv";
+        case Op_push_qn: return "push_qn";
         case Op_push_iv: return "push_iv";
         case Op_mov_iv_iv: return "mov_iv_iv";
         case Op_mov_iv_qn: return "mov_iv_qn";

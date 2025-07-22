@@ -23,6 +23,8 @@ enum treeTypeNodeLabel {
     treeTypeNode_Add_,
     treeTypeNode_Times,
     treeTypeNode_Times_,
+    treeTypeNode_Power,
+    treeTypeNode_Power_,
     treeTypeNode_Factor,
     treeTypeNode_Sentence,
     treeTypeNode_Sentences,

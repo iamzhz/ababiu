@@ -159,10 +159,68 @@ void Syntax::analyze_Compare(Tree * tr) {
     this->irs->add(i);
 }
 void Syntax::analyze_Add(Tree * tr) {
+    Tree * s;
     IR i;
-    i.op = Op_add;
-    i.qn0 = makeQuicknumber("hello");
+    this->analyze_Times(tr->children[0]);
+    s = tr->children[1];
+    while (s->label != treeTypeNode_Epsilon) {
+        // OP
+        if (s->children[0]->tk.matchSign("+")) i.op = Op_add;
+        else i.op = Op_sub; // when s->children[0]->tk.matchSign("-")
+        // another Times
+        this->analyze_Times(s->children[1]);
+        // add
+        this->irs->add(i);
+        // prepare
+        s = s->children[2];
+    }
+}
+void Syntax::analyze_Times(Tree * tr) {
+    Tree * s;
+    IR i;
+    this->analyze_Power(tr->children[0]);
+    s = tr->children[1];
+    while (s->label != treeTypeNode_Epsilon) {
+        // OP
+        if (s->children[0]->tk.matchSign("*")) i.op = Op_mul;
+        else i.op = Op_div; // when s->children[0]->tk.matchSign("/")
+        // another Power
+        this->analyze_Power(s->children[1]);
+        // add
+        this->irs->add(i);
+        // prepare
+        s = s->children[2];
+    }
+}
+
+void Syntax::analyze_Power(Tree * tr) {
+    IR i;
+    this->analyze_Factor(tr->children[0]);
+    // if Power' is ε
+    if (tr->children[1]->label == treeTypeNode_Epsilon) {
+        return ;
+    }
+    // Compare'
+    this->analyze_Factor(tr->children[1]->children[1]);
+    i.op = Op_power;
     this->irs->add(i);
 }
-void analyze_Times(Tree * tr);
-void analyze_Factor(Tree * tr);
+
+void Syntax::analyze_Factor(Tree * tr) {
+    IR i;
+    Tree * head = tr->children[0];
+    if (head->type == treeType_Token) {
+        IR i;
+        i.op = Op_push_qn;
+        // TEMP: Just to show
+        i.qn0 = makeQuicknumber(head->tk.content);
+        this->irs->add(i);
+    } else if (head->label == treeTypeNode_Expr) {
+        this->analyze_Expr(head);
+    } else if (head->label == treeTypeNode_FunctionCall) {
+        this->analyze_FuntionCall(head);
+    }// else if ()
+}
+/*
+
+ */

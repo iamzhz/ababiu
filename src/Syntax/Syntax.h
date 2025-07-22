@@ -30,6 +30,7 @@ class Syntax {
     void analyze_Compare(Tree * tr);
     void analyze_Add(Tree * tr);
     void analyze_Times(Tree * tr);
+    void analyze_Power(Tree * tr);
     void analyze_Factor(Tree * tr);
     
 };

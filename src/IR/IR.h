@@ -15,11 +15,12 @@ enum IROp {
     */
     Op_pop_qn,
     Op_pop_iv,
+    Op_push_qn,
     Op_push_iv,
     Op_mov_iv_iv, // iv0 = iv1
     Op_mov_iv_qn,
-    Op_add,
-    Op_sub,
+    Op_add, // push (~1 + ~0)
+    Op_sub, // push (~1 - ~0)
     Op_mul,
     Op_div,
     Op_call_if,
@@ -29,6 +30,8 @@ enum IROp {
     Op_smaller, // push (~1 < ~0)
     Op_smallerEqual, // push (~1 <= ~0)
     Op_notEqual, // push (~1 != ~0)
+
+    Op_power, // push (~1 ** ~0)
 };
 
 enum QuicknumberType {

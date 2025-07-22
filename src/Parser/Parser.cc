@@ -155,7 +155,7 @@ Tree* Parser::parse_Times_() {
 }
 
 Tree* Parser::parse_Power() {
-    Tree* tr = createTree(treeTypeNode_Times);
+    Tree* tr = createTree(treeTypeNode_Power);
     Tree* tr_Factor = this->parse_Factor();
     Tree* tr_Power_;
 
@@ -171,9 +171,8 @@ Tree* Parser::parse_Power() {
 Tree* Parser::parse_Power_() {
     Token tk = this->current;
     
-    Tree* tr = createTree(treeTypeNode_Times_);
+    Tree* tr = createTree(treeTypeNode_Power_);
     Tree* tr_Factor;
-    Tree* tr_Power_;
     if (tk.matchSign("**")) {
         tr->add(createTree(tk));
         this->getNextToken();
@@ -185,9 +184,6 @@ Tree* Parser::parse_Power_() {
     ERROR_nullptr(Factor);
     tr->add(tr_Factor);
 
-    tr_Power_ = this->parse_Power_();
-    //if (tr_Power_ == nullptr) return nullptr;
-    tr->add(tr_Power_);
     return tr;
 }
 
