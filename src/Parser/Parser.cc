@@ -65,8 +65,7 @@ Tree* Parser::parse_Compare_() {
     
     Tree* tr = createTree(treeTypeNode_Compare_);
     Tree* tr_Add;
-    Tree* tr_Compare_;
-    if (tk.matchSign("==") || tk.matchSign("<") || tk.matchSign(">") || tk.matchSign(">=") || tk.matchSign("<=")) {
+    if (tk.matchSign("==") || tk.matchSign("<") || tk.matchSign(">") || tk.matchSign(">=") || tk.matchSign("<=") || tk.matchSign("!=")) {
         tr->add(createTree(tk));
         this->getNextToken();
     } else {
@@ -77,9 +76,7 @@ Tree* Parser::parse_Compare_() {
     ERROR_nullptr(Add);
     tr->add(tr_Add);
 
-    tr_Compare_ = this->parse_Compare_();
     // if (tr_Expr_ == nullptr) return nullptr; (I believe it'll never run)
-    tr->add(tr_Compare_);
     return tr;
 }
 

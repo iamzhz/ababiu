@@ -22,16 +22,19 @@ Token Syntax::getInner(Tree * tr) {
     }
 }
 void Syntax::analyze_Statements(Tree * tr) {
-    if (tr->children[0]->type == treeType_Token 
-        && tr->children[0]->tk.matchSign("{")) {
-        
-        this->analyze_Sentences(tr->children[1]);
-        return ;
+    Tree * head = tr->children[0];
+    if (head->label == treeTypeNode_Sentences) {
+        this->analyze_Sentences(head);
+    } else {
+        this->analyze_Sentence(head);
     }
-    this->analyze_Sentence(tr->children[0]);
 }
 void Syntax::analyze_Sentences(Tree * tr) {
-    // TODO
+    Tree * s = tr;
+    while (s->children.size() == 2) {
+        this->analyze_Sentence(s->children[0]);
+        s = s->children[1];
+    }
 }
 void Syntax::analyze_Sentence(Tree * tr) {
     Tree * head = tr->children[0];
@@ -138,7 +141,7 @@ void Syntax::analyze_Compare(Tree * tr) {
     Tree * compare_; // Compare'
     Token * signToken;
     // if Compare' is ε
-    if (tr->children[1]->type == treeTypeNode_Epsilon) {
+    if (tr->children[1]->label == treeTypeNode_Epsilon) {
         this->analyze_Add(tr->children[0]);
         return ;
     }
