@@ -64,7 +64,7 @@ void outQuicknumber(Quicknumber qn) {
 }
 void IRs::display() {
     for (auto ir : this->content) {
-        std::cout << IROpToText(ir.op) << " \n";
+        std::print("{} \n", IROpToText(ir.op));
         outIdVaiable(ir.iv0);
         outIdVaiable(ir.iv1);
         outQuicknumber(ir.qn0);

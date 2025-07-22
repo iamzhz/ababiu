@@ -55,18 +55,18 @@ void Tree::display(int indent) {
 }
 void Tree::display(int indent, bool last) {
     for (int i = 0; i < indent - 1; ++i) {
-        std::cout << (i < indent - 1 ? "│   " : "    ");
+        std::print("{}", (i < indent - 1 ? "│   " : "    "));
     }
 
     if (indent > 0) {
-        std::cout << (last ? "└── " : "├── ");
+        std::print("{}", (last ? "└── " : "├── "));
     }
 
     if (this->type == treeType_Token) {
-        std::cout << "Token " << this->tk.typeToText()
-                  << " [" << this->tk.content << ']' << std::endl;
+        std::print("Token {} [{}]\n", 
+            this->tk.typeToText(), this->tk.content);
     } else {
-        std::cout << "Node " << treeTypeNodeLabelToText(this->label) << std::endl;
+        std::print("Node {}\n", treeTypeNodeLabelToText(this->label));
 
         for (size_t i = 0; i < this->children.size(); ++i) {
             this->children[i]->display(indent + 1, i == this->children.size() - 1);

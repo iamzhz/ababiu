@@ -12,8 +12,10 @@ ExprList -> Expr ExprList' | ε
 ExprList' -> , Expr ExprList' | ε
 FunctionCall -> @ Id ( ExprList )
 Sentence -> Expr ; | If | Else | While | DoWhile | For | Break | Continue | Return
-Sentences -> Sentence Sentences | Sentence
-Statements -> { Sentences } | Sentence
+
+/* IMPORTANT NOTE: { and } will not record to Tree */
+Statements -> { Sentences | Sentence
+Sentences -> Sentence Sentences | Sentence | }
 
 DefineFuction -> fn Type Id ( ExprList ) Statements
 DefineVariable -> Type Id
