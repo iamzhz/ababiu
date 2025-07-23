@@ -39,12 +39,13 @@ std::string IROpToText(IROp n) {
         case Op_mul: return "mul";
         case Op_div: return "div";
         case Op_call_if: return "call_if";
-        case Op_equal: return "Op_equal";
-        case Op_bigger: return "Op_bigger";
-        case Op_biggerEqual: return "Op_biggerEqual";
-        case Op_smaller: return "Op_smaller";
-        case Op_smallerEqual: return "Op_smallerEqual";
-        case Op_notEqual: return "Op_notEqual";
+        case Op_equal: return "equal";
+        case Op_bigger: return "bigger";
+        case Op_biggerEqual: return "biggerEqual";
+        case Op_smaller: return "smaller";
+        case Op_smallerEqual: return "smallerEqual";
+        case Op_notEqual: return "notEqual";
+        case Op_power: return "power";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

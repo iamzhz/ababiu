@@ -124,6 +124,7 @@ void Syntax::analyze_Assign(Tree * tr) {
     // if it is not an assign
     if (assign_->label == treeTypeNode_Epsilon) {
         this->analyze_Compare(compare);
+        return ;
     }
     // or tr->children[0] inner should be a `token id`
     tk = this->getInner(compare);
@@ -210,7 +211,6 @@ void Syntax::analyze_Factor(Tree * tr) {
     IR i;
     Tree * head = tr->children[0];
     if (head->type == treeType_Token) {
-        IR i;
         i.op = Op_push_qn;
         // TEMP: Just to show
         i.qn0 = makeQuicknumber(head->tk.content);
