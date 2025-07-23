@@ -32,6 +32,9 @@ enum IROp {
     Op_notEqual, // push (~1 != ~0)
 
     Op_power, // push (~1 ** ~0)
+
+    Op_jump_qn, // jump to qn0 
+    Op_jumpIfNot_qn, // jump to qn0 if not ~0
 };
 
 enum QuicknumberType {
@@ -60,6 +63,8 @@ struct IR {
     IdVariable iv0;
     IdVariable iv1;
     Quicknumber qn0;
+
+    int pos;
 };
 
 Quicknumber makeQuicknumber(int i);
@@ -70,9 +75,11 @@ IdVariable makeIdVariable(std::string content);
 
 class IRs {
     public:
+    int pos = 0; // the position which will be on the next IR
+    int getPosition();
     std::vector<IR> content;
     
-    void add(IR ir);
+    int add(IR ir); // return the position of IR
     //void 
     #ifdef DEBUG
     void display();

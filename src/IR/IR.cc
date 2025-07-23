@@ -1,6 +1,14 @@
 #include "../include.h"
-void IRs::add(IR ir) {
+
+int IRs::getPosition() {
+    this->pos ++;
+    return (this->pos - 1);
+}
+
+int IRs::add(IR ir) {
+    ir.pos = this->getPosition();
     content.push_back(std::move(ir));
+    return ir.pos;
 }
 
 QuicknumberType getQuicknumberType(const Quicknumber& qn) {
@@ -46,6 +54,8 @@ std::string IROpToText(IROp n) {
         case Op_smallerEqual: return "smallerEqual";
         case Op_notEqual: return "notEqual";
         case Op_power: return "power";
+        case Op_jump_qn: return "jump_qn";
+        case Op_jumpIfNot_qn: return "jumpIfNot_qn";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
@@ -66,7 +76,7 @@ void outQuicknumber(Quicknumber qn) {
 }
 void IRs::display() {
     for (auto ir : this->content) {
-        std::print("{} \n", IROpToText(ir.op));
+        std::print("{}:{}\n", ir.pos, IROpToText(ir.op));
         outIdVaiable(ir.iv0);
         outIdVaiable(ir.iv1);
         outQuicknumber(ir.qn0);

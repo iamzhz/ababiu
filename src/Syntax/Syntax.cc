@@ -38,65 +38,42 @@ void Syntax::analyze_Sentences(Tree * tr) {
 }
 void Syntax::analyze_Sentence(Tree * tr) {
     Tree * head = tr->children[0];
-    std::string keyword;
-    if (head->children[0]->type != treeType_Token
-        || head->children[0]->tk.type != tokenTypeKeyword) {
-        
-        this->analyze_Expr(head);
-        return ;
-    }
-    keyword = head->children[0]->tk.content;
-    switch (keyword.length()) {
-        case 2:
-            if ("if" == keyword) {
-                this->analyze_If(head);
-                return ;
-            }
-            if ("do" == keyword) {
-                this->analyze_DoWhile(head);
-                return ;
-            }
-            break;
-        case 3:
-            if ("for" == keyword) {
-                this->analyze_For(head);
-                return ;
-            }
-            break;
-        case 4:
-            if ("else" == keyword) {
-                this->analyze_Else(head);
-                return ;
-            }
-            break;
-        case 5:
-            if ("while" == keyword) {
-                this->analyze_While(head);
-                return ;
-            }
-            if ("break" == keyword) {
-                this->analyze_Break(head);
-                return ;
-            }
-            break;
-        case 6:
-            if ("return" == keyword) {
-                this->analyze_Return(head);
-                return ;
-            }
-            break;
-        case 8:
-            if ("continue" == keyword) {
-                this->analyze_Continue(head);
-                return ;
-            }
-            break;
+    switch (head->label) {
+        case treeTypeNode_If:
+            this->analyze_If(head);
+            return ;
+        case treeTypeNode_Else:
+            this->analyze_Else(head);
+            return ;
+        case treeTypeNode_While:
+            this->analyze_While(head);
+            return ;
+        case treeTypeNode_DoWhile:
+            this->analyze_DoWhile(head);
+            return ;
+        case treeTypeNode_For:
+            this->analyze_For(head);
+            return ;
+        case treeTypeNode_Break:
+            this->analyze_Break(head);
+            return ;
+        case treeTypeNode_Continue:
+            this->analyze_Continue(head);
+            return ;
+        case treeTypeNode_Return:
+            this->analyze_Return(head);
+            return ;
+        case treeTypeNode_Expr:
+            this->analyze_Expr(head);
+            return ;
+        default:
+            return ; // if my code works well, it'll never run this
     }
     sayError(head->children[0]->tk.line, 
         head->children[0]->tk.column, 
         "Wrong keyword.");
 }
-void Syntax::analyze_FuntionCall(Tree * tr) {
+void Syntax::analyze_FunctionCall(Tree * tr) {
     std::string function_name;
     IR ir;
     if (tr->label != treeTypeNode_FunctionCall) {
@@ -209,7 +186,9 @@ void Syntax::analyze_Power(Tree * tr) {
 
 void Syntax::analyze_Factor(Tree * tr) {
     IR i;
-    Tree * head = tr->children[0];
+    Tree * head;
+    if (tr->children.size() == 0) return ;
+    head = tr->children[0];
     if (head->type == treeType_Token) {
         i.op = Op_push_qn;
         // TEMP: Just to show
@@ -218,7 +197,7 @@ void Syntax::analyze_Factor(Tree * tr) {
     } else if (head->label == treeTypeNode_Expr) {
         this->analyze_Expr(head);
     } else if (head->label == treeTypeNode_FunctionCall) {
-        this->analyze_FuntionCall(head);
+        this->analyze_FunctionCall(head);
     }// else if ()
 }
 /*

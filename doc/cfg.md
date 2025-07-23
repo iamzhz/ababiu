@@ -1,4 +1,4 @@
-/* IMPORTANT NOTE: {} and () will not record to Tree */
+/* IMPORTANT NOTE: {}, () and @ will not record to Tree */
 Expr -> Assign
 Assign -> Compare Assign'
 Assign' -> = Compare | ε
@@ -22,6 +22,7 @@ Sentences -> Sentence Sentences | Sentence | }
 DefineFuction -> fn Type Id ( ExprList ) Statements
 DefineVariable -> Type Id
 
+/* ATTENTION: if, else, while, do and for will not record to Tree */
 If -> if ( Expr ) Statements
 Else -> else Statements
 While -> while ( Expr ) Statements
