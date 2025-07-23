@@ -13,12 +13,12 @@ void Syntax::analyze_If(Tree * tr) {
 void Syntax::analyze_Else(Tree * tr) {
     IR i;
     int jump_pos;
+    int if_jump_pos = this->if_jump_pos;
     i.op = Op_jump_qn;
     jump_pos = this->irs->add(i);
     this->analyze_Statements(tr->children[0]);
     this->irs->content[jump_pos].qn0 = makeQuicknumber(this->irs->pos);
-    this->irs->content[this->if_jump_pos].qn0 = makeQuicknumber(jump_pos + 1);
-    this->if_jump_pos = (-1);
+    this->irs->content[if_jump_pos].qn0 = makeQuicknumber(jump_pos + 1);
 }
 void Syntax::analyze_DoWhile(Tree * tr) {
 
