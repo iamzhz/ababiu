@@ -1,7 +1,6 @@
 #ifndef _INCLUDE_H_
 #define _INCLUDE_H_
 
-#define DEBUG
 #include <iostream>
 #include <print>
 #include <format>
@@ -27,11 +26,5 @@
 #include "./Syntax/Syntax.h"
 
 // pay attention to the order!! (to myself)
-
-#ifdef TEST
-#define test_main main
-#else
-#define program_main main
-#endif
 
 #endif

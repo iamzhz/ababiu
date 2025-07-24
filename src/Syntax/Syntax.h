@@ -6,7 +6,6 @@ class Syntax {
     private:
     Tree * tr; // the Tree need to deal with
     IRs * irs;   // the result
-    int if_jump_pos = (-1); // the position of jumpIfNot last time
     public:
     Syntax(Tree * tr, IRs * irs);
     // analyze
@@ -19,7 +18,7 @@ class Syntax {
     void analyze_If(Tree * tr);
     void analyze_DoWhile(Tree * tr);
     void analyze_For(Tree * tr);
-    void analyze_Else(Tree * tr);
+    void analyze_Else(Tree * tr, int if_jump_pos);
     void analyze_While(Tree * tr);
     void analyze_Break(Tree * tr);
     void analyze_Return(Tree * tr);

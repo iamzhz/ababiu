@@ -42,9 +42,6 @@ void Syntax::analyze_Sentence(Tree * tr) {
         case treeTypeNode_If:
             this->analyze_If(head);
             return ;
-        case treeTypeNode_Else:
-            this->analyze_Else(head);
-            return ;
         case treeTypeNode_While:
             this->analyze_While(head);
             return ;
@@ -190,7 +187,11 @@ void Syntax::analyze_Factor(Tree * tr) {
     if (tr->children.size() == 0) return ;
     head = tr->children[0];
     if (head->type == treeType_Token) {
-        i.op = Op_push_qn;
+        if (head->tk.type == tokenTypeId) {
+            i.op = Op_push_iv;
+        } else {
+            i.op = Op_push_qn;
+        }
         // TEMP: Just to show
         i.qn0 = makeQuicknumber(head->tk.content);
         this->irs->add(i);

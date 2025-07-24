@@ -9,25 +9,11 @@ int main(int argc, char** argv) {
     f.next();
     tkzer.setFile(f);
     Parser psr(&tkzer);
-    clp.display();
-
-    //tk = tkzer.getNextToken();
-    /*
-    while (!tk.isEof()) {
-        std::cout << tk.typeToText() << ' ' << tk.line << ' ' << tk.column << '['<< tk.content << ']' << std::endl;
-        tk = tkzer.getNextToken();
-    }*/
-
-
-    /* s */
     Tree *root = psr.parse_Unit(); 
     if (root == nullptr) sayError("what??");
-    root->display();
-    std::print(" ----------\n");
     IRs irs;
     Syntax syn(root, &irs);
     syn.analyze_unit();
     irs.display();
-    /* e */
     return 0;
 }

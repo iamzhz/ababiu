@@ -4,6 +4,7 @@ Tree* Parser::parse_If() {
     Tree* tr = createTree(treeTypeNode_If);
     Tree* tr_Expr;
     Tree* tr_Statements;
+    Tree* tr_Else;
 
     if (!this->current.matchKeyword("if")) EXPECTED_ERROR("If");
     this->getNextToken();
@@ -16,6 +17,10 @@ Tree* Parser::parse_If() {
     ERROR_nullptr(Statements);
     tr->add(tr_Statements);
 
+    tr_Else = this->parse_Else();
+    ERROR_nullptr(Else);
+    tr->add(tr_Else);
+
     return tr;
 }
 
@@ -23,7 +28,7 @@ Tree* Parser::parse_Else() {
     Tree* tr = createTree(treeTypeNode_Else);
     Tree* tr_Statements;
 
-    if (!this->current.matchKeyword("else")) EXPECTED_ERROR("Else");
+    if (!this->current.matchKeyword("else")) return epsilonTreeClass;
     this->getNextToken();
 
     tr_Statements = this->parse_Statements();

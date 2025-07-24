@@ -23,8 +23,8 @@ DefineFuction -> fn Type Id ( ExprList ) Statements
 DefineVariable -> Type Id
 
 /* ATTENTION: if, else, while, do and for will not record to Tree */
-If -> if ( Expr ) Statements
-Else -> else Statements
+If -> if ( Expr ) Statements Else
+Else -> else Statements | ε
 While -> while ( Expr ) Statements
 DoWhile -> do Statements while ( Expr ) ;
 For -> for (Expr ; Expr ; Expr ) Statements

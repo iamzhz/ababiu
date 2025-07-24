@@ -35,6 +35,7 @@ enum IROp {
 
     Op_jump_qn, // jump to qn0 
     Op_jumpIfNot_qn, // jump to qn0 if not ~0
+    Op_jumpIf_qn, // jump to qn0 if not ~0
 };
 
 enum QuicknumberType {

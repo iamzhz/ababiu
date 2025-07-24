@@ -26,7 +26,7 @@ bool CmdLineParser::option(std::string first, std::string second) {
             if (first[1] == '\0') {
                 this->outputFile = second;
                 return true;
-            }else {
+            } else {
                 sayError(std::string("`-o` does not be allowed to do like this "));
             }
             break;

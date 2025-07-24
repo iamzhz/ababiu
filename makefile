@@ -1,22 +1,24 @@
-cc := g++
-std := -std=c++23
-debug := -g
+CC := g++
+STD := -std=c++23
+DEBUG := -g -DDEBUG # -DDEEPDEBUG
+WARNINGS := -Wall -Wextra -Wpedantic
 
 SRC_FILES := $(wildcard src/*.cc src/*/*.cc)
-OBJ_FILES := $(SRC_FILES:.cc=.o)
+OBJ_FILES := $(filter-out src/main.o src/main_ir.o, $(SRC_FILES:.cc=.o))
 
-all: abandon
+EXECUTABLES := abandon abandon_ir
 
-# link
-abandon: $(OBJ_FILES)
-	$(cc) $^ -o $@ $(debug)
-# compile
+all: $(EXECUTABLES)
+
+abandon: src/main.o $(OBJ_FILES)
+	$(CC) $^ -o $@ $(DEBUG)
+abandon_ir: src/main_ir.o $(OBJ_FILES)
+	$(CC) $^ -o $@ $(DEBUG)
+
 %.o: %.cc
-	$(cc) -c $< -o $@ $(std) $(debug) -Wall -Wextra -Wpedantic
+	$(CC) -c $< -o $@ $(STD) $(DEBUG) $(WARNINGS)
 
-
-# clean
 clean:
-	rm -f $(OBJ_FILES) abandon
+	rm -f $(OBJ_FILES) src/main.o src/main_ir.o $(EXECUTABLES)
 
 .PHONY: all clean

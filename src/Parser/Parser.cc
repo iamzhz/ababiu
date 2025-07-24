@@ -239,11 +239,6 @@ Tree* Parser::parse_Sentence() {
             ERROR_nullptr(If);
             tr->add(tr_If);
             return tr;
-        } else if (this->current.matchKeyword("else")) {
-            Tree* tr_Else = this->parse_Else();
-            ERROR_nullptr(Else);
-            tr->add(tr_Else);
-            return tr;
         } else if (this->current.matchKeyword("while")) {
             Tree* tr_While = this->parse_While();
             ERROR_nullptr(While);

@@ -56,6 +56,7 @@ std::string IROpToText(IROp n) {
         case Op_power: return "power";
         case Op_jump_qn: return "jump_qn";
         case Op_jumpIfNot_qn: return "jumpIfNot_qn";
+        case Op_jumpIf_qn: return "jumpIf_qn";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
