@@ -1,5 +1,7 @@
-#include "../include.h"
 #include "Tree.h"
+#include "../PointerManager/PointerManager.h"
+#include "../Token/Token.h"
+#include <print>
 
 PointerManager<Tree*> pmTree;
 Token noneTokenClass;

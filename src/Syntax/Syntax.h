@@ -1,6 +1,8 @@
 #ifndef _SYNTAX_H_
 #define _SYNTAX_H_
-#include "../include.h"
+#include "../IR/IR.h"
+#include "../Tree/Tree.h"
+#include "../AutoAssign/AutoAssign.h"
 
 class Syntax {
     private:

@@ -1,6 +1,8 @@
 #ifndef _AUTOASSIGN_H_
 #define _AUTOASSIGN_H_
-#include "../include.h"
+#include "../IR/IR.h"
+#include <vector>
+#include <utility>
 
 class AutoAssign {
     private:

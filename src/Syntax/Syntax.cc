@@ -1,4 +1,6 @@
-#include "../include.h"
+#include "Syntax.h"
+#include "../SayError/SayError.h"
+#include "../Token/Token.h"
 
 Syntax::Syntax(Tree * tr, IRs * irs) {
     this->tr = tr;

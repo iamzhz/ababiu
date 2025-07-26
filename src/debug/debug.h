@@ -2,7 +2,7 @@
 #define _DEBUG_H_
 
 #ifdef DEEPDEBUG // use -DDEEPDEBUG
-
+#include <iostream>
 #define ASSERT(info) std::cout << "\033[0;31m[" << __FILE__ << \
     "," << __LINE__ << "]" << info << "\033[0m" << std::endl; // red
 

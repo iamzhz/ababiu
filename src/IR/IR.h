@@ -1,6 +1,9 @@
 #ifndef _IR_H_
 #define _IR_H_
-#include "../include.h"
+
+#include <string>
+#include <vector>
+#include <variant>
 
 enum IROp {
     /*
@@ -13,7 +16,6 @@ enum IROp {
     iv -> id.variable
     if -> id.function (but use `iv`)
     */
-    Op_pop_qn,
     Op_pop_iv,
     Op_push_qn,
     Op_push_iv,

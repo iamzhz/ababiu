@@ -1,7 +1,11 @@
 // src/Semantic/Symbol.h
 #ifndef _SYMBOL_H_
 #define _SYMBOL_H_
-#include "../include.h"
+#include "../PointerManager/PointerManager.h"
+#include "../Token/Token.h"
+#include <string>
+#include <cstdlib>
+#include <unordered_map>
 
 enum SymbolType { SYMBOL_VAR, SYMBOL_FUNC };
 

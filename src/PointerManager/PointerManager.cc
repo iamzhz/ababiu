@@ -1,4 +1,8 @@
-#include "../include.h"
+#include "PointerManager.h"
+#include <iostream>
+#include "../Tree/Tree.h"
+#include "../Syntax/Symbol.h"
+#include "../debug/debug.h"
 
 template <class T>
 void PointerManager<T>::add(T ptr) {

@@ -1,6 +1,9 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
-#include "../include.h"
+#include "../Token/Token.h"
+#include "../Tree/Tree.h"
+#include "../Lexer/Lexer.h"
+#include <string>
 
 extern Tree* epsilonTreeClass;
 

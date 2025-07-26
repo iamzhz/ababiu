@@ -1,6 +1,6 @@
 #ifndef _POINTERMANAGER_H_
 #define _POINTERMANAGER_H_
-#include "../include.h"
+#include <vector>
 class Tree;
 template <class T>
 class PointerManager {

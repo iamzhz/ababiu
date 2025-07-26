@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "IR.h"
+#include <print>
 
 int IRs::getPosition() {
     this->pos ++;
@@ -36,7 +37,6 @@ IdVariable makeIdVariable(std::string content) {
 #ifdef DEBUG
 std::string IROpToText(IROp n) {
     switch (n) {
-        case Op_pop_qn: return "pop_qn";
         case Op_pop_iv: return "pop_iv";
         case Op_push_qn: return "push_qn";
         case Op_push_iv: return "push_iv";

@@ -1,7 +1,7 @@
 #ifndef _TOKEN_H_
 #define _TOKEN_H_
 
-#include "../include.h"
+#include <string>
 
 enum tokenType {
     tokenTypeString, 

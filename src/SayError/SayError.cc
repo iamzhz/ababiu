@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "SayError.h"
+#include <print>
 void sayError(int line, int column, std::string info) {
     std::print(stderr, "[Error] {},{} {}\n", line, column, info);
     std::exit(1);

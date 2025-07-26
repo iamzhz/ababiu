@@ -1,4 +1,9 @@
-#include "include.h"
+#include "FileManager/FileManager.h"
+#include "Lexer/Lexer.h"
+#include "CmdLineParser/CmdLineParser.h"
+#include "Token/Token.h"
+#include "Parser/Parser.h"
+#include "Syntax/Syntax.h"
 int main(int argc, char** argv) {
     FileManager f;
     Lexer tkzer;

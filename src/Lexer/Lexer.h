@@ -1,7 +1,8 @@
 #ifndef _LEXER_H_
 #define _LEXER_H_
 
-#include "../include.h"
+#include "../FileManager/FileManager.h"
+#include "../Token/Token.h"
 
 enum signState {
     signStateRight,

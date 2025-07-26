@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "Symbol.h"
 
 PointerManager<VarSymbol*> pmVar;
 PointerManager<FuncSymbol*> pmFunc;

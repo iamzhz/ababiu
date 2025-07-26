@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "Token.h"
+#include <string>
 
 Token::Token() {
     // nothing now

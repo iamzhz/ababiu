@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "AutoAssign.h"
 AutoAssign::AutoAssign(IRs * irs) {
     this->irs = irs;
 }

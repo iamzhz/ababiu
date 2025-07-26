@@ -1,7 +1,10 @@
 #ifndef _CMDLINEPARSER_H_
 #define _CMDLINEPARSER_H_
 
-#include "../include.h"
+#include <string>
+#include <vector>
+#include <print>
+#include "../SayError/SayError.h"
 
 class CmdLineParser {
     int argc;

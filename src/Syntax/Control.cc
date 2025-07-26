@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "Syntax.h"
 
 #define POS_NOW_INT (this->irs->pos)
 #define POS_NOW (makeQuicknumber(POS_NOW_INT))

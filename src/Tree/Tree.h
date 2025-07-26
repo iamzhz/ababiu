@@ -1,7 +1,8 @@
 #ifndef _TREE_H_
 #define _TREE_H_
 
-#include "../include.h"
+#include "../PointerManager/PointerManager.h"
+#include "../Token/Token.h"
 
 extern Token noneTokenClass;
 enum treeType {

@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "Parser.h"
+#include "../SayError/SayError.h"
 
 void Parser::getNextToken() {
     this->current = this->lx->getNextToken();

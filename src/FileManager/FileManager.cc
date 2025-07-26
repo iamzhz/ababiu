@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "FileManager.h"
+#include "../debug/debug.h"
 
 bool FileManager::setInputFile(std::string fileName) {
     this->inputFile.open(fileName);

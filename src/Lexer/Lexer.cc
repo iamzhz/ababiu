@@ -1,4 +1,5 @@
-#include "../include.h"
+#include "Lexer.h"
+#include "../SayError/SayError.h"
 bool Lexer::isSpace(char ch) {
     return 
         ch == ' ' ||

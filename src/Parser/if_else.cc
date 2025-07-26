@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "Parser.h"
 
 Tree* Parser::parse_If() {
     Tree* tr = createTree(treeTypeNode_If);

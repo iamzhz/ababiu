@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "Parser.h"
 
 Tree* epsilonTreeClass = createTree(treeTypeNode_Epsilon);
 

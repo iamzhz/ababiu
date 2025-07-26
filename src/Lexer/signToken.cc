@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "Lexer.h"
 
 bool Lexer::isSign(char ch) {
     char signs[] = "=+-*/.`~!@#$%^&*()_{}[];:'\"\\|<>,?/";
