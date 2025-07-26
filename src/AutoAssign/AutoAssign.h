@@ -4,11 +4,16 @@
 
 class AutoAssign {
     private:
-    std::vector<std::vector<IR*>> data;
+    std::vector<
+      std::pair<
+        std::vector<int>, Quicknumber>> data;
+    IRs * irs;
     public:
+    AutoAssign(IRs * irs);
     void create();
-    void add(IR*);
-    void assign(int pos);
+    void add(int pos);
+    void set(const Quicknumber& qn);
+    void assign();
 };
 
 #endif

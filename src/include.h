@@ -23,6 +23,7 @@
 #include "./Parser/Parser.h"
 #include "./Syntax/Symbol.h"
 #include "./IR/IR.h"
+#include "./AutoAssign/AutoAssign.h"
 #include "./Syntax/Syntax.h"
 
 // pay attention to the order!! (to myself)

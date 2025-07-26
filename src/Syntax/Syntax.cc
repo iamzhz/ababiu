@@ -3,6 +3,19 @@
 Syntax::Syntax(Tree * tr, IRs * irs) {
     this->tr = tr;
     this->irs = irs;
+    this->start = nullptr;
+    this->end = nullptr;
+}
+Syntax::~Syntax() {
+    if (this->start != nullptr)
+        delete this->start;
+    if (this->end != nullptr)
+        delete this->end;
+}
+
+void Syntax::init() {
+    this->start = new AutoAssign(this->irs);
+    this->end = new AutoAssign(this->irs);
 }
 
 int Syntax::analyze_quicknumber(Token * tk) {
@@ -52,10 +65,10 @@ void Syntax::analyze_Sentence(Tree * tr) {
             this->analyze_For(head);
             return ;
         case treeTypeNode_Break:
-            this->analyze_Break(head);
+            this->analyze_Break();
             return ;
         case treeTypeNode_Continue:
-            this->analyze_Continue(head);
+            this->analyze_Continue();
             return ;
         case treeTypeNode_Return:
             this->analyze_Return(head);

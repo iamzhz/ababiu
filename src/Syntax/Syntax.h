@@ -6,8 +6,13 @@ class Syntax {
     private:
     Tree * tr; // the Tree need to deal with
     IRs * irs;   // the result
+    // for jumping
+    AutoAssign * start; // start of a loop
+    AutoAssign * end;
     public:
     Syntax(Tree * tr, IRs * irs);
+    ~Syntax();
+    void init();
     // analyze
     int analyze_quicknumber(Token * tk); // return the index
     void analyze_unit(); // run this to start working
@@ -20,9 +25,9 @@ class Syntax {
     void analyze_For(Tree * tr);
     void analyze_Else(Tree * tr, int if_jump_pos);
     void analyze_While(Tree * tr);
-    void analyze_Break(Tree * tr);
+    void analyze_Break();
     void analyze_Return(Tree * tr);
-    void analyze_Continue(Tree * tr);
+    void analyze_Continue();
     void analyze_FunctionCall(Tree * tr);
     void analyze_ExprList(Tree * tr);
     void analyze_Expr(Tree * tr);

@@ -27,49 +27,60 @@ void Syntax::analyze_Else(Tree * tr, int if_jump_pos) {
     this->irs->content[if_jump_pos].qn0 = makeQuicknumber(jump_pos + 1);
 }
 void Syntax::analyze_DoWhile(Tree * tr) {
+    this->start->create();
+    this->end->create();
     IR i;
-    int statements_pos = POS_NOW_INT;
+    this->start->set(POS_NOW);
     this->analyze_Statements(tr->children[0]);
     this->analyze_Expr(tr->children[1]);
     i.op = Op_jumpIf_qn;
-    i.qn0 = makeQuicknumber(statements_pos);
-    this->irs->add(i);
+    this->start->add(this->irs->add(i));
+    this->end->set(POS_NOW);
+    this->start->assign();
+    this->end->assign();
 }
 void Syntax::analyze_For(Tree * tr) {
+    this->start->create();
+    this->end->create();
     IR i;
-    int cal_jump_pos;
-    int if_jump_pos;
     this->analyze_Expr(tr->children[0]);
-    cal_jump_pos = POS_NOW_INT;
+    this->start->set(POS_NOW);
     this->analyze_Expr(tr->children[1]);
     i.op = Op_jumpIfNot_qn;
-    if_jump_pos = this->irs->add(i);
+    this->end->add(this->irs->add(i));
     this->analyze_Statements(tr->children[3]);
     this->analyze_Expr(tr->children[2]);
     i.op = Op_jump_qn;
-    i.qn0 = makeQuicknumber(cal_jump_pos);
-    this->irs->add(i);
-    this->irs->content[if_jump_pos].qn0 = POS_NOW;
+    this->start->add(this->irs->add(i));
+    this->end->set(POS_NOW);
+    this->start->assign();
+    this->end->assign();
 }
 void Syntax::analyze_While(Tree * tr) {
+    this->start->create();
+    this->end->create();
     IR i;
-    int if_jump_pos;
-    int cal_jump_pos = POS_NOW_INT;
+    this->start->set(POS_NOW_INT);
     this->analyze_Expr(tr->children[0]);
     i.op = Op_jumpIfNot_qn;
-    if_jump_pos = this->irs->add(i);
+    this->end->add(this->irs->add(i));
     this->analyze_Statements(tr->children[1]);
     i.op = Op_jump_qn;
-    i.qn0 = makeQuicknumber(cal_jump_pos);
-    this->irs->add(i);
-    this->irs->content[if_jump_pos].qn0 = POS_NOW;
+    this->start->add(this->irs->add(i));
+    this->end->set(POS_NOW);
+    this->start->assign();
+    this->end->assign();
 }
-void Syntax::analyze_Break(Tree * tr) {
-
+void Syntax::analyze_Break() {
+    IR i;
+    i.op = Op_jump_qn;
+    this->end->add(this->irs->add(i));
 }
 void Syntax::analyze_Return(Tree * tr) {
 
 }
-void Syntax::analyze_Continue(Tree * tr) {
-
+void Syntax::analyze_Continue() {
+    IR i;
+    i.op = Op_jump_qn;
+    this->start->add(this->irs->add(i));
 }

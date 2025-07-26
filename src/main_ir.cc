@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
     if (root == nullptr) sayError("what??");
     IRs irs;
     Syntax syn(root, &irs);
+    syn.init();
     syn.analyze_unit();
     irs.display();
     return 0;

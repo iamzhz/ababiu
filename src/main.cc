@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
     std::print(" ----------\n");
     IRs irs;
     Syntax syn(root, &irs);
+    syn.init();
     syn.analyze_unit();
     irs.display();
     /* e */
