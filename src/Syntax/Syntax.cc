@@ -20,10 +20,6 @@ void Syntax::init() {
     this->end = new AutoAssign(this->irs);
 }
 
-int Syntax::analyze_quicknumber(Token * tk) {
-    return 1;
-}
-
 void Syntax::analyze_unit() {
     this->analyze_Statements(this->tr);
 }
@@ -98,8 +94,11 @@ void Syntax::analyze_FunctionCall(Tree * tr) {
     this->irs->add(ir);
 }
 void Syntax::analyze_ExprList(Tree * tr) {
-    // TODO: only deal the first now!
-    this->analyze_Expr(tr->children[0]);
+    Tree * s = tr;
+    while (s->children.size() == 2) {
+        this->analyze_Expr(s->children[0]);
+        s = s->children[1];
+    }
 }
 void Syntax::analyze_Expr(Tree * tr) {
     this->analyze_Assign(tr->children[0]);
