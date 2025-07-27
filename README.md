@@ -4,9 +4,17 @@ It is a program for a programming language named `Abandon`.
 
 This project is WIP.
 You can see more about it [here](https://iamzhz.github.io/t/).  It was written by Chinese.
-## Compile this project
+## Build this project
+If you use `makefile`:
 ``` bash
 make
+```
+If you use `cmake`:
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 It will generate two files named `abandon` and `abandon_ir`.  
 
