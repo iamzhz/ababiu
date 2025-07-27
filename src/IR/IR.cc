@@ -1,5 +1,5 @@
 #include "IR.h"
-#include <print>
+#include <iostream>
 
 int IRs::getPosition() {
     this->pos ++;
@@ -61,23 +61,23 @@ std::string IROpToText(IROp n) {
     return "Error: IR.cc::IRs::display();\n";
 }
 void outIdVaiable(IdVariable iv) {
-    std::print("  {}", iv.content);
+    std::cout << "  " << iv.content;
 }
 void outQuicknumber(Quicknumber qn) {
     std::visit([](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (std::is_same_v<T, std::monostate>) {
-            std::print("\n");
+            std::cout << std::endl;
         } else if constexpr (std::is_same_v<T, double>) {
-            std::print("  {:.2f}\n", arg);
+            std::cout << "  " << arg << std::endl;
         } else {
-            std::print("  {}\n", arg);
+            std::cout << "  " << arg << std::endl;
         }
     }, qn);
 }
 void IRs::display() {
     for (auto ir : this->content) {
-        std::print("{}:{}\n", ir.pos, IROpToText(ir.op));
+        std::cout << ir.pos << ':' << IROpToText(ir.op) << std::endl;
         outIdVaiable(ir.iv0);
         outIdVaiable(ir.iv1);
         outQuicknumber(ir.qn0);

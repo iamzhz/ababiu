@@ -1,7 +1,7 @@
 #include "Tree.h"
 #include "../PointerManager/PointerManager.h"
 #include "../Token/Token.h"
-#include <print>
+#include <iostream>
 
 PointerManager<Tree*> pmTree;
 Token noneTokenClass;
@@ -59,18 +59,18 @@ void Tree::display(int indent) {
 }
 void Tree::display(int indent, bool last) {
     for (int i = 0; i < indent - 1; ++i) {
-        std::print("{}", (i < indent - 1 ? "│   " : "    "));
+        std::cout << (i < indent - 1 ? "│   " : "    ");
     }
 
     if (indent > 0) {
-        std::print("{}", (last ? "└── " : "├── "));
+        std::cout << (last ? "└── " : "├── ");
     }
 
     if (this->type == treeType_Token) {
-        std::print("Token {} [{}]\n", 
-            this->tk.typeToText(), this->tk.content);
+        std::cout << "Token "
+            << this->tk.typeToText() << " [" << this->tk.content << "]\n";
     } else {
-        std::print("Node {}\n", treeTypeNodeLabelToText(this->label));
+        std::cout << "Node " << treeTypeNodeLabelToText(this->label) << std::endl;
 
         for (size_t i = 0; i < this->children.size(); ++i) {
             this->children[i]->display(indent + 1, i == this->children.size() - 1);

@@ -59,11 +59,11 @@ void CmdLineParser::run() {
 
 #ifdef DEBUG
 void CmdLineParser::display() {
-    std::print("Input File: ");
+    std::cout << "Input File: ";
     for (std::size_t i = 0;  i < this->inputFiles.size();  i ++) {
-        std::print("{} ", this->inputFiles[i]);
+        std::cout << this->inputFiles[i];
     }
-    std::print("\nOutput File: {}\n", this->outputFile);
+    std::cout << "\nOutput File: " << this->outputFile << std::endl;
 }
 #endif
 

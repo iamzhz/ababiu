@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     Tree *root = psr.parse_Unit(); 
     if (root == nullptr) sayError("what??");
     root->display();
-    std::print(" ----------\n");
+    std::cout << " ----------\n";
     IRs irs;
     Syntax syn(root, &irs);
     syn.init();
