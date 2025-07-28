@@ -7,14 +7,21 @@
 
 enum IROp {
     /*
-    TIP ~n:
-    ~n (n is a digit) means the n-th of the stack (isn't a var).
-    ~n's value poped when it is used.
+    TIP ~n(n is a digit):
+        ~n means the n-th of the stack (isn't a var).
+        ~n's value poped when it is used.
+    TIP $n(n is a digit):
+        $n can be considered as a temp var.
+        when n is from {1, 2, 3, 4}:
+            $n will be the n-th register on CPU.
+        when n is bigger than 4:
+            $n will be a piece of memory in stack.
     
     Other Tip:
     qn -> quicknumber
     iv -> id.variable
     if -> id.function (but use `iv`)
+    t  -> temp (but use `iv`)
     */
     Op_pop_iv,
     Op_push_qn,
@@ -38,6 +45,8 @@ enum IROp {
     Op_jump_qn, // jump to qn0 
     Op_jumpIfNot_qn, // jump to qn0 if not ~0
     Op_jumpIf_qn, // jump to qn0 if not ~0
+
+    Sign_callParaBegin, // as a sign to mark the beginning
 };
 
 enum QuicknumberType {
@@ -83,6 +92,7 @@ class IRs {
     std::vector<IR> content;
     
     int add(IR ir); // return the position of IR
+    void replace(IRs & old);
     //void 
     #ifdef DEBUG
     void display();

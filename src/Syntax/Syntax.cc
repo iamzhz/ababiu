@@ -89,6 +89,8 @@ void Syntax::analyze_FunctionCall(Tree * tr) {
     }
     function_name = tr->children[0]->tk.content;
     this->analyze_ExprList(tr->children[1]);
+    ir.op = Sign_callParaBegin;
+    this->irs->add(ir);   // add mark
     ir.op = Op_call_if;
     ir.iv0 = makeIdVariable(function_name);
     this->irs->add(ir);
@@ -203,11 +205,11 @@ void Syntax::analyze_Factor(Tree * tr) {
     if (head->type == treeType_Token) {
         if (head->tk.type == tokenTypeId) {
             i.op = Op_push_iv;
+            i.iv0 = makeIdVariable(head->tk.content);
         } else {
             i.op = Op_push_qn;
+            i.qn0 = makeQuicknumber(head->tk.content);
         }
-        // TEMP: Just to show
-        i.qn0 = makeQuicknumber(head->tk.content);
         this->irs->add(i);
     } else if (head->label == treeTypeNode_Expr) {
         this->analyze_Expr(head);

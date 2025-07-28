@@ -4,6 +4,7 @@
 #include "Token/Token.h"
 #include "Parser/Parser.h"
 #include "Syntax/Syntax.h"
+#include "StackEraser/StackEraser.h"
 int main(int argc, char** argv) {
     FileManager f;
     Lexer tkzer;
@@ -33,6 +34,8 @@ int main(int argc, char** argv) {
     Syntax syn(root, &irs);
     syn.init();
     syn.analyze_unit();
+    StackEraser se(&irs);
+    se.convert();
     irs.display();
     /* e */
     return 0;

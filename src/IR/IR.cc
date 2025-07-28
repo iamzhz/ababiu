@@ -34,6 +34,11 @@ IdVariable makeIdVariable(std::string content) {
     return iv;
 }
 
+void IRs::replace(IRs & theNew) {
+    this->content = theNew.content;
+    this->pos = this->content.size();
+}
+
 #ifdef DEBUG
 std::string IROpToText(IROp n) {
     switch (n) {
@@ -57,6 +62,7 @@ std::string IROpToText(IROp n) {
         case Op_jump_qn: return "jump_qn";
         case Op_jumpIfNot_qn: return "jumpIfNot_qn";
         case Op_jumpIf_qn: return "jumpIf_qn";
+        case Sign_callParaBegin: return "callParaBegin";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
