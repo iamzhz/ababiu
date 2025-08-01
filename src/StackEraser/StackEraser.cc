@@ -56,10 +56,10 @@ void StackEraser::convert() {
                     ir.op = Op_mov_iv_iv;
                     ir.iv0 = i.iv0;
                     ir.iv1 = v.getIdVariable();
-                } else if (v.isQuicknumber()) {
-                    ir.op = Op_mov_iv_qn;
+                } else if (v.isImmediate()) {
+                    ir.op = Op_mov_iv_imm;
                     ir.iv0 = i.iv0;
-                    ir.qn0 = v.getQuicknumber();
+                    ir.imm0 = v.getImmediate();
                 } else if (v.isReg()) {
                     ir.op = Op_store_iv_reg;
                     ir.iv0 = i.iv0;
@@ -68,8 +68,8 @@ void StackEraser::convert() {
                 this->append(ir);
                 break;
             }
-            case Op_push_qn: {
-                this->push(Value(i.qn0));
+            case Op_push_imm: {
+                this->push(Value(i.imm0));
                 break;
             }
             case Op_push_iv: {
@@ -87,10 +87,10 @@ void StackEraser::convert() {
                         ir.reg0 = a_b_regs[regs_index] = this->getReg();
                         ir.iv0  = t.getIdVariable();
                         this->append(ir);
-                    } else if (t.isQuicknumber()) {
-                        ir.op = Op_load_qn_reg;
+                    } else if (t.isImmediate()) {
+                        ir.op = Op_load_imm_reg;
                         ir.reg0 = a_b_regs[regs_index] = this->getReg();
-                        ir.qn0 = t.getQuicknumber();
+                        ir.imm0 = t.getImmediate();
                         this->append(ir);
                     } else if (t.isReg()) {
                         a_b_regs[regs_index] = t;
@@ -107,7 +107,7 @@ void StackEraser::convert() {
                 break;
             }
             case Op_mov_iv_iv: // fall through
-            case Op_mov_iv_qn: {
+            case Op_mov_iv_imm: {
                 this->append(i);
                 break;
             }

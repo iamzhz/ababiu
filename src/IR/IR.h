@@ -16,16 +16,16 @@ enum IROp {
         $n will be a register or a piece of memory in stack.
     
     Other Tip:
-    qn -> quicknumber
+    imm -> Immediate
     iv -> id.variable
     if -> id.function (but use `iv`)
     t  -> temp (but use `iv`)
     */
     Op_pop_iv,
-    Op_push_qn,
+    Op_push_imm,
     Op_push_iv,
     Op_mov_iv_iv, // iv0 = iv1
-    Op_mov_iv_qn,
+    Op_mov_iv_imm,
     Op_mov_reg_reg,
     Op_add, // push (~1 + ~0)
     Op_add_reg_reg,
@@ -45,14 +45,14 @@ enum IROp {
 
     Op_power, // push (~1 ** ~0)
 
-    Op_jump_qn, // jump to qn0 
-    Op_jumpIfNot_qn, // jump to qn0 if not ~0
-    Op_jumpIf_qn, // jump to qn0 if not ~0
+    Op_jump_imm, // jump to imm0 
+    Op_jumpIfNot_imm, // jump to imm0 if not ~0
+    Op_jumpIf_imm, // jump to imm0 if not ~0
 
     Sign_callParaBegin, // as a sign to mark the beginning
     
     Op_load_iv_reg,
-    Op_load_qn_reg,
+    Op_load_imm_reg,
     Op_store_iv_reg,
 };
 
@@ -61,7 +61,7 @@ struct IR {
     IROp op;
     IdVariable iv0;
     IdVariable iv1;
-    Quicknumber qn0;
+    Immediate imm0;
     Value reg0;
     Value reg1;
     void clean();

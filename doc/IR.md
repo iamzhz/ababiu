@@ -1,15 +1,15 @@
 # IR
 ## basic explanation
 ```
-quicknumber is a `Tree` root
-quicknumber may be not a number
+Immediate is a `Tree` root
+Immediate may be not a number
 
 ```
-pop_qn quicknumber
+pop_imm Immediate
 pop_iv id.variable
 push_iv id.variable
 mov_iv_iv id.variable id.variable
-mov_iv_qn id.variable quicknumber
+mov_iv_imm id.variable Immediate
 add
 sub
 mul

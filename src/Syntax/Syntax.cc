@@ -207,8 +207,8 @@ void Syntax::analyze_Factor(Tree * tr) {
             i.op = Op_push_iv;
             i.iv0 = makeIdVariable(head->tk.content);
         } else {
-            i.op = Op_push_qn;
-            i.qn0 = makeQuicknumber(head->tk.content);
+            i.op = Op_push_imm;
+            i.imm0 = makeImmediate(head->tk.content);
         }
         this->irs->add(i);
     } else if (head->label == treeTypeNode_Expr) {

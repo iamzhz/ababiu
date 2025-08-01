@@ -1,20 +1,20 @@
 #include "Value.h"
 
-QuicknumberType getQuicknumberType(const Quicknumber& qn) {
-    switch (qn.index()) {
-        case 0: return QN_UNKNOWN;
-        case 1: return QN_INT;
-        case 2: return QN_CHAR;
-        case 3: return QN_FLOAT;
-        case 4: return QN_STRING;
-        default: return QN_UNKNOWN;
+ImmediateType getImmediateType(const Immediate& imm) {
+    switch (imm.index()) {
+        case 0: return IMM_UNKNOWN;
+        case 1: return IMM_INT;
+        case 2: return IMM_CHAR;
+        case 3: return IMM_FLOAT;
+        case 4: return IMM_STRING;
+        default: return IMM_UNKNOWN;
     }
 }
 
-Quicknumber makeQuicknumber(int i) { return i;}
-Quicknumber makeQuicknumber(char c) { return c;}
-Quicknumber makeQuicknumber(double f)  { return f;}
-Quicknumber makeQuicknumber(std::string s) { return s;}
+Immediate makeImmediate(int i) { return i;}
+Immediate makeImmediate(char c) { return c;}
+Immediate makeImmediate(double f)  { return f;}
+Immediate makeImmediate(std::string s) { return s;}
 
 IdVariable makeIdVariable(std::string content) {
     IdVariable iv;
@@ -23,8 +23,8 @@ IdVariable makeIdVariable(std::string content) {
 }
 
 Value::Value() {}
-Value::Value(const Quicknumber & qn) {
-    this->data_ = qn;
+Value::Value(const Immediate & imm) {
+    this->data_ = imm;
 }
 Value::Value(const IdVariable & iv) {
     this->data_ = iv;
@@ -32,7 +32,7 @@ Value::Value(const IdVariable & iv) {
 Value::Value(const int & reg) {
     this->data_ = reg;
 }
-Value& Value::operator=(const Quicknumber & o) {
+Value& Value::operator=(const Immediate & o) {
     this->data_ = o;
     return *this;
 }
@@ -49,14 +49,14 @@ Value& Value::operator=(const std::string & o) {
 bool Value::isVariable() {
     return std::holds_alternative<IdVariable>(data_);
 }
-bool Value::isQuicknumber() {
-    return std::holds_alternative<Quicknumber>(data_);
+bool Value::isImmediate() {
+    return std::holds_alternative<Immediate>(data_);
 }
 bool Value::isReg() {
     return std::holds_alternative<int>(data_);
 }
-const Quicknumber& Value::getQuicknumber() const {
-    return std::get<Quicknumber>(data_);
+const Immediate& Value::getImmediate() const {
+    return std::get<Immediate>(data_);
 }
 const IdVariable& Value::getIdVariable() const {
     return std::get<IdVariable>(data_);

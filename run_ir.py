@@ -41,8 +41,8 @@ class IRInterpreter:
                 opcode = instruction_match.group(2)
                 
                 # 需要操作数的指令列表
-                if opcode in ['push_iv', 'push_qn', 'pop_iv', 'pop_qn', 'mov_iv_iv', 
-                             'mov_iv_qn', 'call_if', 'jump_qn', 'jumpIfNot_qn', 'jumpIf_qn']:
+                if opcode in ['push_iv', 'push_imm', 'pop_iv', 'pop_imm', 'mov_iv_iv', 
+                             'mov_iv_imm', 'call_if', 'jump_imm', 'jumpIfNot_imm', 'jumpIf_imm']:
                     pending_operand = line_num
                     self.next_operand[line_num] = opcode
                 else:
@@ -79,7 +79,7 @@ class IRInterpreter:
                     self.stack.append(self.variables.get(var_name, 0))
                 
                 # 处理立即数压栈
-                elif op == 'push_qn':
+                elif op == 'push_imm':
                     imm_val = self.parse_immediate(arg)
                     self.stack.append(imm_val)
                 
@@ -90,7 +90,7 @@ class IRInterpreter:
                     self.variables[arg] = self.stack.pop()
                 
                 # 处理弹出栈顶（丢弃）
-                elif op == 'pop_qn':
+                elif op == 'pop_imm':
                     if self.stack:
                         self.stack.pop()
                 
@@ -135,14 +135,14 @@ class IRInterpreter:
                         self.stack.append(int(self.stack.pop()))
                 
                 # 处理无条件跳转
-                elif op == 'jump_qn':
+                elif op == 'jump_imm':
                     target = int(arg)
                     next_pc = target
                     if not (min_line <= target <= max_line):
                         return  # 跳出循环，程序结束
                 
                 # 处理条件跳转（栈顶为False时跳转）
-                elif op == 'jumpIfNot_qn':
+                elif op == 'jumpIfNot_imm':
                     if not self.stack or not self.stack.pop():
                         target = int(arg)
                         next_pc = target
@@ -150,7 +150,7 @@ class IRInterpreter:
                             return
                 
                 # 处理条件跳转（栈顶为True时跳转）
-                elif op == 'jumpIf_qn':
+                elif op == 'jumpIf_imm':
                     if self.stack and self.stack.pop():
                         target = int(arg)
                         next_pc = target
@@ -160,7 +160,7 @@ class IRInterpreter:
                     pass
                 
                 # 未实现的指令
-                elif op in ['mov_iv_iv', 'mov_iv_qn']:
+                elif op in ['mov_iv_iv', 'mov_iv_imm']:
                     raise NotImplementedError(f"指令 {op} 尚未实现")
                 
                 # 未知指令

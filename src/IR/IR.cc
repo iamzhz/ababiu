@@ -5,7 +5,7 @@ void IR::clean() {
     #ifdef DEBUG
     this->iv0 = {};
     this->iv1 = {};
-    this->qn0 = {};
+    this->imm0 = {};
     this->reg0 = Value();
     this->reg1 = Value();
     #endif
@@ -32,10 +32,10 @@ void IRs::replace(IRs & theNew) {
 std::string IROpToText(IROp n) {
     switch (n) {
         case Op_pop_iv: return "pop_iv";
-        case Op_push_qn: return "push_qn";
+        case Op_push_imm: return "push_imm";
         case Op_push_iv: return "push_iv";
         case Op_mov_iv_iv: return "mov_iv_iv";
-        case Op_mov_iv_qn: return "mov_iv_qn";
+        case Op_mov_iv_imm: return "mov_iv_imm";
         case Op_mov_reg_reg: return "mov_reg_reg";
         case Op_add: return "add";
         case Op_add_reg_reg: return "add_reg_reg";
@@ -53,12 +53,12 @@ std::string IROpToText(IROp n) {
         case Op_smallerEqual: return "smallerEqual";
         case Op_notEqual: return "notEqual";
         case Op_power: return "power";
-        case Op_jump_qn: return "jump_qn";
-        case Op_jumpIfNot_qn: return "jumpIfNot_qn";
-        case Op_jumpIf_qn: return "jumpIf_qn";
+        case Op_jump_imm: return "jump_imm";
+        case Op_jumpIfNot_imm: return "jumpIfNot_imm";
+        case Op_jumpIf_imm: return "jumpIf_imm";
         case Sign_callParaBegin: return "callParaBegin";
         case Op_load_iv_reg: return "load_iv_reg";
-        case Op_load_qn_reg: return "load_qn_reg";
+        case Op_load_imm_reg: return "load_imm_reg";
         case Op_store_iv_reg: return "store_iv_reg";
     }
     return "Error: IR.cc::IRs::display();\n";
@@ -66,7 +66,7 @@ std::string IROpToText(IROp n) {
 void outIdVaiable(IdVariable iv) {
     std::cout << "  " << iv.content;
 }
-void outQuicknumber(Quicknumber qn) {
+void outImmediate(Immediate imm) {
     std::visit([](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (std::is_same_v<T, std::monostate>) {
@@ -76,7 +76,7 @@ void outQuicknumber(Quicknumber qn) {
         } else {
             std::cout << "  " << arg;
         }
-    }, qn);
+    }, imm);
 }
 void IRs::display() {
     int count = 0;
@@ -84,7 +84,7 @@ void IRs::display() {
         std::cout << count << ':' << IROpToText(ir.op) << std::endl;
         outIdVaiable(ir.iv0);
         outIdVaiable(ir.iv1);
-        outQuicknumber(ir.qn0);
+        outImmediate(ir.imm0);
         if (ir.reg0.isReg())
             std::cout << "   " << ir.reg0.getReg();
         if (ir.reg1.isReg())

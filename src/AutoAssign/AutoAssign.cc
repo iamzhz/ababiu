@@ -9,14 +9,14 @@ void AutoAssign::add(int pos) {
     std::vector<int>& lastVec = this->data.back().first;
     lastVec.push_back(pos);
 }
-void AutoAssign::set(const Quicknumber& qn) {
-    this->data.back().second = qn;
+void AutoAssign::set(const Immediate& imm) {
+    this->data.back().second = imm;
 }
 void AutoAssign::assign() {
     std::vector<int>& lastVec = this->data.back().first;
-    const Quicknumber& qn = this->data.back().second;
+    const Immediate& imm = this->data.back().second;
     for (int i : lastVec) {
-        this->irs->content[i].qn0 = qn;
+        this->irs->content[i].imm0 = imm;
     }
     this->data.pop_back();
 }

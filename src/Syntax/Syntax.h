@@ -17,7 +17,7 @@ class Syntax {
     ~Syntax();
     void init();
     // analyze
-    int analyze_quicknumber(Token * tk); // return the index
+    int analyze_Immediate(Token * tk); // return the index
     void analyze_unit(); // run this to start working
     Token getInner(Tree * tr);
     void analyze_Statements(Tree * tr);
