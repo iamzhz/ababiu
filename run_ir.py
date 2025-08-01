@@ -1,5 +1,5 @@
 # author of 'run_ir.py': DeepSeek-R1
-# ./abandon_ir test.abn | python run_ir.py
+# ./ababiu_ir test.abb | python run_ir.py
 
 import sys
 import re

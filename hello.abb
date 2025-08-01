@@ -1,0 +1,20 @@
+{
+    x = @inte(@input());
+    op = @input();
+    y = @inte(@input());
+    if (op == "+") {
+        r = x + y;
+    } else if (op == "-") {
+        r = x - y;
+    } else if (op == '*') {
+        r = x * y;
+    } else if (op == '/') {
+        if (y != 0) {
+            r = x / y;
+        } else {
+            @print("NO!");
+        }
+    }
+    @print("---------");
+    @print(r);
+}

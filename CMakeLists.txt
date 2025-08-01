@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(abandon VERSION 1.0)
+project(ababiu VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,5 +17,5 @@ file(GLOB_RECURSE MAIN_FILES "src/main.cc" "src/main_ir.cc")
 
 list(REMOVE_ITEM SRC_FILES ${MAIN_FILES})
 
-add_executable(abandon src/main.cc ${SRC_FILES})
-add_executable(abandon_ir src/main_ir.cc ${SRC_FILES})
+add_executable(ababiu src/main.cc ${SRC_FILES})
+add_executable(ababiu_ir src/main_ir.cc ${SRC_FILES})

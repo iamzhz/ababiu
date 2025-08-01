@@ -1,5 +1,5 @@
 # debug.h
-[查看文件](https://github.com/iamzhz/Abandon/blob/main/src/debug/debug.h#L6)  
+[查看文件](https://github.com/iamzhz/Ababiu/blob/main/src/debug/debug.h#L6)  
 ### 宏`ASSERT(info)`
 ``` cpp
 ASSERT(info)

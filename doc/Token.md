@@ -1,6 +1,6 @@
 # Token
-[头文件](https://github.com/iamzhz/Abandon/blob/main/src/Token/Token.h)  
-[代码实现](https://github.com/iamzhz/Abandon/blob/main/src/Token/Token.cc)
+[头文件](https://github.com/iamzhz/Ababiu/blob/main/src/Token/Token.h)  
+[代码实现](https://github.com/iamzhz/Ababiu/blob/main/src/Token/Token.cc)
 ## Token 的意图
 > 顾名思义, 存放代码中的 token, 该类主要用于存放 token 的类型, 以及 token 的值.  
 > 另外, 该类还提供了一些辅助函数, 使得更容易地设置和使用 token.
