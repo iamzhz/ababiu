@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <variant>
+#include "../Value/Value.h"
 
 enum IROp {
     /*
@@ -12,10 +13,7 @@ enum IROp {
         ~n's value poped when it is used.
     TIP $n(n is a digit):
         $n can be considered as a temp var.
-        when n is from {1, 2, 3, 4}:
-            $n will be the n-th register on CPU.
-        when n is bigger than 4:
-            $n will be a piece of memory in stack.
+        $n will be a register or a piece of memory in stack.
     
     Other Tip:
     qn -> quicknumber
@@ -28,10 +26,15 @@ enum IROp {
     Op_push_iv,
     Op_mov_iv_iv, // iv0 = iv1
     Op_mov_iv_qn,
+    Op_mov_reg_reg,
     Op_add, // push (~1 + ~0)
+    Op_add_reg_reg,
     Op_sub, // push (~1 - ~0)
-    Op_mul,
-    Op_div,
+    Op_sub_reg_reg,
+    Op_mul, // push (~1 * ~0)
+    Op_mul_reg_reg,
+    Op_div, // push (~1 / ~0)
+    Op_div_reg_reg,
     Op_call_if,
     Op_equal, // push (~1 == ~0)
     Op_bigger, // push (~1 > ~0)
@@ -47,43 +50,22 @@ enum IROp {
     Op_jumpIf_qn, // jump to qn0 if not ~0
 
     Sign_callParaBegin, // as a sign to mark the beginning
+    
+    Op_load_iv_reg,
+    Op_load_qn_reg,
+    Op_store_iv_reg,
 };
 
-enum QuicknumberType {
-    QN_UNKNOWN, 
-    QN_INT, 
-    QN_CHAR, 
-    QN_FLOAT, 
-    QN_STRING
-};
 
-using Quicknumber = std::variant<
-    std::monostate, 
-    int,
-    char,
-    double,
-    std::string
->;
-
-QuicknumberType getQuicknumberType(const Quicknumber& qn) ;
-
-struct IdVariable {
-    std::string content;
-};
 struct IR {
     IROp op;
     IdVariable iv0;
     IdVariable iv1;
     Quicknumber qn0;
-
-    int pos;
+    Value reg0;
+    Value reg1;
+    void clean();
 };
-
-Quicknumber makeQuicknumber(int i);
-Quicknumber makeQuicknumber(char c);
-Quicknumber makeQuicknumber(double f);
-Quicknumber makeQuicknumber(std::string s);
-IdVariable makeIdVariable(std::string content);
 
 class IRs {
     public:
@@ -93,7 +75,7 @@ class IRs {
     
     int add(IR ir); // return the position of IR
     void replace(IRs & old);
-    //void 
+    //void
     #ifdef DEBUG
     void display();
     #endif

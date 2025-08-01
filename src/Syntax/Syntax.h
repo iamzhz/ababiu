@@ -3,6 +3,7 @@
 #include "../IR/IR.h"
 #include "../Tree/Tree.h"
 #include "../AutoAssign/AutoAssign.h"
+#include "../Value/Value.h"
 
 class Syntax {
     private:

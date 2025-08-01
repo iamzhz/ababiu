@@ -10,7 +10,7 @@
         r = x * y;
     } else if (op == '/') {
         if (y != 0) {
-            r == x / y;
+            r = x / y;
         } else {
             @print("NO!");
         }

@@ -156,6 +156,8 @@ class IRInterpreter:
                         next_pc = target
                         if not (min_line <= target <= max_line):
                             return
+                elif op == 'callParaBegin':
+                    pass
                 
                 # 未实现的指令
                 elif op in ['mov_iv_iv', 'mov_iv_qn']:
