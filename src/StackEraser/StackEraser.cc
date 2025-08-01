@@ -46,6 +46,7 @@ void StackEraser::append(IR & ir) {
 void StackEraser::convert() {
     int n = 0;
     Value v;
+    IROp temp_op;
     for (IR i : this->old->content) {
         IR ir;
         this->lineCast.insert({n, this->irs->pos});
@@ -76,7 +77,31 @@ void StackEraser::convert() {
                 this->push(Value(i.iv0));
                 break;
             }
-            case Op_add: {
+            case Op_add: // fall through
+            case Op_sub:
+            case Op_mul:
+            case Op_div:
+            case Op_equal:
+            case Op_bigger:
+            case Op_biggerEqual:
+            case Op_smaller:
+            case Op_smallerEqual:
+            case Op_notEqual:
+            case Op_power: {
+                switch (i.op) {
+                    case Op_add: temp_op = Op_add_reg_reg;  break;
+                    case Op_sub: temp_op = Op_sub_reg_reg;  break;
+                    case Op_mul: temp_op = Op_mul_reg_reg;  break;
+                    case Op_div: temp_op = Op_div_reg_reg;  break;
+                    case Op_equal: temp_op = Op_equal_reg_reg;  break;
+                    case Op_bigger: temp_op = Op_bigger_reg_reg;  break;
+                    case Op_biggerEqual: temp_op = Op_biggerEqual_reg_reg;  break;
+                    case Op_smaller: temp_op = Op_smaller_reg_reg;  break;
+                    case Op_smallerEqual: temp_op = Op_smallerEqual_reg_reg;  break;
+                    case Op_notEqual: temp_op = Op_notEqual_reg_reg;  break;
+                    case Op_power: temp_op = Op_power_reg_reg;  break;
+                    default: break;
+                }
                 Value b = this->pop();
                 Value a = this->pop();
                 Value a_b_regs[2];
@@ -98,7 +123,7 @@ void StackEraser::convert() {
                     regs_index ++;
                 }
                 ir.clean();
-                ir.op = Op_add_reg_reg;
+                ir.op = temp_op;
                 ir.reg0 = a_b_regs[0];
                 ir.reg1 = a_b_regs[1];
                 this->append(ir);

@@ -60,6 +60,13 @@ std::string IROpToText(IROp n) {
         case Op_load_iv_reg: return "load_iv_reg";
         case Op_load_imm_reg: return "load_imm_reg";
         case Op_store_iv_reg: return "store_iv_reg";
+        case Op_equal_reg_reg:  return "equal_reg_reg";
+        case Op_bigger_reg_reg:  return "bigger_reg_reg";
+        case Op_biggerEqual_reg_reg:  return "biggerEqual_reg_reg";
+        case Op_smaller_reg_reg:  return "smaller_reg_reg";
+        case Op_smallerEqual_reg_reg:  return "smallerEqual_reg_reg";
+        case Op_notEqual_reg_reg:  return "notEqual_reg_reg";
+        case Op_power_reg_reg:  return "power_reg_reg";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

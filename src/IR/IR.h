@@ -37,13 +37,20 @@ enum IROp {
     Op_div_reg_reg,
     Op_call_if,
     Op_equal, // push (~1 == ~0)
+    Op_equal_reg_reg,
     Op_bigger, // push (~1 > ~0)
+    Op_bigger_reg_reg,
     Op_biggerEqual, // push (~1 >= ~0)
+    Op_biggerEqual_reg_reg,
     Op_smaller, // push (~1 < ~0)
+    Op_smaller_reg_reg,
     Op_smallerEqual, // push (~1 <= ~0)
+    Op_smallerEqual_reg_reg,
     Op_notEqual, // push (~1 != ~0)
+    Op_notEqual_reg_reg,
 
     Op_power, // push (~1 ** ~0)
+    Op_power_reg_reg,
 
     Op_jump_imm, // jump to imm0 
     Op_jumpIfNot_imm, // jump to imm0 if not ~0
