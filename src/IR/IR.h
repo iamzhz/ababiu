@@ -64,6 +64,10 @@ enum IROp {
     Op_load_iv_reg,
     Op_load_imm_reg,
     Op_store_iv_reg,
+
+    Op_loadParaReg_iv,
+    Op_loadParaReg_imm,
+    Op_loadParaReg_reg,
 };
 
 

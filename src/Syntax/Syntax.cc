@@ -87,10 +87,10 @@ void Syntax::analyze_FunctionCall(Tree * tr) {
     if (tr->label != treeTypeNode_FunctionCall) {
         return ;
     }
-    function_name = tr->children[0]->tk.content;
-    this->analyze_ExprList(tr->children[1]);
     ir.op = Sign_callParaBegin;
     this->irs->add(ir);   // add mark
+    function_name = tr->children[0]->tk.content;
+    this->analyze_ExprList(tr->children[1]);
     ir.op = Op_call_if;
     ir.iv0 = makeIdVariable(function_name);
     this->irs->add(ir);

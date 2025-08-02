@@ -36,6 +36,9 @@ Value::Value(const IdVariable & iv) {
 Value::Value(const int & reg) {
     this->data_ = reg;
 }
+Value::Value(const SpecialMark & spm) {
+    this->data_ = spm;
+}
 Value& Value::operator=(const Immediate & o) {
     this->data_ = o;
     return *this;
@@ -58,6 +61,12 @@ bool Value::isImmediate() {
 }
 bool Value::isReg() {
     return std::holds_alternative<int>(data_);
+}
+bool Value::isParaHead() {
+    if (!std::holds_alternative<SpecialMark>(data_)) {
+        return false;
+    }
+    return (FUNCTION_CALL_PARA_HEAD == std::get<SpecialMark>(data_));
 }
 const Immediate& Value::getImmediate() const {
     return std::get<Immediate>(data_);

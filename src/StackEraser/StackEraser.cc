@@ -1,5 +1,6 @@
 #include "StackEraser.h"
 #include <stdexcept>
+#include <iostream>
 Value StackEraser::getReg() {
     for (int i = 0;  i < REG_NUMBER;  i ++) {
         if (!this->is_used[i]) {
@@ -162,15 +163,34 @@ void StackEraser::convert() {
                 this->releaseReg(a_reg);
                 break;
             }
+            case Sign_callParaBegin: {
+                this->push(Value(FUNCTION_CALL_PARA_HEAD));
+                break;
+            }
+            case Op_call_if: {
+                std::vector<Value> parameters; // reverse of real parameters
+                // reverse of RDI, RSI, RDX, RCX, R8, R9
+                std::vector<Value> last6; // for register (reverse)
+                int paras_size = 0;
+                int last6_size;
+                Value para;
+                while ((para = this->pop()).isParaHead()) {
+                    parameters.push_back(para);
+                    paras_size ++;
+                }
+                if (paras_size > 6) last6_size = 6;
+                else last6_size = paras_size;
 
-            case Op_mov_iv_iv: // fall through
-            case Op_mov_iv_imm:
-            case Op_jump_imm: {
+                last6.assign(parameters.end() - last6_size, parameters.end());
+                parameters.erase(parameters.end() - last6_size, parameters.end());
+
+                // TODO
+                break;
+            }
+            default: {
                 this->append(i);
                 break;
             }
-            default:
-                break;
         }
         n ++;
     }

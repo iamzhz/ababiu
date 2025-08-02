@@ -30,15 +30,21 @@ Immediate makeImmediate(char c);
 Immediate makeImmediate(double f);
 Immediate makeImmediate(std::string s);
 IdVariable makeIdVariable(std::string content);
+
+enum SpecialMark {
+    FUNCTION_CALL_PARA_HEAD,
+};
+
 class Value {
     private:
-    std::variant<std::monostate, Immediate, IdVariable, int> data_;
+    std::variant<std::monostate, Immediate, IdVariable, int, SpecialMark> data_;
     public:
     Value();
     Value(const Value & o) = default;
     Value(const Immediate & imm);
     Value(const IdVariable & iv);
     Value(const int & reg);
+    Value(const SpecialMark & spm);
     ~Value() = default;
     Value& operator=(const Value & o) = default;
     Value& operator=(const Immediate & o);
@@ -47,6 +53,7 @@ class Value {
     bool isVariable();
     bool isImmediate();
     bool isReg();
+    bool isParaHead();
     const Immediate& getImmediate() const;
     const IdVariable& getIdVariable() const;
     const int& getReg() const;
