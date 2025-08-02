@@ -23,6 +23,8 @@ ImmediateType getImmediateType(const Immediate& imm) ;
 struct IdVariable {
     std::string content;
 };
+
+int getImmediateInt(Immediate imm);
 Immediate makeImmediate(int i);
 Immediate makeImmediate(char c);
 Immediate makeImmediate(double f);

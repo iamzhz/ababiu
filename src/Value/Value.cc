@@ -16,6 +16,10 @@ Immediate makeImmediate(char c) { return c;}
 Immediate makeImmediate(double f)  { return f;}
 Immediate makeImmediate(std::string s) { return s;}
 
+int getImmediateInt(Immediate imm) {
+    return std::get<int>(imm);
+}
+
 IdVariable makeIdVariable(std::string content) {
     IdVariable iv;
     iv.content = content;

@@ -67,6 +67,8 @@ std::string IROpToText(IROp n) {
         case Op_smallerEqual_reg_reg:  return "smallerEqual_reg_reg";
         case Op_notEqual_reg_reg:  return "notEqual_reg_reg";
         case Op_power_reg_reg:  return "power_reg_reg";
+        case Op_jumpIf_imm_reg: return "jump_imm_reg";
+        case Op_jumpIfNot_imm_reg: return "jumpIfNot_imm_reg";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

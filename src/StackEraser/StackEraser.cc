@@ -121,6 +121,7 @@ void StackEraser::convert() {
                         a_b_regs[regs_index] = t;
                     }
                     regs_index ++;
+                    ir.clean();
                 }
                 ir.clean();
                 ir.op = temp_op;
@@ -131,8 +132,40 @@ void StackEraser::convert() {
                 this->push(a_b_regs[0]);
                 break;
             }
+            case Op_jumpIf_imm: // fall through
+            case Op_jumpIfNot_imm: {
+                switch (i.op) {
+                    case Op_jumpIf_imm: temp_op = Op_jumpIf_imm_reg; break;
+                    case Op_jumpIfNot_imm: temp_op = Op_jumpIfNot_imm_reg; break;
+                    default: break;
+                }
+                Value a = this->pop();
+                Value a_reg;
+                if (a.isVariable()) {
+                    ir.op = Op_load_iv_reg;
+                    ir.iv0 = a.getIdVariable();
+                    ir.reg0 = a_reg = this->getReg();
+                    this->append(ir);
+                } else if (a.isImmediate()) {
+                    ir.op = Op_load_imm_reg;
+                    ir.imm0 = a.getImmediate();
+                    ir.reg0 = a_reg = this->getReg();
+                    this->append(ir);
+                } else if (a.isReg()) {
+                    a_reg = a;
+                }
+                ir.clean();
+                ir.op = temp_op;
+                ir.imm0 = i.imm0;
+                ir.reg0 = a_reg;
+                this->append(ir);
+                this->releaseReg(a_reg);
+                break;
+            }
+
             case Op_mov_iv_iv: // fall through
-            case Op_mov_iv_imm: {
+            case Op_mov_iv_imm:
+            case Op_jump_imm: {
                 this->append(i);
                 break;
             }
@@ -141,5 +174,20 @@ void StackEraser::convert() {
         }
         n ++;
     }
+    this->lineCast.insert({n, this->irs->pos});
+    this->replaceLineNumber();
     this->old->replace(*this->irs);
+}
+
+void StackEraser::replaceLineNumber() {
+    for (IR & i : this->irs->content) {
+        switch (i.op) {
+            case Op_jumpIf_imm_reg: // fall through
+            case Op_jumpIfNot_imm_reg: {
+                i.imm0 = makeImmediate(this->lineCast.find(getImmediateInt(i.imm0))->second);
+                break;
+            }
+            default: break;
+        }
+    }
 }

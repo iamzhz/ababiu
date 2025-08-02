@@ -28,6 +28,7 @@ class StackEraser {
     StackEraser(IRs * irs);
     ~StackEraser();
     void convert();
+    void replaceLineNumber();
     // ~StackEraser();
 };
 

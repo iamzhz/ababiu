@@ -56,6 +56,9 @@ enum IROp {
     Op_jumpIfNot_imm, // jump to imm0 if not ~0
     Op_jumpIf_imm, // jump to imm0 if not ~0
 
+    Op_jumpIfNot_imm_reg,
+    Op_jumpIf_imm_reg,
+
     Sign_callParaBegin, // as a sign to mark the beginning
     
     Op_load_iv_reg,
