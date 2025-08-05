@@ -1,6 +1,5 @@
 #include "StackEraser.h"
 #include <stdexcept>
-#include <iostream>
 Value StackEraser::getReg() {
     for (int i = 0;  i < REG_NUMBER;  i ++) {
         if (!this->is_used[i]) {
@@ -9,6 +8,10 @@ Value StackEraser::getReg() {
         }
     }
     return (-1); // TODO
+}
+Value StackEraser::getCallerReg(int number) {
+    // reverse of RDI, RSI, RDX, RCX, R8, R9
+    return (REG_NUMBER + 1 + number);
 }
 
 StackEraser::StackEraser(IRs * irs) {
@@ -24,6 +27,47 @@ void StackEraser::releaseReg(Value reg) {
         this->is_used[r] = false;
     } else {
         // TODO
+    }
+}
+
+Value StackEraser::loadToReg(Value t) {
+    return this->loadToReg(t, this->getReg());
+}
+
+Value StackEraser::loadToReg(Value t, Value reg) {
+    IR ir;
+    if (t.isVariable()) {
+        ir.op = Op_load_iv_reg;
+        ir.reg0 = reg;
+        ir.iv0  = t.getIdVariable();
+        this->append(ir);
+    } else if (t.isImmediate()) {
+        ir.op = Op_load_imm_reg;
+        ir.reg0 = reg;
+        ir.imm0 = t.getImmediate();
+        this->append(ir);
+    } else if (t.isReg()) {
+        this->releaseReg(reg);
+    }
+    return reg;
+}
+
+inline bool StackEraser::isStackUsed(int n) {
+    return this->stack_used.find(n) != this->stack_used.end();
+}
+
+int StackEraser::getStack() {
+    int i = (-1);
+    while (this->isStackUsed(i)) {
+        i --;
+    }
+    this->stack_used.insert(i);
+    return i;
+}
+
+void StackEraser::releaseStack(int n){
+    if (this->isStackUsed(n)) {
+        this->stack_used.erase(n);
     }
 }
 
@@ -106,25 +150,8 @@ void StackEraser::convert() {
                 Value b = this->pop();
                 Value a = this->pop();
                 Value a_b_regs[2];
-                int regs_index = 0;
-                for (Value t : {a, b}) {
-                    if (t.isVariable()) {
-                        ir.op = Op_load_iv_reg;
-                        ir.reg0 = a_b_regs[regs_index] = this->getReg();
-                        ir.iv0  = t.getIdVariable();
-                        this->append(ir);
-                    } else if (t.isImmediate()) {
-                        ir.op = Op_load_imm_reg;
-                        ir.reg0 = a_b_regs[regs_index] = this->getReg();
-                        ir.imm0 = t.getImmediate();
-                        this->append(ir);
-                    } else if (t.isReg()) {
-                        a_b_regs[regs_index] = t;
-                    }
-                    regs_index ++;
-                    ir.clean();
-                }
-                ir.clean();
+                a_b_regs[0] = this->loadToReg(a);
+                a_b_regs[1] = this->loadToReg(b);
                 ir.op = temp_op;
                 ir.reg0 = a_b_regs[0];
                 ir.reg1 = a_b_regs[1];
@@ -142,20 +169,7 @@ void StackEraser::convert() {
                 }
                 Value a = this->pop();
                 Value a_reg;
-                if (a.isVariable()) {
-                    ir.op = Op_load_iv_reg;
-                    ir.iv0 = a.getIdVariable();
-                    ir.reg0 = a_reg = this->getReg();
-                    this->append(ir);
-                } else if (a.isImmediate()) {
-                    ir.op = Op_load_imm_reg;
-                    ir.imm0 = a.getImmediate();
-                    ir.reg0 = a_reg = this->getReg();
-                    this->append(ir);
-                } else if (a.isReg()) {
-                    a_reg = a;
-                }
-                ir.clean();
+                a_reg = this->loadToReg(a);
                 ir.op = temp_op;
                 ir.imm0 = i.imm0;
                 ir.reg0 = a_reg;
@@ -164,7 +178,7 @@ void StackEraser::convert() {
                 break;
             }
             case Sign_callParaBegin: {
-                this->push(Value(FUNCTION_CALL_PARA_HEAD));
+                this->push(Value(static_cast<SpecialMark>(FUNCTION_CALL_PARA_HEAD)));
                 break;
             }
             case Op_call_if: {
@@ -174,7 +188,7 @@ void StackEraser::convert() {
                 int paras_size = 0;
                 int last6_size;
                 Value para;
-                while ((para = this->pop()).isParaHead()) {
+                while (!(para = this->pop()).isParaHead()) {
                     parameters.push_back(para);
                     paras_size ++;
                 }
@@ -184,6 +198,13 @@ void StackEraser::convert() {
                 last6.assign(parameters.end() - last6_size, parameters.end());
                 parameters.erase(parameters.end() - last6_size, parameters.end());
 
+                // deal with register paras
+                int reg_para_count = 0;
+                for (auto it = last6.rbegin(); it != last6.rend(); ++it) {
+                    this->loadToReg(*it, this->getCallerReg(reg_para_count));
+                    reg_para_count ++;
+                }
+                this->append(i);
                 // TODO
                 break;
             }

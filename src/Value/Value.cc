@@ -27,6 +27,7 @@ IdVariable makeIdVariable(std::string content) {
 }
 
 Value::Value() {}
+#include <iostream>
 Value::Value(const Immediate & imm) {
     this->data_ = imm;
 }
