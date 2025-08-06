@@ -11,6 +11,7 @@ Stack Eraser is used to convert a stack-IR to non-stack-IR
 
 #define REG_NUMBER_X86_64 12
 #define REG_NUMBER REG_NUMBER_X86_64
+#define RAX_NUMBER 0
 
 class StackEraser {
     private:

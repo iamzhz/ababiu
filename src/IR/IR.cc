@@ -34,6 +34,7 @@ std::string IROpToText(IROp n) {
         case Op_pop_iv: return "pop_iv";
         case Op_push_imm: return "push_imm";
         case Op_push_iv: return "push_iv";
+        case Op_push_reg: return "push_reg";
         case Op_mov_iv_iv: return "mov_iv_iv";
         case Op_mov_iv_imm: return "mov_iv_imm";
         case Op_mov_reg_reg: return "mov_reg_reg";
@@ -69,6 +70,8 @@ std::string IROpToText(IROp n) {
         case Op_power_reg_reg:  return "power_reg_reg";
         case Op_jumpIf_imm_reg: return "jump_imm_reg";
         case Op_jumpIfNot_imm_reg: return "jumpIfNot_imm_reg";
+        case Op_loadParaReg_imm: return "loadParaReg_imm";
+        case Op_loadParaReg_iv: return "loadParaReg_iv";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

@@ -11,7 +11,7 @@ Value StackEraser::getReg() {
 }
 Value StackEraser::getCallerReg(int number) {
     // reverse of RDI, RSI, RDX, RCX, R8, R9
-    return (REG_NUMBER + 1 + number);
+    return (REG_NUMBER + number);
 }
 
 StackEraser::StackEraser(IRs * irs) {
@@ -40,15 +40,20 @@ Value StackEraser::loadToReg(Value t, Value reg) {
         ir.op = Op_load_iv_reg;
         ir.reg0 = reg;
         ir.iv0  = t.getIdVariable();
-        this->append(ir);
     } else if (t.isImmediate()) {
         ir.op = Op_load_imm_reg;
         ir.reg0 = reg;
         ir.imm0 = t.getImmediate();
-        this->append(ir);
     } else if (t.isReg()) {
-        this->releaseReg(reg);
+        if (reg.getReg() < REG_NUMBER) {
+            this->releaseReg(reg);
+            return t;
+        }
+        ir.op = Op_mov_reg_reg;
+        ir.reg0 = reg;
+        ir.reg1 = t;
     }
+    this->append(ir);
     return reg;
 }
 
@@ -110,6 +115,7 @@ void StackEraser::convert() {
                     ir.op = Op_store_iv_reg;
                     ir.iv0 = i.iv0;
                     ir.reg0 = v;
+                    this->releaseReg(v);
                 }
                 this->append(ir);
                 break;
@@ -192,7 +198,7 @@ void StackEraser::convert() {
                     parameters.push_back(para);
                     paras_size ++;
                 }
-                if (paras_size > 6) last6_size = 6;
+                if (paras_size >= 6) last6_size = 6;
                 else last6_size = paras_size;
 
                 last6.assign(parameters.end() - last6_size, parameters.end());
@@ -204,8 +210,16 @@ void StackEraser::convert() {
                     this->loadToReg(*it, this->getCallerReg(reg_para_count));
                     reg_para_count ++;
                 }
+                // deal with stack paras
+                ir.op = Op_push_reg;
+                for (Value stack_para : parameters) {
+                    Value reg = this->loadToReg(stack_para);
+                    ir.reg0 = reg;
+                    this->append(ir);
+                    this->releaseReg(reg);
+                }
                 this->append(i);
-                // TODO
+                this->push(Value(RAX_NUMBER));
                 break;
             }
             default: {
