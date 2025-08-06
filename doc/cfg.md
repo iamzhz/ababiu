@@ -17,7 +17,7 @@ FunctionCall -> @ Id ( ExprList )
 Sentence -> Expr ; | If | Else | While | DoWhile | For | Break | Continue | Return
 
 Statements -> { Sentences | Sentence
-Sentences -> Sentence Sentences | Sentence | }
+Sentences -> Sentence ... }
 
 DefineFuction -> fn Type Id ( ExprList ) Statements
 DefineVariable -> Type Id

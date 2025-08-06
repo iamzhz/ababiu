@@ -41,10 +41,8 @@ void Syntax::analyze_Statements(Tree * tr) {
     }
 }
 void Syntax::analyze_Sentences(Tree * tr) {
-    Tree * s = tr;
-    while (s->children.size() == 2) {
-        this->analyze_Sentence(s->children[0]);
-        s = s->children[1];
+    for (Tree * child : tr->children) {
+        this->analyze_Sentence(child);
     }
 }
 void Syntax::analyze_Sentence(Tree * tr) {

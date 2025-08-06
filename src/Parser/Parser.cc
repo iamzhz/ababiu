@@ -288,20 +288,12 @@ Tree* Parser::parse_Sentence() {
 Tree* Parser::parse_Sentences() {
     Tree* tr = createTree(treeTypeNode_Sentences);
     Tree* tr_Sentence;
-    Tree* tr_Sentences;
     
-    if (this->current.matchSign("}")) {
-        return tr;
+    while (!this->current.matchSign("}")) {
+        tr_Sentence = this->parse_Sentence();
+        ERROR_nullptr(Sentence);
+        tr->add(tr_Sentence);
     }
-
-    tr_Sentence = this->parse_Sentence();
-    ERROR_nullptr(Sentence);
-    tr->add(tr_Sentence);
-
-    
-    tr_Sentences = this->parse_Sentences();
-    ERROR_nullptr(Sentences);
-    tr->add(tr_Sentences);
 
     return tr;
 }
