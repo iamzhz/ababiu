@@ -7,7 +7,7 @@ Tree* Parser::parse_ExprList() {
     Token tk = this->current;
 
     tr_Expr = this->parse_Expr();
-    ERROR_nullptr(Expr);
+    CHECK_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_ExprList_ = this->parse_ExprList_();
@@ -25,7 +25,7 @@ Tree* Parser::parse_ExprList_() {
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_nullptr(Expr);
+    CHECK_nullptr(Expr);
     tr->add(tr_Expr);
 
     tr_ExprList_ = this->parse_ExprList_();
@@ -59,7 +59,7 @@ Tree* Parser::parse_FunctionCall() {
 Tree* Parser::parse_DefineFunction() {
     Tree* tr = createTree(treeTypeNode_DefineFunction);
     Tree* tr_Id;
-    Tree* tr_ExprList;
+    Tree* tr_DefineVariableList;
     Tree* tr_Statements;
     if (!this->current.matchKeyword("fn")) EXPECTED_ERROR("fn");
     this->getNextToken();
@@ -77,12 +77,14 @@ Tree* Parser::parse_DefineFunction() {
     this->getNextToken();
 
     if (this->current.matchKeyword("void")) {
-        tr->add(createTree(treeTypeNode_ExprList));
+        tr->add(createTree(treeTypeNode_DefineVariableList));
         this->getNextToken();
+    } else if (this->current.matchSign(")")) {
+        tr->add(createTree(treeTypeNode_DefineVariableList));
     } else {
-        tr_ExprList = this->parse_ExprList();
-        ERROR_nullptr(ExprList);
-        tr->add(tr_ExprList);
+        tr_DefineVariableList = this->parse_DefineVariableList();
+        CHECK_nullptr(DefineVariableList);
+        tr->add(tr_DefineVariableList);
     }
 
     if (!this->current.matchSign(")")) EXPECTED_ERROR(")");
@@ -103,7 +105,7 @@ Tree* Parser::parse_Return() {
     this->getNextToken();
 
     tr_Expr = this->parse_Expr();
-    ERROR_nullptr(Expr);
+    CHECK_nullptr(Expr);
     tr->add(tr_Expr);
 
     if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
@@ -122,5 +124,20 @@ Tree* Parser::parse_DefineVariable() {
     tr->add(createTree(this->current));
     this->getNextToken();
     
+    return tr;
+}
+
+Tree* Parser::parse_DefineVariableList() {
+    Tree* tr = createTree(treeTypeNode_DefineVariableList);
+    Tree* tr_DefineVariable;
+    while (this->current.type == tokenTypeType) {
+        tr_DefineVariable = this->parse_DefineVariable();
+        CHECK_nullptr(DefineVariable);
+        tr->add(tr_DefineVariable);
+        if (!this->current.matchSign(",")) {
+            break;
+        } 
+        this->getNextToken();
+    }
     return tr;
 }

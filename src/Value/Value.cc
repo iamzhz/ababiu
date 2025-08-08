@@ -1,13 +1,13 @@
 #include "Value.h"
 
-ImmediateType getImmediateType(const Immediate& imm) {
+TypeType getImmediateType(const Immediate& imm) {
     switch (imm.index()) {
-        case 0: return IMM_UNKNOWN;
-        case 1: return IMM_INT;
-        case 2: return IMM_CHAR;
-        case 3: return IMM_FLOAT;
-        case 4: return IMM_STRING;
-        default: return IMM_UNKNOWN;
+        case 0: return TYPE_UNKNOWN;
+        case 1: return TYPE_INT;
+        case 2: return TYPE_CHAR;
+        case 3: return TYPE_FLOAT;
+        case 4: return TYPE_STRING;
+        default: return TYPE_UNKNOWN;
     }
 }
 

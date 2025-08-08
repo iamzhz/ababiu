@@ -69,6 +69,8 @@ enum IROp {
     Op_loadParaReg_iv,
     Op_loadParaReg_imm,
     Op_loadParaReg_reg,
+
+    Sign_defineVariable_type_iv,
 };
 
 
@@ -79,6 +81,7 @@ struct IR {
     Immediate imm0;
     Value reg0;
     Value reg1;
+    TypeType type0;
     void clean();
 };
 

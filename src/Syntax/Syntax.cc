@@ -21,7 +21,7 @@ void Syntax::init() {
 }
 
 void Syntax::analyze_unit() {
-    this->analyze_Statements(this->tr);
+    this->analyze_DefineFunction(this->tr);
 }
 Token Syntax::getInner(Tree * tr) {
     Tree * P = tr;
@@ -71,6 +71,9 @@ void Syntax::analyze_Sentence(Tree * tr) {
             return ;
         case treeTypeNode_Expr:
             this->analyze_Expr(head);
+            return ;
+        case treeTypeNode_DefineVariable:
+            this->analyze_DefineVariable(head);
             return ;
         default:
             return ; // if my code works well, it'll never run this

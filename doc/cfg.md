@@ -10,16 +10,20 @@ Times   -> Power Times'
 Times'  -> * Power Times' | / Power Times' | ε
 Power   -> Factor Power'
 Power'  -> ** Factor | ε
-Factor -> ( Expr ) | Int | DefineVariable | FunctionCall
+Factor -> ( Expr ) | Int | FunctionCall
+
 ExprList -> Expr ExprList' | ε
 ExprList' -> , Expr ExprList' | ε
+
 FunctionCall -> @ Id ( ExprList )
-Sentence -> Expr ; | If | Else | While | DoWhile | For | Break | Continue | Return
+
+Sentence -> Expr ; | If | Else | While | DoWhile | For | Break | Continue | Return | DefineVariable
 
 Statements -> { Sentences | Sentence
 Sentences -> Sentence ... }
 
-DefineFuction -> fn Type Id ( ExprList ) Statements
+DefineFuction -> fn Type Id ( DefineVariableList ) Statements
+DefineVariableList -> DefineVariable , ...
 DefineVariable -> Type Id
 
 /* ATTENTION: if, else, while, do and for will not record to Tree */

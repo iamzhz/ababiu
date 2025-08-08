@@ -40,6 +40,7 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_FunctionCall: return "FunctionCall";
         case treeTypeNode_DefineFunction: return "DefineFunction";
         case treeTypeNode_DefineVariable: return "DefineVariable";
+        case treeTypeNode_DefineVariableList: return "DefineVariableList";
         case treeTypeNode_If: return "If";
         case treeTypeNode_Else: return "Else";
         case treeTypeNode_While: return "While";

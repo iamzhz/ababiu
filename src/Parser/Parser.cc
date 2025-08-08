@@ -10,7 +10,7 @@ Parser::Parser(Lexer* lx) {
 Tree* Parser::parse_Expr() {
     Tree* tr = createTree(treeTypeNode_Expr);
     Tree* tr_Assign = this->parse_Assign();
-    ERROR_nullptr(Assign);
+    CHECK_nullptr(Assign);
     tr->add(tr_Assign);
     return tr;
 }
@@ -20,7 +20,7 @@ Tree* Parser::parse_Assign() {
     Tree* tr_Assign_;
 
     tr_Compare = this->parse_Compare();
-    ERROR_nullptr(Compare);
+    CHECK_nullptr(Compare);
     tr->add(tr_Compare);
 
     tr_Assign_ = this->parse_Assign_();
@@ -40,7 +40,7 @@ Tree* Parser::parse_Assign_() {
     }
 
     tr_Compare = this->parse_Compare();
-    ERROR_nullptr(Compare);
+    CHECK_nullptr(Compare);
     tr->add(tr_Compare);
 
     // if (tr_Expr_ == nullptr) return nullptr; (I believe it'll never run)
@@ -53,7 +53,7 @@ Tree* Parser::parse_Compare() {
     Tree* tr_Compare_;
 
     tr_Add = this->parse_Add();
-    ERROR_nullptr(Add);
+    CHECK_nullptr(Add);
     tr->add(tr_Add);
 
     tr_Compare_ = this->parse_Compare_();
@@ -73,7 +73,7 @@ Tree* Parser::parse_Compare_() {
     }
 
     tr_Add = this->parse_Add();
-    ERROR_nullptr(Add);
+    CHECK_nullptr(Add);
     tr->add(tr_Add);
 
     // if (tr_Expr_ == nullptr) return nullptr; (I believe it'll never run)
@@ -85,7 +85,7 @@ Tree* Parser::parse_Add() {
     Tree* tr_Times = this->parse_Times();
     Tree* tr_Add_;
 
-    ERROR_nullptr(Times);
+    CHECK_nullptr(Times);
     tr->add(tr_Times);
 
     tr_Add_ = this->parse_Add_();// here
@@ -108,7 +108,7 @@ Tree* Parser::parse_Add_() {
     }
 
     tr_Times = this->parse_Times();
-    ERROR_nullptr(Times);
+    CHECK_nullptr(Times);
     tr->add(tr_Times);
 
     tr_Add_ = this->parse_Add_();
@@ -122,7 +122,7 @@ Tree* Parser::parse_Times() {
     Tree* tr_Power = this->parse_Power();
     Tree* tr_Times_;
 
-    ERROR_nullptr(Power);
+    CHECK_nullptr(Power);
     tr->add(tr_Power);
 
     tr_Times_ = this->parse_Times_();
@@ -145,7 +145,7 @@ Tree* Parser::parse_Times_() {
     }
 
     tr_Power = this->parse_Power();
-    ERROR_nullptr(Power);
+    CHECK_nullptr(Power);
     tr->add(tr_Power);
 
     tr_Times_ = this->parse_Times_();
@@ -159,7 +159,7 @@ Tree* Parser::parse_Power() {
     Tree* tr_Factor = this->parse_Factor();
     Tree* tr_Power_;
 
-    ERROR_nullptr(Factor);
+    CHECK_nullptr(Factor);
     tr->add(tr_Factor);
 
     tr_Power_ = this->parse_Power_();
@@ -181,7 +181,7 @@ Tree* Parser::parse_Power_() {
     }
 
     tr_Factor = this->parse_Factor();
-    ERROR_nullptr(Factor);
+    CHECK_nullptr(Factor);
     tr->add(tr_Factor);
 
     return tr;
@@ -203,7 +203,7 @@ Tree* Parser::parse_Factor() {
     }
     if (this->current.type == tokenTypeType) {
         Tree* tr_DefineVariable = this->parse_DefineVariable();
-        ERROR_nullptr(DefineVariable);
+        CHECK_nullptr(DefineVariable);
         tr->add(tr_DefineVariable);
         return tr;
     }
@@ -236,44 +236,51 @@ Tree* Parser::parse_Sentence() {
     if (this->current.type == tokenTypeKeyword) {
         if (this->current.matchKeyword("if")) {
             Tree* tr_If = this->parse_If();
-            ERROR_nullptr(If);
+            CHECK_nullptr(If);
             tr->add(tr_If);
             return tr;
         } else if (this->current.matchKeyword("while")) {
             Tree* tr_While = this->parse_While();
-            ERROR_nullptr(While);
+            CHECK_nullptr(While);
             tr->add(tr_While);
             return tr;
         } else if (this->current.matchKeyword("do")) {
             Tree* tr_DoWhile = this->parse_DoWhile();
-            ERROR_nullptr(DoWhile);
+            CHECK_nullptr(DoWhile);
             tr->add(tr_DoWhile);
             return tr;
         } else if (this->current.matchKeyword("for")) {
             Tree* tr_For = this->parse_For();
-            ERROR_nullptr(For);
+            CHECK_nullptr(For);
             tr->add(tr_For);
             return tr;
         } else if (this->current.matchKeyword("continue")) {
             Tree* tr_Continue = this->parse_Continue();
-            ERROR_nullptr(Continue);
+            CHECK_nullptr(Continue);
             tr->add(tr_Continue);
             return tr;
         } else if (this->current.matchKeyword("break")) {
             Tree* tr_Break = this->parse_Break();
-            ERROR_nullptr(Break);
+            CHECK_nullptr(Break);
             tr->add(tr_Break);
             return tr;
         } else if (this->current.matchKeyword("return")) {
             Tree* tr_Return = this->parse_Return();
-            ERROR_nullptr(Return);
+            CHECK_nullptr(Return);
             tr->add(tr_Return);
             return tr;
         }
+    } else if (this->current.type == tokenTypeType) {
+        Tree* tr_DefineVariable = this->parse_DefineVariable();
+        CHECK_nullptr(DefineVariable);
+        tr->add(tr_DefineVariable);
+        if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
+        this->getNextToken();
+        return tr;
     }
         
     tr_Expr = this->parse_Expr();
-    ERROR_nullptr(Expr);
+    CHECK_nullptr(Expr);
     tr->add(tr_Expr);
 
     if (!this->current.matchSign(";")) {
@@ -291,7 +298,7 @@ Tree* Parser::parse_Sentences() {
     
     while (!this->current.matchSign("}")) {
         tr_Sentence = this->parse_Sentence();
-        ERROR_nullptr(Sentence);
+        CHECK_nullptr(Sentence);
         tr->add(tr_Sentence);
     }
 
@@ -313,7 +320,7 @@ Tree* Parser::parse_Statements() {
     this->getNextToken();
 
     tr_Sentences = this->parse_Sentences();
-    ERROR_nullptr(Sentences);
+    CHECK_nullptr(Sentences);
     tr->add(tr_Sentences);
 
     this->getNextToken();

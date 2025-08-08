@@ -35,6 +35,7 @@ class Parser {
     Tree* parse_FunctionCall();
     Tree* parse_DefineFunction();
     Tree* parse_DefineVariable();
+    Tree* parse_DefineVariableList();
 
     Tree* parse_If();
     Tree* parse_Else();
@@ -54,5 +55,5 @@ class Parser {
 #define EXPECTED_ERROR(STH) { this->parserError(STH " expected"); \
 return nullptr; } 
 
-#define ERROR_nullptr(TER) if (tr_##TER == nullptr) EXPECTED_ERROR(#TER); 
+#define CHECK_nullptr(TER) if (tr_##TER == nullptr) EXPECTED_ERROR(#TER); 
 #endif

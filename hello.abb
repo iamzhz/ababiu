@@ -1,4 +1,4 @@
-{
+fn int main (void) {
     x = @inte(@input());
     op = @input();
     y = @inte(@input());

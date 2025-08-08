@@ -35,6 +35,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_FunctionCall,
     treeTypeNode_DefineFunction,
     treeTypeNode_DefineVariable,
+    treeTypeNode_DefineVariableList,
 
     treeTypeNode_If,
     treeTypeNode_Else,

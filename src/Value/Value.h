@@ -2,12 +2,12 @@
 #define _VALUE_H_
 #include <string>
 #include <variant>
-enum ImmediateType {
-    IMM_UNKNOWN, 
-    IMM_INT, 
-    IMM_CHAR, 
-    IMM_FLOAT, 
-    IMM_STRING
+enum TypeType {
+    TYPE_UNKNOWN, 
+    TYPE_INT, 
+    TYPE_CHAR, 
+    TYPE_FLOAT, 
+    TYPE_STRING
 };
 
 using Immediate = std::variant<
@@ -18,7 +18,7 @@ using Immediate = std::variant<
     std::string
 >;
 
-ImmediateType getImmediateType(const Immediate& imm) ;
+TypeType getImmediateType(const Immediate& imm) ;
 
 struct IdVariable {
     std::string content;

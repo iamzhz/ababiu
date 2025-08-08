@@ -72,6 +72,7 @@ std::string IROpToText(IROp n) {
         case Op_jumpIfNot_imm_reg: return "jumpIfNot_imm_reg";
         case Op_loadParaReg_imm: return "loadParaReg_imm";
         case Op_loadParaReg_iv: return "loadParaReg_iv";
+        case Sign_defineVariable_type_iv: return "defineVariable_type_iv";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
