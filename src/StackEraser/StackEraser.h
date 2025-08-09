@@ -8,10 +8,7 @@ Stack Eraser is used to convert a stack-IR to non-stack-IR
 #include <vector>
 #include "../IR/IR.h"
 #include "../Value/Value.h"
-
-#define REG_NUMBER_X86_64 12
-#define REG_NUMBER REG_NUMBER_X86_64
-#define RAX_NUMBER 0
+#include "../env_config/config.h"
 
 class StackEraser {
     private:
@@ -20,7 +17,7 @@ class StackEraser {
     IRs * old;
     std::vector<Value> stack;
     int tempCount = 0;
-    bool is_used[REG_NUMBER];
+    bool is_used[COMMON_REGS_NUMBER];
     std::unordered_set<int> stack_used; // stand for the real memory stack
     Value getReg();
     Value getCallerReg(int number);

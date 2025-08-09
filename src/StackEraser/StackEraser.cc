@@ -1,7 +1,7 @@
 #include "StackEraser.h"
 #include <stdexcept>
 Value StackEraser::getReg() {
-    for (int i = 0;  i < REG_NUMBER;  i ++) {
+    for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         if (!this->is_used[i]) {
             this->is_used[i] = true;
             return i;
@@ -11,19 +11,19 @@ Value StackEraser::getReg() {
 }
 Value StackEraser::getCallerReg(int number) {
     // reverse of RDI, RSI, RDX, RCX, R8, R9
-    return (REG_NUMBER + number);
+    return (COMMON_REGS_NUMBER + number);
 }
 
 StackEraser::StackEraser(IRs * irs) {
     this->old = irs;
     this->irs = new IRs();
-    for (int i = 0;  i < REG_NUMBER;  i ++) {
+    for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         this->is_used[i] = false;
     }
 }
 void StackEraser::releaseReg(Value reg) {
     int r = reg.getReg();
-    if (r < REG_NUMBER && r >= 0) {
+    if (r < COMMON_REGS_NUMBER && r >= 0) {
         this->is_used[r] = false;
     } else {
         // TODO
@@ -45,7 +45,7 @@ Value StackEraser::loadToReg(Value t, Value reg) {
         ir.reg0 = reg;
         ir.imm0 = t.getImmediate();
     } else if (t.isReg()) {
-        if (reg.getReg() < REG_NUMBER) {
+        if (reg.getReg() < COMMON_REGS_NUMBER) {
             this->releaseReg(reg);
             return t;
         }
@@ -239,7 +239,9 @@ void StackEraser::replaceLineNumber() {
         switch (i.op) {
             case Op_jumpIf_imm_reg: // fall through
             case Op_jumpIfNot_imm_reg: {
-                i.imm0 = makeImmediate(this->lineCast.find(getImmediateInt(i.imm0))->second);
+                int line = this->lineCast.find(getImmediateInt(i.imm0))->second;
+                this->irs->content[line].isMarked = true;
+                i.imm0 = makeImmediate(line);
                 break;
             }
             default: break;

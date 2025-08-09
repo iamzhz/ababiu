@@ -5,6 +5,7 @@
 #include "Parser/Parser.h"
 #include "Syntax/Syntax.h"
 #include "StackEraser/StackEraser.h"
+#include "CodeGen/CodeGen.h"
 int main(int argc, char** argv) {
     FileManager f;
     Lexer tkzer;
@@ -37,6 +38,10 @@ int main(int argc, char** argv) {
     StackEraser se(&irs);
     se.convert();
     irs.display();
+    std::cout << " ----------\n";
+    CodeGen codegen(&irs);
+    codegen.generate();
+    std::cout << codegen.get_output();
     /* e */
     return 0;
 }

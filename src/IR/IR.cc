@@ -23,8 +23,8 @@ int IRs::add(IR ir) {
     return pos;
 }
 
-void IRs::replace(IRs & theNew) {
-    this->content = theNew.content;
+void IRs::replace(IRs & new_) {
+    this->content = new_.content;
     this->pos = this->content.size();
 }
 
@@ -70,8 +70,6 @@ std::string IROpToText(IROp n) {
         case Op_power_reg_reg:  return "power_reg_reg";
         case Op_jumpIf_imm_reg: return "jump_imm_reg";
         case Op_jumpIfNot_imm_reg: return "jumpIfNot_imm_reg";
-        case Op_loadParaReg_imm: return "loadParaReg_imm";
-        case Op_loadParaReg_iv: return "loadParaReg_iv";
         case Sign_defineVariable_type_iv: return "defineVariable_type_iv";
     }
     return "Error: IR.cc::IRs::display();\n";

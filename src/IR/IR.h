@@ -66,10 +66,6 @@ enum IROp {
     Op_load_imm_reg,
     Op_store_iv_reg,
 
-    Op_loadParaReg_iv,
-    Op_loadParaReg_imm,
-    Op_loadParaReg_reg,
-
     Sign_defineVariable_type_iv,
 };
 
@@ -82,6 +78,7 @@ struct IR {
     Value reg0;
     Value reg1;
     TypeType type0;
+    bool isMarked = false;
     void clean();
 };
 
@@ -92,7 +89,7 @@ class IRs {
     std::vector<IR> content;
     
     int add(IR ir); // return the position of IR
-    void replace(IRs & old);
+    void replace(IRs & new_);
     //void
     #ifdef DEBUG
     void display();
