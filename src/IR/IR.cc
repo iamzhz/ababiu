@@ -31,6 +31,7 @@ void IRs::replace(IRs & new_) {
 #ifdef DEBUG
 std::string IROpToText(IROp n) {
     switch (n) {
+        case Op_none: return "none";
         case Op_pop_iv: return "pop_iv";
         case Op_push_imm: return "push_imm";
         case Op_push_iv: return "push_iv";
@@ -75,19 +76,10 @@ std::string IROpToText(IROp n) {
     return "Error: IR.cc::IRs::display();\n";
 }
 void outIdVaiable(IdVariable iv) {
-    std::cout << "  " << iv.content;
+    std::cout << iv.content << "  ";
 }
 void outImmediate(Immediate imm) {
-    std::visit([](auto&& arg) {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, std::monostate>) {
-            //std::cout << std::endl;
-        } else if constexpr (std::is_same_v<T, double>) {
-            std::cout << "  " << arg;
-        } else {
-            std::cout << "  " << arg;
-        }
-    }, imm);
+    std::cout << imm.content << "  ";
 }
 void IRs::display() {
     int count = 0;
@@ -97,9 +89,9 @@ void IRs::display() {
         outIdVaiable(ir.iv1);
         outImmediate(ir.imm0);
         if (ir.reg0.isReg())
-            std::cout << "   " << ir.reg0.getReg();
+            std::cout << ir.reg0.getReg() << "   ";
         if (ir.reg1.isReg())
-            std::cout << "   " << ir.reg1.getReg() << std::endl;
+            std::cout << ir.reg1.getReg() << "   " << std::endl;
         else std::cout << std::endl;
         count ++;
     }

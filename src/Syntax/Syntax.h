@@ -4,16 +4,18 @@
 #include "../Tree/Tree.h"
 #include "../AutoAssign/AutoAssign.h"
 #include "../Value/Value.h"
+#include "../Symbol/Symbol.h"
 
 class Syntax {
     private:
     Tree * tr; // the Tree need to deal with
     IRs * irs;   // the result
+    Symbol * symbol;
     // for jumping
     AutoAssign * start; // start of a loop
     AutoAssign * end;
     public:
-    Syntax(Tree * tr, IRs * irs);
+    Syntax(Tree * tr, IRs * irs, Symbol * symbol);
     ~Syntax();
     void init();
     // analyze

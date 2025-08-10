@@ -1,23 +1,23 @@
 #include "Value.h"
-
-TypeType getImmediateType(const Immediate& imm) {
-    switch (imm.index()) {
-        case 0: return TYPE_UNKNOWN;
-        case 1: return TYPE_INT;
-        case 2: return TYPE_CHAR;
-        case 3: return TYPE_FLOAT;
-        case 4: return TYPE_STRING;
-        default: return TYPE_UNKNOWN;
-    }
-}
-
-Immediate makeImmediate(int i) { return i;}
-Immediate makeImmediate(char c) { return c;}
-Immediate makeImmediate(double f)  { return f;}
-Immediate makeImmediate(std::string s) { return s;}
+#include <string>
 
 int getImmediateInt(Immediate imm) {
-    return std::get<int>(imm);
+    return std::stoi(imm.content);
+}
+
+TypeType getImmediateType(const Immediate& imm) {
+    return imm.type;
+}
+
+Immediate makeImmediate(TypeType type, std::string s) {
+    Immediate imm;
+    imm.type = type;
+    imm.content = s;
+    return imm;
+}
+
+Immediate makeImmediate(int i) {
+    return makeImmediate(TYPE_INT,  std::to_string(i));
 }
 
 IdVariable makeIdVariable(std::string content) {
@@ -27,7 +27,6 @@ IdVariable makeIdVariable(std::string content) {
 }
 
 Value::Value() {}
-#include <iostream>
 Value::Value(const Immediate & imm) {
     this->data_ = imm;
 }

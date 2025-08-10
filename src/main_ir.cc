@@ -3,6 +3,7 @@
 #include "CmdLineParser/CmdLineParser.h"
 #include "Token/Token.h"
 #include "Parser/Parser.h"
+#include "Symbol/Symbol.h"
 #include "Syntax/Syntax.h"
 int main(int argc, char** argv) {
     FileManager f;
@@ -17,7 +18,8 @@ int main(int argc, char** argv) {
     Tree *root = psr.parse_Unit(); 
     if (root == nullptr) sayError("what??");
     IRs irs;
-    Syntax syn(root, &irs);
+    Symbol symbol;
+    Syntax syn(root, &irs, &symbol);
     syn.init();
     syn.analyze_unit();
     irs.display();

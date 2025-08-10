@@ -12,6 +12,9 @@ void AutoAssign::add(int pos) {
 void AutoAssign::set(const Immediate& imm) {
     this->data.back().second = imm;
 }
+void AutoAssign::set(int i) {
+    this->set(makeImmediate(i));
+}
 void AutoAssign::assign() {
     std::vector<int>& lastVec = this->data.back().first;
     const Immediate& imm = this->data.back().second;

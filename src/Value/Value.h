@@ -10,13 +10,10 @@ enum TypeType {
     TYPE_STRING
 };
 
-using Immediate = std::variant<
-    std::monostate, 
-    int,
-    char,
-    double,
-    std::string
->;
+struct Immediate {
+    TypeType type;
+    std::string content;
+};
 
 TypeType getImmediateType(const Immediate& imm) ;
 
@@ -25,10 +22,8 @@ struct IdVariable {
 };
 
 int getImmediateInt(Immediate imm);
+Immediate makeImmediate(TypeType type, std::string s);
 Immediate makeImmediate(int i);
-Immediate makeImmediate(char c);
-Immediate makeImmediate(double f);
-Immediate makeImmediate(std::string s);
 IdVariable makeIdVariable(std::string content);
 
 enum SpecialMark {

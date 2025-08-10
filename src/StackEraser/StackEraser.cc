@@ -235,12 +235,21 @@ void StackEraser::convert() {
 }
 
 void StackEraser::replaceLineNumber() {
+    int size = this->irs->content.size();
     for (IR & i : this->irs->content) {
         switch (i.op) {
             case Op_jumpIf_imm_reg: // fall through
             case Op_jumpIfNot_imm_reg: {
                 int line = this->lineCast.find(getImmediateInt(i.imm0))->second;
-                this->irs->content[line].isMarked = true;
+                if (line >= size) {
+                    IR ir;
+                    ir.op = Op_none;
+                    ir.isMarked = true;
+                    this->irs->content.push_back(ir);
+                    size ++;
+                } else {
+                    this->irs->content[line].isMarked = true;
+                }
                 i.imm0 = makeImmediate(line);
                 break;
             }

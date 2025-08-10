@@ -2,9 +2,10 @@
 #include "../SayError/SayError.h"
 #include "../Token/Token.h"
 
-Syntax::Syntax(Tree * tr, IRs * irs) {
+Syntax::Syntax(Tree * tr, IRs * irs, Symbol * symbol) {
     this->tr = tr;
     this->irs = irs;
+    this->symbol = symbol;
     this->start = nullptr;
     this->end = nullptr;
 }
@@ -209,7 +210,13 @@ void Syntax::analyze_Factor(Tree * tr) {
             i.iv0 = makeIdVariable(head->tk.content);
         } else {
             i.op = Op_push_imm;
-            i.imm0 = makeImmediate(head->tk.content);
+            switch (head->tk.type) {
+                case tokenTypeChar: i.imm0 = makeImmediate(TYPE_CHAR, head->tk.content); break;
+                case tokenTypeInt: i.imm0 = makeImmediate(TYPE_INT, head->tk.content); break;
+                case tokenTypeFloat: i.imm0 = makeImmediate(TYPE_FLOAT, head->tk.content); break;
+                case tokenTypeString: i.imm0 = makeImmediate(TYPE_STRING, head->tk.content); break;
+                default: break;
+            }
         }
         this->irs->add(i);
     } else if (head->label == treeTypeNode_Expr) {

@@ -21,6 +21,7 @@ enum IROp {
     if -> id.function (but use `iv`)
     t  -> temp (but use `iv`)
     */
+    Op_none,
     Op_pop_iv,
     Op_push_imm,
     Op_push_iv,

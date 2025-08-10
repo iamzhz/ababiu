@@ -3,6 +3,7 @@
 #include "CmdLineParser/CmdLineParser.h"
 #include "Token/Token.h"
 #include "Parser/Parser.h"
+#include "Symbol/Symbol.h"
 #include "Syntax/Syntax.h"
 #include "StackEraser/StackEraser.h"
 #include "CodeGen/CodeGen.h"
@@ -32,14 +33,15 @@ int main(int argc, char** argv) {
     root->display();
     std::cout << " ----------\n";
     IRs irs;
-    Syntax syn(root, &irs);
+    Symbol symbol;
+    Syntax syn(root, &irs, &symbol);
     syn.init();
     syn.analyze_unit();
     StackEraser se(&irs);
     se.convert();
     irs.display();
     std::cout << " ----------\n";
-    CodeGen codegen(&irs);
+    CodeGen codegen(&irs, &symbol);
     codegen.generate();
     std::cout << codegen.get_output();
     /* e */
