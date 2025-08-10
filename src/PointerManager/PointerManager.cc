@@ -1,7 +1,7 @@
 #include "PointerManager.h"
 #include <iostream>
 #include "../Tree/Tree.h"
-#include "../Syntax/Symbol.h"
+#include "../Symbol/Symbol.h"
 #include "../debug/debug.h"
 
 template <class T>
@@ -37,5 +37,5 @@ void PointerManager<T>::display() {
 #endif
 
 template class PointerManager<Tree*>;
-template class PointerManager<VarSymbol*>;
-template class PointerManager<FuncSymbol*>;
+//template class PointerManager<VarSymbol*>;
+//template class PointerManager<FuncSymbol*>;
