@@ -12,9 +12,7 @@ class CodeGen {
     void append(std::string ins);
     IRs * irs;
     Symbol * symbol;
-
-    int mark = (-1);
-    int getMark();
+    
     public:
     CodeGen(IRs * irs, Symbol * symbol);
     void generate();

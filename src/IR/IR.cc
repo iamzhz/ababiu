@@ -26,6 +26,7 @@ int IRs::add(IR ir) {
 void IRs::replace(IRs & new_) {
     this->content = new_.content;
     this->pos = this->content.size();
+    this->marks = new_.marks;
 }
 
 #ifdef DEBUG

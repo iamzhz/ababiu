@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <variant>
+#include <unordered_map>
 #include "../Value/Value.h"
 
 enum IROp {
@@ -79,7 +80,6 @@ struct IR {
     Value reg0;
     Value reg1;
     TypeType type0;
-    bool isMarked = false;
     void clean();
 };
 
@@ -88,6 +88,7 @@ class IRs {
     int pos = 0; // the position which will be on the next IR
     int getPosition();
     std::vector<IR> content;
+    std::unordered_map<std::string, int> marks;
     
     int add(IR ir); // return the position of IR
     void replace(IRs & new_);

@@ -1,10 +1,6 @@
 #include "Value.h"
 #include <string>
 
-int getImmediateInt(Immediate imm) {
-    return std::stoi(imm.content);
-}
-
 TypeType getImmediateType(const Immediate& imm) {
     return imm.type;
 }

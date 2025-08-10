@@ -21,7 +21,6 @@ struct IdVariable {
     std::string content;
 };
 
-int getImmediateInt(Immediate imm);
 Immediate makeImmediate(TypeType type, std::string s);
 Immediate makeImmediate(int i);
 IdVariable makeIdVariable(std::string content);

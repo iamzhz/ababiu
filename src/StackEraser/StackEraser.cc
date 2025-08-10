@@ -1,5 +1,6 @@
 #include "StackEraser.h"
 #include <stdexcept>
+#include <string>
 Value StackEraser::getReg() {
     for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         if (!this->is_used[i]) {
@@ -233,23 +234,23 @@ void StackEraser::convert() {
     this->replaceLineNumber();
     this->old->replace(*this->irs);
 }
-
 void StackEraser::replaceLineNumber() {
     int size = this->irs->content.size();
+    int count = 0;
     for (IR & i : this->irs->content) {
         switch (i.op) {
-            case Op_jumpIf_imm_reg: // fall through
+            case Op_jump_imm: // fall through
+            case Op_jumpIf_imm_reg:
             case Op_jumpIfNot_imm_reg: {
-                int line = this->lineCast.find(getImmediateInt(i.imm0))->second;
+                int line = this->lineCast.find(std::stoi(i.imm0.content))->second;
                 if (line >= size) {
                     IR ir;
                     ir.op = Op_none;
-                    ir.isMarked = true;
                     this->irs->content.push_back(ir);
                     size ++;
-                } else {
-                    this->irs->content[line].isMarked = true;
                 }
+                this->irs->marks.insert({std::to_string(line), count});
+                count ++;
                 i.imm0 = makeImmediate(line);
                 break;
             }
