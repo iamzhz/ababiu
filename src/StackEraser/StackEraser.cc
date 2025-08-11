@@ -1,5 +1,4 @@
 #include "StackEraser.h"
-#include <stdexcept>
 #include <string>
 Value StackEraser::getReg() {
     for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {

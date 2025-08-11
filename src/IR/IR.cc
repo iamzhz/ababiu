@@ -1,5 +1,4 @@
 #include "IR.h"
-#include <iostream>
 
 void IR::clean() {
     #ifdef DEBUG
