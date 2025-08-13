@@ -1,7 +1,9 @@
 # Ababiu
-It is a program for a programming language named `Ababiu`.
-
-This project is WIP.
+It is a program for a programming language named `Ababiu`.  
+**(This project is WIP.)**  
+  
+To compile this project, you should have `make` or `cmake`.  
+To compile your Ababiu code, you should have `nasm` and `gcc`.  
 ## Build this project
 If you use `makefile`:
 ``` bash
@@ -14,23 +16,27 @@ cd build
 cmake ..
 cmake --build .
 ```
-It will generate two files named `ababiu` and `ababiu_ir`.  
+It will generate a executable file named `ababiu`.
 
-## Run this project
-``` bash
-./ababiu your_code.abb
+## Prepare before use
+You should run
+```bash
+gcc -c libababiu/libababiu.c -o libababiu.o
 ```
-Though `ababiu_ir` you can get the IR of your code.  
-There is an AI-made interpreter named `run_ir.py`(Python).  
-So now, you can do this:
+to prepare the library of Abandon.
+
+## Compile your code
+(There is a test file `test.abb`, you can try it)  
 ``` bash
-./ababiu_ir you_code.abb | python run_ir.py
-```  
-to run your Ababiu code!  
-There is a test file `./hello.abb`. You can try it.  
+./ababiu your_code.abb -o assembly.asm  # compile to assembly code
+nasm -f elf64 assembly.asm -o a.o
+gcc a.o libababiu.o -o output
 
-(Compiler is continuing writing!)
-
+```
+Then you can run it by
+```bash
+./output
+```
 ## File
 `src/` is the source code.  
-`doc/` is the document.
+`libababiu/` is the library of Ababiu.

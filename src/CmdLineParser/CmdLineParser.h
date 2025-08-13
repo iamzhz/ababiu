@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
+#include <unordered_map>
 #include "../SayError/SayError.h"
 
 class CmdLineParser {
@@ -14,16 +14,11 @@ class CmdLineParser {
     bool option(std::string first, std::string second); // return true means used `second`
     std::string deleteDash(char *para);
     public:
-
-    std::vector<std::string> inputFiles;
-    std::string outputFile;
+    // "" -> input file
+    // "o" -> output file
+    std::unordered_map<std::string, std::string> table;
     CmdLineParser(int argc, char** argv);
-    void setArgs(int argc, char** argv);
     void run();
-
-    #ifdef DEBUG
-    void display();
-    #endif
 };
 
 #endif

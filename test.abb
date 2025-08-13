@@ -1,0 +1,7 @@
+fn int main(void) {
+    int x;
+    int y;
+    x = @input();
+    y = @input();
+    @print(x+y);
+}

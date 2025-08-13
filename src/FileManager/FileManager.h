@@ -28,6 +28,7 @@ class FileManager {
 
     bool setInputFile(std::string fileName); // return true is a success
     bool setOutputFile(std::string fileName); // return true is a success
+    void outputToFile(std::string text);
     void closeFile();
     char current();
     bool next(); // return false means eof

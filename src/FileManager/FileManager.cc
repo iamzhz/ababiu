@@ -16,6 +16,10 @@ bool FileManager::setOutputFile(std::string fileName) {
     return this->outputFile.is_open();
 }
 
+void FileManager::outputToFile(std::string text) {
+    this->outputFile << text;
+}
+
 
 void FileManager::closeFile() {
     this->inputFile.close();
@@ -54,7 +58,7 @@ bool FileManager::next() {
     int& bufferLength = this->bufferLengths[this->isBufferA];
     this->readPoint ++;
     if (this->readPoint >= bufferLength) { // ready to change buffer
-        this->isBufferA = this->isBufferA == false; // true to false, false to true
+        this->isBufferA = !this->isBufferA; // true to false, false to true
         if (this->notToReread) this->notToReread = false;
         else this->readToBuffer();
         this->readPoint = 0;
