@@ -27,6 +27,10 @@ class CodeGen {
     void Handle_jumpIf_imm_reg(const IR & ir);
     void Handle_jumpIfNot_imm_reg(const IR & ir);
     void Handle_compare_reg_reg(const IR & ir);
+    void Handle_push_imm(const IR & ir);
+    void Handle_push_iv(const IR & ir);
+    void Handle_push_reg(const IR & ir);
+    void Handle_call_if(const IR & ir);
     
     public:
     CodeGen(IRs * irs, Symbol * symbol);

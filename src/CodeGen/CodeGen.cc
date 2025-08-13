@@ -92,36 +92,54 @@ void CodeGen::Handle_compare_reg_reg(const IR & ir) {
     this->append(opcode + " " + common_low8_regs[ir.reg0.getReg()]);
     this->append("movzx " + this->getReg(ir.reg0) + ", " + common_low8_regs[ir.reg0.getReg()]);
 }
+void CodeGen::Handle_push_imm(const IR & ir) {
+    this->append("push " + ir.imm0.content);
+}
+void CodeGen::Handle_push_iv(const IR & ir) {
+    this->append("push " + this->symbol->get_variable_mem(ir.iv0.content));
+}
+void CodeGen::Handle_push_reg(const IR & ir) {
+    this->append("push " + this->getReg(ir.reg0));
+}
+void CodeGen::Handle_call_if(const IR & ir) {
+    this->append("call " + ir.iv0.content);
+}
 
 void CodeGen::generate() {
     int count = 0;
+    using OpHandler = void (CodeGen::*)(const IR&);
+    std::unordered_map<IROp, OpHandler> handlers = {
+        {Op_mov_iv_iv, &CodeGen::Handle_mov_iv_iv},
+        {Op_mov_iv_imm, &CodeGen::Handle_mov_iv_imm},
+        {Op_mov_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_add_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_sub_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_div_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
+        {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
+        {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},
+        {Op_jump_imm, &CodeGen::Handle_jump_imm},
+        {Op_jumpIf_imm_reg, &CodeGen::Handle_jumpIf_imm_reg},
+        {Op_jumpIfNot_imm_reg, &CodeGen::Handle_jumpIfNot_imm_reg},
+        {Op_equal_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_bigger_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_biggerEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_smaller_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_smallerEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_notEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
+        {Op_push_imm, &CodeGen::Handle_push_imm},
+        {Op_push_iv, &CodeGen::Handle_push_iv},
+        {Op_push_reg, &CodeGen::Handle_push_reg},
+        {Op_call_if, &CodeGen::Handle_call_if},
+    };
+    this->append("push rbp");
+    this->append("mov rbp, rsp");
     for (IR ir : this->irs->content) {
         auto mark = this->irs->marks.find(std::to_string(count));
         if (mark != this->irs->marks.end()) {
             this->append("L" + std::to_string(mark->second) + ":");
         }
-        using OpHandler = void (CodeGen::*)(const IR&);
-        std::unordered_map<IROp, OpHandler> handlers = {
-            {Op_mov_iv_iv, &CodeGen::Handle_mov_iv_iv},
-            {Op_mov_iv_imm, &CodeGen::Handle_mov_iv_imm},
-            {Op_mov_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-            {Op_add_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-            {Op_sub_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-            {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-            {Op_div_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-            {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
-            {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
-            {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},
-            {Op_jump_imm, &CodeGen::Handle_jump_imm},
-            {Op_jumpIf_imm_reg, &CodeGen::Handle_jumpIf_imm_reg},
-            {Op_jumpIfNot_imm_reg, &CodeGen::Handle_jumpIfNot_imm_reg},
-            {Op_equal_reg_reg, &CodeGen::Handle_compare_reg_reg},
-            {Op_bigger_reg_reg, &CodeGen::Handle_compare_reg_reg},
-            {Op_biggerEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
-            {Op_smaller_reg_reg, &CodeGen::Handle_compare_reg_reg},
-            {Op_smallerEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
-            {Op_notEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
-        };
         auto it = handlers.find(ir.op);
         if (it != handlers.end()) {
             (this->*(it->second))(ir);
