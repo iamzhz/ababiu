@@ -13,6 +13,10 @@ class CodeGen {
     IRs * irs;
     Symbol * symbol;
 
+    std::string getReg(bool isLow8, int n);
+    inline std::string getReg(int n);
+    std::string getReg(const Value & reg);
+
     void Handle_mov_iv_iv(const IR & ir);
     void Handle_mov_iv_imm(const IR & ir);
     void Handle_xxx_reg_reg(const IR & ir);

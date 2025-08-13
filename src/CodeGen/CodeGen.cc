@@ -11,7 +11,20 @@ std::vector<std::string> common_low8_regs = {
 };
 std::vector<std::string> call_regs = {
     "rdi", "rsi", "rdx", "rcx", "r8", "r9"
-};  
+};
+
+std::string CodeGen::getReg(bool isLow8, int n) {
+    if (n >= 0 && n < COMMON_REGS_NUMBER) {
+        return isLow8?common_low8_regs[n]:common_regs[n];
+    }
+    return call_regs[n-COMMON_REGS_NUMBER];
+}
+inline std::string CodeGen::getReg(int n) {
+    return this->getReg(false, n);
+}
+std::string CodeGen::getReg(const Value & reg) {
+    return this->getReg(reg.getReg());
+}
 
 CodeGen::CodeGen(IRs * irs, Symbol * symbol) {
     this->irs = irs;
@@ -42,26 +55,26 @@ void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
         case Op_div_reg_reg: opcode = "div"; break;
         default: break;
     }
-    this->append(opcode + ' ' + common_regs[ir.reg0.getReg()] + ", " + common_regs[ir.reg1.getReg()]);
+    this->append(opcode + ' ' + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
-    this->append("mov " + common_regs[ir.reg0.getReg()] + ", " + ir.imm0.content);
+    this->append("mov " + this->getReg(ir.reg0) + ", " + ir.imm0.content);
 }
 void CodeGen::Handle_load_iv_reg(const IR & ir) {
-    this->append("mov " + common_regs[ir.reg0.getReg()] + ", " + this->symbol->get_variable_mem(ir.iv0.content));
+    this->append("mov " + this->getReg(ir.reg0) + ", " + this->symbol->get_variable_mem(ir.iv0.content));
 }
 void CodeGen::Handle_store_iv_reg(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.iv0.content) + ", " + common_regs[ir.reg0.getReg()]);
+    this->append("mov " + this->symbol->get_variable_mem(ir.iv0.content) + ", " + this->getReg(ir.reg0));
 }
 void CodeGen::Handle_jump_imm(const IR & ir) {
     this->append("jmp L" + std::to_string(this->irs->marks[ir.imm0.content]));
 }
 void CodeGen::Handle_jumpIf_imm_reg(const IR & ir) {
-    this->append("test " + common_regs[ir.reg0.getReg()] + ", " + common_regs[ir.reg0.getReg()]);
+    this->append("test " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
                 this->append("jne L" + std::to_string(this->irs->marks[ir.imm0.content]));
 }
 void CodeGen::Handle_jumpIfNot_imm_reg(const IR & ir) {
-    this->append("test " + common_regs[ir.reg0.getReg()] + ", " + common_regs[ir.reg0.getReg()]);
+    this->append("test " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg0));
     this->append("je L" + std::to_string(this->irs->marks[ir.imm0.content]));
 }
 void CodeGen::Handle_compare_reg_reg(const IR & ir) {
@@ -75,9 +88,9 @@ void CodeGen::Handle_compare_reg_reg(const IR & ir) {
         case Op_notEqual_reg_reg: opcode = "setne"; break;
         default: break;
     }
-    this->append("cmp " + common_regs[ir.reg0.getReg()] + ", " + common_regs[ir.reg1.getReg()]);
+    this->append("cmp " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
     this->append(opcode + " " + common_low8_regs[ir.reg0.getReg()]);
-    this->append("movzx " + common_regs[ir.reg0.getReg()] + ", " + common_low8_regs[ir.reg0.getReg()]);
+    this->append("movzx " + this->getReg(ir.reg0) + ", " + common_low8_regs[ir.reg0.getReg()]);
 }
 
 void CodeGen::generate() {
