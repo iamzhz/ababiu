@@ -24,6 +24,7 @@ enum IROp {
     */
     Op_none,
     Op_pop_iv,
+    Op_pop_reg,
     Op_push_imm,
     Op_push_iv,
     Op_push_reg,

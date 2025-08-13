@@ -1,5 +1,12 @@
 #include "StackEraser.h"
 #include <string>
+
+void StackEraser::markUsed(int n) {
+    if (n >= 0 && n < COMMON_REGS_NUMBER) {
+        this->is_used[n] = true;
+    }
+}
+
 Value StackEraser::getReg() {
     for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         if (!this->is_used[i]) {
@@ -188,6 +195,12 @@ void StackEraser::convert() {
                 break;
             }
             case Op_call_if: {
+                bool isRaxProtect = this->is_used[RAX_NUMBER];
+                if (isRaxProtect) {
+                    ir.op = Op_push_reg;
+                    ir.reg0 = Value(RAX_NUMBER);
+                    this->append(ir);
+                }
                 std::vector<Value> parameters; // reverse of real parameters
                 // reverse of RDI, RSI, RDX, RCX, R8, R9
                 std::vector<Value> last6; // for register (reverse)
@@ -218,8 +231,19 @@ void StackEraser::convert() {
                     this->append(ir);
                     this->releaseReg(reg);
                 }
-                this->append(i);
-                this->push(Value(RAX_NUMBER));
+                this->append(i); // call func
+                if (isRaxProtect) {
+                    ir.op = Op_mov_reg_reg;
+                    ir.reg0 = this->getReg();
+                    ir.reg1 = Value(RAX_NUMBER);
+                    this->append(ir);
+                    ir.op = Op_pop_reg;
+                    ir.reg0 = Value(RAX_NUMBER);
+                    this->append(ir);
+                } else {
+                    this->push(Value(RAX_NUMBER));
+                    this->markUsed(RAX_NUMBER);
+                }
                 break;
             }
             default: {

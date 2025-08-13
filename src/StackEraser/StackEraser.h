@@ -19,6 +19,7 @@ class StackEraser {
     int tempCount = 0;
     bool is_used[COMMON_REGS_NUMBER];
     std::unordered_set<int> stack_used; // stand for the real memory stack
+    void markUsed(int n);
     Value getReg();
     Value getCallerReg(int number);
     void releaseReg(Value reg);
