@@ -18,11 +18,11 @@ struct SymbolValue{
 
 class Symbol {
     private:
-    int i = (-8);
     std::unordered_map<std::string, SymbolValue> table;
     std::vector<std::pair<int, int>> memory_unused; // first->addr; second->unused_bytes_number
     int assign_memory(int addr, int rest, int size, int & used);
     public:
+    int i = (-8);
     Symbol() = default;
     void insert_variable(std::string name, TypeType var_type);
     SymbolValue get_variable(std::string name);

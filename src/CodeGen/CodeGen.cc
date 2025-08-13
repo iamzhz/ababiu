@@ -34,9 +34,22 @@ CodeGen::CodeGen(IRs * irs, Symbol * symbol) {
 void CodeGen::append(std::string ins) {
     this->_output << ins << '\n';
 }
-
 std::string CodeGen::get_output() {
-    return this->_output.str();
+    int allocate = -this->symbol->i;
+    allocate = (allocate + 15) & ~15;
+    return  "section .text\n"
+            "extern print\n"
+            "extern input\n"
+            "global main\n"
+            "main:\n"
+            "push rbp\n"
+            "mov rbp, rsp\n"
+            "sub rsp, " + std::to_string(allocate) + "\n"
+            + this->_output.str() +
+            "xor rax, rax\n"
+            "leave\n"
+            "ret\n"
+            "\n";
 }
 
 void CodeGen::Handle_mov_iv_iv(const IR & ir) {
@@ -133,8 +146,6 @@ void CodeGen::generate() {
         {Op_push_reg, &CodeGen::Handle_push_reg},
         {Op_call_if, &CodeGen::Handle_call_if},
     };
-    this->append("push rbp");
-    this->append("mov rbp, rsp");
     for (IR ir : this->irs->content) {
         auto mark = this->irs->marks.find(std::to_string(count));
         if (mark != this->irs->marks.end()) {
