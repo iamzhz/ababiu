@@ -246,6 +246,19 @@ void StackEraser::convert() {
                 }
                 break;
             }
+            case Op_return: {
+                Value v = this->pop();
+                if (v.isImmediate()) {
+                    ir.op = Op_return_imm;
+                    ir.imm0 = v.getImmediate();
+                    this->append(ir);
+                    break;
+                }
+                ir.op = Op_return_reg;
+                ir.reg0 = this->loadToReg(v);
+                this->append(ir);
+                break;
+            }
             default: {
                 this->append(i);
                 break;

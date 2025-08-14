@@ -31,6 +31,8 @@ class CodeGen {
     void Handle_push_iv(const IR & ir);
     void Handle_push_reg(const IR & ir);
     void Handle_call_if(const IR & ir);
+    void Handle_return_imm(const IR & ir);
+    void Handle_return_reg(const IR & ir);
     
     public:
     CodeGen(IRs * irs, Symbol * symbol);

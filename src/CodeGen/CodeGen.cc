@@ -117,6 +117,22 @@ void CodeGen::Handle_push_reg(const IR & ir) {
 void CodeGen::Handle_call_if(const IR & ir) {
     this->append("call " + ir.iv0.content);
 }
+void CodeGen::Handle_return_imm(const IR & ir) {
+    if (ir.imm0.content == "0") {
+        this->append("xor rax, rax");
+    } else {
+        this->append("mov rax, " + ir.imm0.content);
+    }
+    this->append("leave");
+    this->append("ret");
+}
+void CodeGen::Handle_return_reg(const IR & ir) {
+    if (ir.reg0.getReg() != RAX_NUMBER) {
+        this->append("mov rax, " + this->getReg(ir.reg0));
+    }
+    this->append("leave");
+    this->append("ret");
+}
 
 void CodeGen::generate() {
     int count = 0;
@@ -145,6 +161,8 @@ void CodeGen::generate() {
         {Op_push_iv, &CodeGen::Handle_push_iv},
         {Op_push_reg, &CodeGen::Handle_push_reg},
         {Op_call_if, &CodeGen::Handle_call_if},
+        {Op_return_imm, &CodeGen::Handle_return_imm},
+        {Op_return_reg, &CodeGen::Handle_return_reg},
     };
     for (IR ir : this->irs->content) {
         auto mark = this->irs->marks.find(std::to_string(count));

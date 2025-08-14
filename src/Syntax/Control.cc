@@ -80,7 +80,10 @@ void Syntax::analyze_Break() {
     this->end->add(this->irs->add(i));
 }
 void Syntax::analyze_Return(Tree * tr) {
-
+    IR i;
+    this->analyze_Expr(tr->children[0]);
+    i.op = Op_return;
+    this->irs->add(i);
 }
 void Syntax::analyze_Continue() {
     IR i;

@@ -53,6 +53,10 @@ enum IROp {
     Op_notEqual, // push (~1 != ~0)
     Op_notEqual_reg_reg,
 
+    Op_return, // return (~0)
+    Op_return_imm,
+    Op_return_reg,
+
     Op_power, // push (~1 ** ~0)
     Op_power_reg_reg,
 

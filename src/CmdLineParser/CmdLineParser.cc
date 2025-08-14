@@ -27,6 +27,7 @@ void CmdLineParser::run() {
                 std::string(argv[i+1])
             });
             ++ i;
+            continue ;
         }
         this->table.insert({"", std::string(argv[i])});
     }
