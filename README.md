@@ -23,7 +23,7 @@ You should run
 ```bash
 gcc -c libababiu/libababiu.c -o libababiu.o
 ```
-to prepare the library of Abandon.
+to prepare the library of Ababiu.
 
 ## Compile your code
 (There is a test file `test.abb`, you can try it)  
