@@ -2,7 +2,7 @@
 It is a program for a programming language named `Ababiu`.  
 **(This project is WIP.)**  
   
-To compile this project, you should have `make` or `cmake`.  
+To compile this project, you should have `make`, `cmake` or `xmake`.  
 To compile your Ababiu code, you should have `nasm` and `gcc`.  
 ## Build this project
 If you use `makefile`:
@@ -15,6 +15,10 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
+```
+If you use `xmake`:
+```bash
+xmake
 ```
 It will generate a executable file named `ababiu`.
 
