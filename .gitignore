@@ -1,4 +1,5 @@
 .vscode/
+.xmake/
 build/
 ababiu
 ababiu_ir
