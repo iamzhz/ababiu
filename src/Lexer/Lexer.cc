@@ -40,12 +40,25 @@ Token Lexer::getNextToken() {
     tokenLine = this->file->curLine;
     tokenColumn = this->file->curColumn;
     cur = this->file->current();
-    if (this->isDigit(cur)) tk = this->intToken();
-    else if (this->isLetter(cur) || cur == '_') tk = this->idToken();
-    else if (cur == '\'') tk = this->charToken(); 
-    else if (cur == '\"') tk = this->stringToken();
-    else if (this->isSign(cur)) tk = this->signToken();
-    else {
+    if (this->isDigit(cur)) {
+        tk = this->intToken();
+        this->isCalculableLast = true;
+    } else if (cur == '-' && !this->isCalculableLast) {
+        tk = this->intToken();
+        this->isCalculableLast = true;
+    } else if (this->isLetter(cur) || cur == '_') {
+        tk = this->idToken();
+        this->isCalculableLast = true;
+    } else if (cur == '\'') {
+        tk = this->charToken(); 
+        this->isCalculableLast = true;
+    } else if (cur == '\"') {
+        tk = this->stringToken();
+        this->isCalculableLast = true;
+    } else if (this->isSign(cur)) {
+        tk = this->signToken();
+        this->isCalculableLast = false;
+    } else {
         tk.type = tokenTypeEof;
         this->file->next();
     }
@@ -61,9 +74,10 @@ Token Lexer::intToken() {
     Token tk, tmp;
     char cur;
     tk.type = tokenTypeInt;
-    if (!this->isDigit(this->file->current())) 
-            sayError(this->file->curLine, this->file->curColumn, "Should be a digit here");
-    do {
+    cur = this->file->current();
+    // this->isDigit(cur) || cur == '-'
+    tk.addToContent(cur);
+    while (this->file->next()) {
         cur = this->file->current();
         if (this->isDigit(cur)) {
             tk.addToContent(cur);
@@ -75,8 +89,8 @@ Token Lexer::intToken() {
             if (tmp.type != tokenTypeInt) sayError("Syntax wrong");
             tk.addToContent(tmp.content);
             break;
-        }else break;
-    } while (this->file->next());
+        } else break;
+    }
     return tk;
 }
 
