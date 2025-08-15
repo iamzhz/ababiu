@@ -1,6 +1,7 @@
 .vscode/
 .xmake/
 build/
+.clangd
 ababiu
 ababiu_ir
 *.o

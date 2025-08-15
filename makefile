@@ -1,5 +1,5 @@
 CC := g++
-STD := -std=c++17
+STD := -std=c++20
 DEBUG := -g -DDEBUG # -DDEEPDEBUG
 WARNINGS := -Wall -Wextra -Wpedantic
 
@@ -13,7 +13,7 @@ all: $(EXECUTABLES)
 ababiu: src/main.o $(OBJ_FILES)
 	$(CC) $^ -o $@ $(DEBUG)
 %.o: %.cc
-	$(CC) -c $< -o $@ $(STD) $(DEBUG) $(WARNINGS)
+	$(CC) -c $< -o $@ $(STD) $(DEBUG) $(WARNINGS) -DTEST
 
 clean:
 	rm -f $(OBJ_FILES) $(EXECUTABLES)
