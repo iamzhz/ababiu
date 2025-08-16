@@ -44,23 +44,16 @@ Value StackEraser::loadToReg(Value t) {
 Value StackEraser::loadToReg(Value t, Value reg) {
     IR ir;
     if (t.isVariable()) {
-        ir.op = Op_load_iv_reg;
-        ir.reg0 = reg;
-        ir.iv0  = t.getIdVariable();
+        this->append({Op_load_iv_reg, t, reg});
     } else if (t.isImmediate()) {
-        ir.op = Op_load_imm_reg;
-        ir.reg0 = reg;
-        ir.imm0 = t.getImmediate();
+        this->append({Op_load_imm_reg, t, reg});
     } else if (t.isReg()) {
         if (reg.getReg() < COMMON_REGS_NUMBER) {
             this->releaseReg(reg);
             return t;
         }
-        ir.op = Op_mov_reg_reg;
-        ir.reg0 = reg;
-        ir.reg1 = t;
+        this->append({Op_mov_reg_reg, reg, t});
     }
-    this->append(ir);
     return reg;
 }
 
@@ -96,173 +89,148 @@ Value StackEraser::pop() {
 void StackEraser::push(const Value & v) {
     this->stack.push_back(v);
 }
-void StackEraser::append(IR & ir) {
+void StackEraser::append(const IR & ir) {
     this->irs->add(ir);
 }
+void StackEraser::Handle_pop_iv(const IR & i) {
+    Value v = this->pop();
+    if (v.isVariable()) {
+        this->append({Op_mov_iv_iv, i.val0, v});
+    } else if (v.isImmediate()) {
+        this->append({Op_mov_iv_imm, i.val0, v});
+    } else if (v.isReg()) {
+        this->append({Op_store_iv_reg, i.val0, v});
+        this->releaseReg(v);
+    }
+    
+}
+void StackEraser::Handle_push_imm(const IR & i) {
+    this->push(Value(i.val0));
+}
+void StackEraser::Handle_push_iv(const IR & i) {
+    this->push(Value(i.val0));
+}
+void StackEraser::Handle_xxx(const IR & i) {
+    IROp op;
+    switch (i.op) {
+        case Op_add: op = Op_add_reg_reg;  break;
+        case Op_sub: op = Op_sub_reg_reg;  break;
+        case Op_mul: op = Op_mul_reg_reg;  break;
+        case Op_div: op = Op_div_reg_reg;  break;
+        case Op_equal: op = Op_equal_reg_reg;  break;
+        case Op_bigger: op = Op_bigger_reg_reg;  break;
+        case Op_biggerEqual: op = Op_biggerEqual_reg_reg;  break;
+        case Op_smaller: op = Op_smaller_reg_reg;  break;
+        case Op_smallerEqual: op = Op_smallerEqual_reg_reg;  break;
+        case Op_notEqual: op = Op_notEqual_reg_reg;  break;
+        case Op_power: op = Op_power_reg_reg;  break;
+        default: break;
+    }
+    Value a_reg = this->loadToReg(this->pop());
+    Value b_reg = this->loadToReg(this->pop());
+    this->append({op, a_reg, b_reg});
+    this->releaseReg(b_reg);
+    this->push(a_reg);
+}
+void StackEraser::Handle_conditionJump_addr(const IR & i) {
+    IROp op;
+    switch (i.op) {
+        case Op_jumpIf_addr: op = Op_jumpIf_addr_reg; break;
+        case Op_jumpIfNot_addr: op = Op_jumpIfNot_addr_reg; break;
+        default: break;
+    }
+    Value a_reg = this->loadToReg(this->pop());
+    this->append({op, i.get_addr(), a_reg});
+    this->releaseReg(a_reg);
+}
+void StackEraser::Handle_callParaBegin(const IR & i) {
+    (void)i;
+    this->push(Value(static_cast<SpecialMark>(FUNCTION_CALL_PARA_HEAD)));
+}
+void StackEraser::Handle_call_if(const IR & i) {
+    bool isRaxProtect = this->is_used[RAX_NUMBER];
+    if (isRaxProtect) {
+        this->append({Op_push_reg, Value(RAX_NUMBER)});
+    }
+    std::vector<Value> parameters; // reverse of real parameters
+    // reverse of RDI, RSI, RDX, RCX, R8, R9
+    std::vector<Value> last6; // for register (reverse)
+    int paras_size = 0;
+    int last6_size;
+    Value para;
+    while (!(para = this->pop()).isParaHead()) {
+        parameters.push_back(para);
+        paras_size ++;
+    }
+    if (paras_size >= 6) last6_size = 6;
+    else last6_size = paras_size;
 
+    last6.assign(parameters.end() - last6_size, parameters.end());
+    parameters.erase(parameters.end() - last6_size, parameters.end());
+
+    // deal with register paras
+    int reg_para_count = 0;
+    for (auto it = last6.rbegin(); it != last6.rend(); ++it) {
+        this->loadToReg(*it, this->getCallerReg(reg_para_count));
+        reg_para_count ++;
+    }
+    // deal with stack paras
+    for (Value stack_para : parameters) {
+        Value reg = this->loadToReg(stack_para);
+        this->append({Op_push_reg, reg});
+        this->releaseReg(reg);
+    }
+    this->append(i); // call func
+    if (isRaxProtect) {
+        this->append({Op_mov_reg_reg, this->getReg(), RAX_NUMBER});
+        this->append({Op_pop_reg, Value(RAX_NUMBER)});
+    } else {
+        this->push(Value(RAX_NUMBER));
+        this->markUsed(RAX_NUMBER);
+    }
+}
+void StackEraser::Handle_return(const IR & i) {
+    (void)i;
+    Value v = this->pop();
+    if (v.isImmediate()) {
+        this->append({Op_return_imm, v});
+        return ;
+    }
+    Value v_reg = this->loadToReg(v);
+    this->append({Op_return_reg, v_reg});
+}
 void StackEraser::convert() {
     int n = 0;
     Value v;
-    IROp temp_op;
+    using OpHandler = void (StackEraser::*)(const IR&);
+    std::unordered_map<IROp, OpHandler> handlers = {
+        {Op_pop_iv, &StackEraser::Handle_pop_iv},
+        {Op_push_imm, &StackEraser::Handle_push_imm},
+        {Op_push_iv, &StackEraser::Handle_push_iv},
+        {Op_add, &StackEraser::Handle_xxx},
+        {Op_sub, &StackEraser::Handle_xxx},
+        {Op_mul, &StackEraser::Handle_xxx},
+        {Op_div, &StackEraser::Handle_xxx},
+        {Op_equal, &StackEraser::Handle_xxx},
+        {Op_bigger, &StackEraser::Handle_xxx},
+        {Op_biggerEqual, &StackEraser::Handle_xxx},
+        {Op_smaller, &StackEraser::Handle_xxx},
+        {Op_smallerEqual, &StackEraser::Handle_xxx},
+        {Op_notEqual, &StackEraser::Handle_xxx},
+        {Op_power, &StackEraser::Handle_xxx},
+        {Op_jumpIf_addr, &StackEraser::Handle_conditionJump_addr},
+        {Op_jumpIfNot_addr, &StackEraser::Handle_conditionJump_addr},
+        {Sign_callParaBegin, &StackEraser::Handle_callParaBegin},
+        {Op_call_if, &StackEraser::Handle_call_if},
+        {Op_return, &StackEraser::Handle_return},
+    };
     for (IR i : this->old->content) {
-        IR ir;
         this->lineCast.insert({n, this->irs->pos});
-        switch (i.op) {
-            case Op_pop_iv: {
-                v = this->pop();
-                if (v.isVariable()) {
-                    ir.op = Op_mov_iv_iv;
-                    ir.iv0 = i.iv0;
-                    ir.iv1 = v.getIdVariable();
-                } else if (v.isImmediate()) {
-                    ir.op = Op_mov_iv_imm;
-                    ir.iv0 = i.iv0;
-                    ir.imm0 = v.getImmediate();
-                } else if (v.isReg()) {
-                    ir.op = Op_store_iv_reg;
-                    ir.iv0 = i.iv0;
-                    ir.reg0 = v;
-                    this->releaseReg(v);
-                }
-                this->append(ir);
-                break;
-            }
-            case Op_push_imm: {
-                this->push(Value(i.imm0));
-                break;
-            }
-            case Op_push_iv: {
-                this->push(Value(i.iv0));
-                break;
-            }
-            case Op_add: // fall through
-            case Op_sub:
-            case Op_mul:
-            case Op_div:
-            case Op_equal:
-            case Op_bigger:
-            case Op_biggerEqual:
-            case Op_smaller:
-            case Op_smallerEqual:
-            case Op_notEqual:
-            case Op_power: {
-                switch (i.op) {
-                    case Op_add: temp_op = Op_add_reg_reg;  break;
-                    case Op_sub: temp_op = Op_sub_reg_reg;  break;
-                    case Op_mul: temp_op = Op_mul_reg_reg;  break;
-                    case Op_div: temp_op = Op_div_reg_reg;  break;
-                    case Op_equal: temp_op = Op_equal_reg_reg;  break;
-                    case Op_bigger: temp_op = Op_bigger_reg_reg;  break;
-                    case Op_biggerEqual: temp_op = Op_biggerEqual_reg_reg;  break;
-                    case Op_smaller: temp_op = Op_smaller_reg_reg;  break;
-                    case Op_smallerEqual: temp_op = Op_smallerEqual_reg_reg;  break;
-                    case Op_notEqual: temp_op = Op_notEqual_reg_reg;  break;
-                    case Op_power: temp_op = Op_power_reg_reg;  break;
-                    default: break;
-                }
-                Value b = this->pop();
-                Value a = this->pop();
-                Value a_b_regs[2];
-                a_b_regs[0] = this->loadToReg(a);
-                a_b_regs[1] = this->loadToReg(b);
-                ir.op = temp_op;
-                ir.reg0 = a_b_regs[0];
-                ir.reg1 = a_b_regs[1];
-                this->append(ir);
-                this->releaseReg(a_b_regs[1]);
-                this->push(a_b_regs[0]);
-                break;
-            }
-            case Op_jumpIf_imm: // fall through
-            case Op_jumpIfNot_imm: {
-                switch (i.op) {
-                    case Op_jumpIf_imm: temp_op = Op_jumpIf_imm_reg; break;
-                    case Op_jumpIfNot_imm: temp_op = Op_jumpIfNot_imm_reg; break;
-                    default: break;
-                }
-                Value a = this->pop();
-                Value a_reg;
-                a_reg = this->loadToReg(a);
-                ir.op = temp_op;
-                ir.imm0 = i.imm0;
-                ir.reg0 = a_reg;
-                this->append(ir);
-                this->releaseReg(a_reg);
-                break;
-            }
-            case Sign_callParaBegin: {
-                this->push(Value(static_cast<SpecialMark>(FUNCTION_CALL_PARA_HEAD)));
-                break;
-            }
-            case Op_call_if: {
-                bool isRaxProtect = this->is_used[RAX_NUMBER];
-                if (isRaxProtect) {
-                    ir.op = Op_push_reg;
-                    ir.reg0 = Value(RAX_NUMBER);
-                    this->append(ir);
-                }
-                std::vector<Value> parameters; // reverse of real parameters
-                // reverse of RDI, RSI, RDX, RCX, R8, R9
-                std::vector<Value> last6; // for register (reverse)
-                int paras_size = 0;
-                int last6_size;
-                Value para;
-                while (!(para = this->pop()).isParaHead()) {
-                    parameters.push_back(para);
-                    paras_size ++;
-                }
-                if (paras_size >= 6) last6_size = 6;
-                else last6_size = paras_size;
-
-                last6.assign(parameters.end() - last6_size, parameters.end());
-                parameters.erase(parameters.end() - last6_size, parameters.end());
-
-                // deal with register paras
-                int reg_para_count = 0;
-                for (auto it = last6.rbegin(); it != last6.rend(); ++it) {
-                    this->loadToReg(*it, this->getCallerReg(reg_para_count));
-                    reg_para_count ++;
-                }
-                // deal with stack paras
-                ir.op = Op_push_reg;
-                for (Value stack_para : parameters) {
-                    Value reg = this->loadToReg(stack_para);
-                    ir.reg0 = reg;
-                    this->append(ir);
-                    this->releaseReg(reg);
-                }
-                this->append(i); // call func
-                if (isRaxProtect) {
-                    ir.op = Op_mov_reg_reg;
-                    ir.reg0 = this->getReg();
-                    ir.reg1 = Value(RAX_NUMBER);
-                    this->append(ir);
-                    ir.op = Op_pop_reg;
-                    ir.reg0 = Value(RAX_NUMBER);
-                    this->append(ir);
-                } else {
-                    this->push(Value(RAX_NUMBER));
-                    this->markUsed(RAX_NUMBER);
-                }
-                break;
-            }
-            case Op_return: {
-                Value v = this->pop();
-                if (v.isImmediate()) {
-                    ir.op = Op_return_imm;
-                    ir.imm0 = v.getImmediate();
-                    this->append(ir);
-                    break;
-                }
-                ir.op = Op_return_reg;
-                ir.reg0 = this->loadToReg(v);
-                this->append(ir);
-                break;
-            }
-            default: {
-                this->append(i);
-                break;
-            }
+        auto it = handlers.find(i.op);
+        if (it != handlers.end()) {
+            (this->*(it->second))(i);
+        } else {
+            this->append(i);
         }
         n ++;
     }
@@ -275,19 +243,18 @@ void StackEraser::replaceLineNumber() {
     int count = 0;
     for (IR & i : this->irs->content) {
         switch (i.op) {
-            case Op_jump_imm: // fall through
-            case Op_jumpIf_imm_reg:
-            case Op_jumpIfNot_imm_reg: {
-                int line = this->lineCast.find(std::stoi(i.imm0.content))->second;
+            case Op_jump_addr: // fall through
+            case Op_jumpIf_addr_reg:
+            case Op_jumpIfNot_addr_reg: {
+                int line = this->lineCast.find(i.get_addr().line)->second;
                 if (line >= size) {
-                    IR ir;
-                    ir.op = Op_none;
-                    this->irs->content.push_back(ir);
+                    this->irs->content.push_back({Op_none});
                     size ++;
                 }
-                this->irs->marks.insert({std::to_string(line), count});
+                // when meet line, show L{count}:
+                this->irs->marks.insert({line, count});
                 count ++;
-                i.imm0 = makeImmediate(line);
+                i.set_addr(Address(line));
                 break;
             }
             default: break;

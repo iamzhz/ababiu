@@ -1,15 +1,13 @@
 #include "IR.h"
 #include <iostream>
 
-void IR::clean() {
-    #ifdef DEBUG
-    this->iv0 = {};
-    this->iv1 = {};
-    this->imm0 = {};
-    this->reg0 = Value();
-    this->reg1 = Value();
-    #endif
-    // if I do not want to see the IR by my eyes, this method is useless.
+
+void IR::set_addr(Address addr) {
+    this->addr = addr;
+}
+
+Address IR::get_addr() const {
+    return this->addr;
 }
 
 int IRs::getPosition() {

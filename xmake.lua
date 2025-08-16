@@ -5,7 +5,6 @@ target("ababiu")
     add_files("src/*.cc", "src/*/*.cc")
     set_languages("c++20")
     add_cxxflags("-g", "-Wall", "-Wextra", "-Wpedantic")
-    add_defines("DEBUG")
     add_ldflags("-g")
 
 target("clean")

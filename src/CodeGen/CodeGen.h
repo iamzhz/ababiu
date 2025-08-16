@@ -4,6 +4,7 @@
 #include <string>
 #include "../IR/IR.h"
 #include "../Symbol/Symbol.h"
+#include "../Literal/Literal.h"
 #include "../env_config/config.h"
 
 class CodeGen {
@@ -12,6 +13,7 @@ class CodeGen {
     void append(std::string ins);
     IRs * irs;
     Symbol * symbol;
+    Literal literal;
 
     std::string getReg(bool isLow8, int n);
     inline std::string getReg(int n);
@@ -23,13 +25,15 @@ class CodeGen {
     void Handle_load_imm_reg(const IR & ir);
     void Handle_load_iv_reg(const IR & ir);
     void Handle_store_iv_reg(const IR & ir);
-    void Handle_jump_imm(const IR & ir);
-    void Handle_jumpIf_imm_reg(const IR & ir);
-    void Handle_jumpIfNot_imm_reg(const IR & ir);
+    void Handle_jump_addr(const IR & ir);
+    void Handle_jumpIf_addr_reg(const IR & ir);
+    void Handle_jumpIfNot_addr_reg(const IR & ir);
     void Handle_compare_reg_reg(const IR & ir);
     void Handle_push_imm(const IR & ir);
     void Handle_push_iv(const IR & ir);
     void Handle_push_reg(const IR & ir);
+    void Handle_pop_reg(const IR & ir);
+    void Handle_pop_iv(const IR & ir);
     void Handle_call_if(const IR & ir);
     void Handle_return_imm(const IR & ir);
     void Handle_return_reg(const IR & ir);

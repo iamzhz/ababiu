@@ -37,7 +37,9 @@ void CodeGen::append(std::string ins) {
 std::string CodeGen::get_output() {
     int allocate = -this->symbol->i;
     allocate = (allocate + 15) & ~15;
-    return  "section .text\n"
+    return  "section .rodata\n" +
+            this->literal.get_rodata() +
+            "section .text\n"
             "extern print\n"
             "extern input\n"
             "global main\n"
@@ -53,10 +55,10 @@ std::string CodeGen::get_output() {
 }
 
 void CodeGen::Handle_mov_iv_iv(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.iv0.content) + ", " + this->symbol->get_variable_mem(ir.iv1.content));
+    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->symbol->get_variable_mem(ir.val1));
 }
 void CodeGen::Handle_mov_iv_imm(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.iv0.content) + ", " + ir.imm0.content);
+    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->literal.get(ir.val1));
 }
 void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
     std::string opcode;
@@ -68,67 +70,76 @@ void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
         case Op_div_reg_reg: opcode = "div"; break;
         default: break;
     }
-    this->append(opcode + ' ' + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
+    this->append(opcode + ' ' + this->getReg(ir.val0) + ", " + this->getReg(ir.val1));
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
-    this->append("mov " + this->getReg(ir.reg0) + ", " + ir.imm0.content);
+    this->append("mov " + this->getReg(ir.val1) + ", " + this->literal.get(ir.val0));
 }
 void CodeGen::Handle_load_iv_reg(const IR & ir) {
-    this->append("mov " + this->getReg(ir.reg0) + ", " + this->symbol->get_variable_mem(ir.iv0.content));
+    this->append("mov " + this->getReg(ir.val1) + ", " + this->symbol->get_variable_mem(ir.val0));
 }
 void CodeGen::Handle_store_iv_reg(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.iv0.content) + ", " + this->getReg(ir.reg0));
+    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->getReg(ir.val1));
 }
-void CodeGen::Handle_jump_imm(const IR & ir) {
-    this->append("jmp L" + std::to_string(this->irs->marks[ir.imm0.content]));
+void CodeGen::Handle_jump_addr(const IR & ir) {
+    this->append("jmp L" + std::to_string(this->irs->marks[ir.get_addr().line]));
 }
-void CodeGen::Handle_jumpIf_imm_reg(const IR & ir) {
-    this->append("test " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
-                this->append("jne L" + std::to_string(this->irs->marks[ir.imm0.content]));
+void CodeGen::Handle_jumpIf_addr_reg(const IR & ir) {
+    this->append("test " + this->getReg(ir.val0) + ", " + this->getReg(ir.val0));
+    this->append("jne L" + std::to_string(this->irs->marks[ir.get_addr().line]));
 }
-void CodeGen::Handle_jumpIfNot_imm_reg(const IR & ir) {
-    this->append("test " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg0));
-    this->append("je L" + std::to_string(this->irs->marks[ir.imm0.content]));
+void CodeGen::Handle_jumpIfNot_addr_reg(const IR & ir) {
+    this->append("test " + this->getReg(ir.val0) + ", " + this->getReg(ir.val0));
+    this->append("je L" + std::to_string(this->irs->marks[ir.get_addr().line]));
 }
 void CodeGen::Handle_compare_reg_reg(const IR & ir) {
     std::string opcode;
+    std::string reg0 = this->getReg(ir.val0);
+    std::string reg1 = this->getReg(ir.val1);
+    std::string low8_reg0 = common_low8_regs[ir.val0.getReg()];
     switch (ir.op) {
         case Op_equal_reg_reg: opcode = "sete"; break;
-        case Op_bigger_reg_reg: opcode = "seta"; break;
-        case Op_biggerEqual_reg_reg: opcode = "setae"; break;
-        case Op_smaller_reg_reg: opcode = "setb"; break;
-        case Op_smallerEqual_reg_reg: opcode = "setbe"; break;
+        case Op_bigger_reg_reg: opcode = "setg"; break;
+        case Op_biggerEqual_reg_reg: opcode = "setge"; break;
+        case Op_smaller_reg_reg: opcode = "setl"; break;
+        case Op_smallerEqual_reg_reg: opcode = "setle"; break;
         case Op_notEqual_reg_reg: opcode = "setne"; break;
         default: break;
     }
-    this->append("cmp " + this->getReg(ir.reg0) + ", " + this->getReg(ir.reg1));
-    this->append(opcode + " " + common_low8_regs[ir.reg0.getReg()]);
-    this->append("movzx " + this->getReg(ir.reg0) + ", " + common_low8_regs[ir.reg0.getReg()]);
+    this->append("cmp " + reg1 + ", " + reg0);
+    this->append(opcode + " " + low8_reg0);
+    this->append("movzx " + reg0 + ", " + low8_reg0);
 }
 void CodeGen::Handle_push_imm(const IR & ir) {
-    this->append("push " + ir.imm0.content);
+    this->append("push " + ir.val0.getImmediate().content);
 }
 void CodeGen::Handle_push_iv(const IR & ir) {
-    this->append("push " + this->symbol->get_variable_mem(ir.iv0.content));
+    this->append("push " + this->symbol->get_variable_mem(ir.val0));
 }
 void CodeGen::Handle_push_reg(const IR & ir) {
-    this->append("push " + this->getReg(ir.reg0));
+    this->append("push " + this->getReg(ir.val0));
+}
+void CodeGen::Handle_pop_reg(const IR & ir) {
+    this->append("pop " + this->getReg(ir.val0));
+}
+void CodeGen::Handle_pop_iv(const IR & ir) {
+    this->append("pop " + this->symbol->get_variable_mem(ir.val0));
 }
 void CodeGen::Handle_call_if(const IR & ir) {
-    this->append("call " + ir.iv0.content);
+    this->append("call " + ir.val0.getIdVariable().content);
 }
 void CodeGen::Handle_return_imm(const IR & ir) {
-    if (ir.imm0.content == "0") {
+    if (ir.val0.getImmediate().content == "0") {
         this->append("xor rax, rax");
     } else {
-        this->append("mov rax, " + ir.imm0.content);
+        this->append("mov rax, " + ir.val0.getImmediate().content);
     }
     this->append("leave");
     this->append("ret");
 }
 void CodeGen::Handle_return_reg(const IR & ir) {
-    if (ir.reg0.getReg() != RAX_NUMBER) {
-        this->append("mov rax, " + this->getReg(ir.reg0));
+    if (ir.val0.getReg() != RAX_NUMBER) {
+        this->append("mov rax, " + this->getReg(ir.val0));
     }
     this->append("leave");
     this->append("ret");
@@ -148,9 +159,9 @@ void CodeGen::generate() {
         {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
         {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
         {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},
-        {Op_jump_imm, &CodeGen::Handle_jump_imm},
-        {Op_jumpIf_imm_reg, &CodeGen::Handle_jumpIf_imm_reg},
-        {Op_jumpIfNot_imm_reg, &CodeGen::Handle_jumpIfNot_imm_reg},
+        {Op_jump_addr, &CodeGen::Handle_jump_addr},
+        {Op_jumpIf_addr_reg, &CodeGen::Handle_jumpIf_addr_reg},
+        {Op_jumpIfNot_addr_reg, &CodeGen::Handle_jumpIfNot_addr_reg},
         {Op_equal_reg_reg, &CodeGen::Handle_compare_reg_reg},
         {Op_bigger_reg_reg, &CodeGen::Handle_compare_reg_reg},
         {Op_biggerEqual_reg_reg, &CodeGen::Handle_compare_reg_reg},
@@ -160,12 +171,14 @@ void CodeGen::generate() {
         {Op_push_imm, &CodeGen::Handle_push_imm},
         {Op_push_iv, &CodeGen::Handle_push_iv},
         {Op_push_reg, &CodeGen::Handle_push_reg},
+        {Op_pop_reg, &CodeGen::Handle_pop_reg},
+        {Op_pop_iv, &CodeGen::Handle_pop_iv},
         {Op_call_if, &CodeGen::Handle_call_if},
         {Op_return_imm, &CodeGen::Handle_return_imm},
         {Op_return_reg, &CodeGen::Handle_return_reg},
     };
     for (IR ir : this->irs->content) {
-        auto mark = this->irs->marks.find(std::to_string(count));
+        auto mark = this->irs->marks.find(count);
         if (mark != this->irs->marks.end()) {
             this->append("L" + std::to_string(mark->second) + ":");
         }

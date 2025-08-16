@@ -1,5 +1,6 @@
 #include "Symbol.h"
 #include "../SayError/SayError.h"
+#include <stdexcept>
 #include <string>
 
 int Symbol::assign_memory(int addr, int rest, int size, int & used) {
@@ -65,6 +66,12 @@ SymbolValue Symbol::get_variable(std::string name) {
     }
     sv = f->second;
     return sv;
+}
+std::string Symbol::get_variable_mem(Value val) {
+    if (!val.isVariable()) {
+        std::runtime_error("Symbol::get_variable_mem(Value val)");
+    }
+    return this->get_variable_mem(val.getIdVariable().content);
 }
 
 std::string Symbol::get_variable_mem(std::string name) {

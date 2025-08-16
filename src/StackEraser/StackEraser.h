@@ -28,10 +28,21 @@ class StackEraser {
     inline bool isStackUsed(int n); // n is a negative
     int getStack();
     void releaseStack(int n);
+    
+    void Handle_pop_iv(const IR & ir);
+    void Handle_push_imm(const IR & ir);
+    void Handle_push_iv(const IR & ir);
+    void Handle_xxx(const IR & ir);
+    void Handle_conditionJump_addr(const IR & ir);
+    void Handle_callParaBegin(const IR & ir);
+    void Handle_call_if(const IR & ir);
+    void Handle_return(const IR & ir);
+    
+
     public:
     Value pop();
     void push(const Value & v);
-    void append(IR & ir);
+    void append(const IR & ir);
     StackEraser(IRs * irs);
     ~StackEraser();
     void convert();

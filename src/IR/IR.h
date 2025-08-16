@@ -60,12 +60,12 @@ enum IROp {
     Op_power, // push (~1 ** ~0)
     Op_power_reg_reg,
 
-    Op_jump_imm, // jump to imm0 
-    Op_jumpIfNot_imm, // jump to imm0 if not ~0
-    Op_jumpIf_imm, // jump to imm0 if not ~0
+    Op_jump_addr, // jump to addr 
+    Op_jumpIfNot_addr, // jump to addr if not ~0
+    Op_jumpIf_addr, // jump to imm0 if not ~0
 
-    Op_jumpIfNot_imm_reg,
-    Op_jumpIf_imm_reg,
+    Op_jumpIfNot_addr_reg,
+    Op_jumpIf_addr_reg,
 
     Sign_callParaBegin, // as a sign to mark the beginning
     
@@ -77,15 +77,20 @@ enum IROp {
 };
 
 
-struct IR {
+class IR {
+    public:
     IROp op;
-    IdVariable iv0;
-    IdVariable iv1;
-    Immediate imm0;
-    Value reg0;
-    Value reg1;
-    TypeType type0;
-    void clean();
+    Address addr;
+    Value val0;
+    Value val1;
+    IR() = default;
+    IR(IROp o) : op(o) {}
+    IR(IROp o, Value v0) : op(o), val0(v0) {}
+    IR(IROp o, Value v0, Value v1) : op(o), val0(v0), val1(v1) {}
+    IR(IROp o, Address n) : op(o), addr(n) {}
+    IR(IROp o, Address n, Value reg) : op(o), addr(n), val0(reg) {}
+    void set_addr(Address addr);
+    Address get_addr() const;
 };
 
 class IRs {
@@ -93,7 +98,7 @@ class IRs {
     int pos = 0; // the position which will be on the next IR
     int getPosition();
     std::vector<IR> content;
-    std::unordered_map<std::string, int> marks;
+    std::unordered_map<int, int> marks;
     
     int add(IR ir); // return the position of IR
     void replace(IRs & new_);

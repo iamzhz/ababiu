@@ -26,11 +26,17 @@ Value::Value() {}
 Value::Value(const Immediate & imm) {
     this->data_ = imm;
 }
+Value::Value(const std::string & iv_name) {
+    this->data_ = makeIdVariable(iv_name);
+}
 Value::Value(const IdVariable & iv) {
     this->data_ = iv;
 }
 Value::Value(const int & reg) {
     this->data_ = reg;
+}
+Value::Value(const TypeType & type) {
+    this->data_ = type;
 }
 Value::Value(const SpecialMark & spm) {
     this->data_ = spm;

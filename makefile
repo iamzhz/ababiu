@@ -1,6 +1,6 @@
 CC := g++
 STD := -std=c++20
-DEBUG := -g -DDEBUG # -DDEEPDEBUG
+DEBUG := -g # -DDEEPDEBUG
 WARNINGS := -Wall -Wextra -Wpedantic
 
 SRC_FILES := $(wildcard src/*.cc src/*/*.cc)
@@ -13,7 +13,7 @@ all: $(EXECUTABLES)
 ababiu: src/main.o $(OBJ_FILES)
 	$(CC) $^ -o $@ $(DEBUG)
 %.o: %.cc
-	$(CC) -c $< -o $@ $(STD) $(DEBUG) $(WARNINGS) -DTEST
+	$(CC) -c $< -o $@ $(STD) $(DEBUG) $(WARNINGS)
 
 clean:
 	rm -f $(OBJ_FILES) $(EXECUTABLES)

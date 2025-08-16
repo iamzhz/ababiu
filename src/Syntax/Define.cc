@@ -1,21 +1,18 @@
 #include "Syntax.h"
 
 void Syntax::analyze_DefineVariable(Tree * tr) {
-    IR ir;
-    ir.op = Sign_defineVariable_type_iv;
+    TypeType type0;
     std::string t = tr->children[0]->tk.content;
     std::string var_name = tr->children[1]->tk.content;
 
-    if (t == "int") ir.type0 = TYPE_INT;
-    else if (t == "float") ir.type0 = TYPE_FLOAT;
-    else if (t == "char") ir.type0 = TYPE_CHAR;
-    else if (t == "string") ir.type0 = TYPE_STRING;
+    if (t == "int") type0 = TYPE_INT;
+    else if (t == "float") type0 = TYPE_FLOAT;
+    else if (t == "char") type0 = TYPE_CHAR;
+    else if (t == "string") type0 = TYPE_STRING;
 
-    ir.iv0 = makeIdVariable(var_name);
+    this->symbol->insert_variable(var_name, type0);
 
-    this->symbol->insert_variable(var_name, ir.type0);
-
-    this->irs->add(ir);
+    this->irs->add({Sign_defineVariable_type_iv, Value(type0), Value(var_name)});
 }
 
 void Syntax::analyze_DefineVariableList(Tree * tr) {

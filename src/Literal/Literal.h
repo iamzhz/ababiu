@@ -2,13 +2,15 @@
 #define _LITERAL_H_
 #include <string>
 #include <sstream>
+#include "../Value/Value.h"
 
 class Literal {
     private:
     std::stringstream _rodata;
     int count = 0;
     public:
-    void storeFloat(std::string fl);
+    std::string get(Value val);
+    std::string storeFloat(std::string fl);
     std::string get_rodata();
 };
 

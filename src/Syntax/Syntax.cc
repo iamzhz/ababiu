@@ -85,17 +85,13 @@ void Syntax::analyze_Sentence(Tree * tr) {
 }
 void Syntax::analyze_FunctionCall(Tree * tr) {
     std::string function_name;
-    IR ir;
     if (tr->label != treeTypeNode_FunctionCall) {
         return ;
     }
-    ir.op = Sign_callParaBegin;
-    this->irs->add(ir);   // add mark
+    this->irs->add({Sign_callParaBegin});   // add mark
     function_name = tr->children[0]->tk.content;
     this->analyze_ExprList(tr->children[1]);
-    ir.op = Op_call_if;
-    ir.iv0 = makeIdVariable(function_name);
-    this->irs->add(ir);
+    this->irs->add({Op_call_if, function_name});
 }
 void Syntax::analyze_ExprList(Tree * tr) {
     Tree * s = tr;
@@ -108,7 +104,6 @@ void Syntax::analyze_Expr(Tree * tr) {
     this->analyze_Assign(tr->children[0]);
 }
 void Syntax::analyze_Assign(Tree * tr) {
-    IR i;
     Token tk; // to store variable name for assign (left value)
     //tr = tr->children[0];// TEMP MEASURE
     Tree * compare = tr->children[0];
@@ -125,12 +120,10 @@ void Syntax::analyze_Assign(Tree * tr) {
     }
     // assign_ -> children[0] is token `=`
     this->analyze_Compare(assign_->children[1]);
-    i.op = Op_pop_iv;
-    i.iv0 = makeIdVariable(tk.content);
-    this->irs->add(i);
+    this->irs->add({Op_pop_iv, tk.content});
 }
 void Syntax::analyze_Compare(Tree * tr) {
-    IR i;
+    IROp op;
     Tree * compare_; // Compare'
     Token * signToken;
     // if Compare' is ε
@@ -143,51 +136,50 @@ void Syntax::analyze_Compare(Tree * tr) {
     signToken = &(compare_->children[0]->tk);
     this->analyze_Add(tr->children[0]);
     this->analyze_Add(compare_->children[1]);
-    if (signToken->matchSign("==")) i.op = Op_equal;
-    else if (signToken->matchSign(">")) i.op = Op_bigger;
-    else if (signToken->matchSign(">=")) i.op = Op_biggerEqual;
-    else if (signToken->matchSign("<")) i.op = Op_smaller;
-    else if (signToken->matchSign("<=")) i.op = Op_smallerEqual;
-    else if (signToken->matchSign("!=")) i.op = Op_notEqual;
-    this->irs->add(i);
+    if (signToken->matchSign("==")) op = Op_equal;
+    else if (signToken->matchSign(">")) op = Op_bigger;
+    else if (signToken->matchSign(">=")) op = Op_biggerEqual;
+    else if (signToken->matchSign("<")) op = Op_smaller;
+    else if (signToken->matchSign("<=")) op = Op_smallerEqual;
+    else if (signToken->matchSign("!=")) op = Op_notEqual;
+    this->irs->add({op});
 }
 void Syntax::analyze_Add(Tree * tr) {
     Tree * s;
-    IR i;
+    IROp op;
     this->analyze_Times(tr->children[0]);
     s = tr->children[1];
     while (s->label != treeTypeNode_Epsilon) {
         // OP
-        if (s->children[0]->tk.matchSign("+")) i.op = Op_add;
-        else i.op = Op_sub; // when s->children[0]->tk.matchSign("-")
+        if (s->children[0]->tk.matchSign("+")) op = Op_add;
+        else op = Op_sub; // when s->children[0]->tk.matchSign("-")
         // another Times
         this->analyze_Times(s->children[1]);
         // add
-        this->irs->add(i);
+        this->irs->add({op});
         // prepare
         s = s->children[2];
     }
 }
 void Syntax::analyze_Times(Tree * tr) {
     Tree * s;
-    IR i;
+    IROp op;
     this->analyze_Power(tr->children[0]);
     s = tr->children[1];
     while (s->label != treeTypeNode_Epsilon) {
         // OP
-        if (s->children[0]->tk.matchSign("*")) i.op = Op_mul;
-        else i.op = Op_div; // when s->children[0]->tk.matchSign("/")
+        if (s->children[0]->tk.matchSign("*")) op = Op_mul;
+        else op = Op_div; // when s->children[0]->tk.matchSign("/")
         // another Power
         this->analyze_Power(s->children[1]);
         // add
-        this->irs->add(i);
+        this->irs->add({op});
         // prepare
         s = s->children[2];
     }
 }
 
 void Syntax::analyze_Power(Tree * tr) {
-    IR i;
     this->analyze_Factor(tr->children[0]);
     // if Power' is ε
     if (tr->children[1]->label == treeTypeNode_Epsilon) {
@@ -195,30 +187,27 @@ void Syntax::analyze_Power(Tree * tr) {
     }
     // Compare'
     this->analyze_Factor(tr->children[1]->children[1]);
-    i.op = Op_power;
-    this->irs->add(i);
+    this->irs->add({Op_power});
 }
 
 void Syntax::analyze_Factor(Tree * tr) {
-    IR i;
     Tree * head;
     if (tr->children.size() == 0) return ;
     head = tr->children[0];
     if (head->type == treeType_Token) {
         if (head->tk.type == tokenTypeId) {
-            i.op = Op_push_iv;
-            i.iv0 = makeIdVariable(head->tk.content);
+            this->irs->add({Op_push_iv, head->tk.content});
         } else {
-            i.op = Op_push_imm;
+            Immediate imm;
             switch (head->tk.type) {
-                case tokenTypeChar: i.imm0 = makeImmediate(TYPE_CHAR, head->tk.content); break;
-                case tokenTypeInt: i.imm0 = makeImmediate(TYPE_INT, head->tk.content); break;
-                case tokenTypeFloat: i.imm0 = makeImmediate(TYPE_FLOAT, head->tk.content); break;
-                case tokenTypeString: i.imm0 = makeImmediate(TYPE_STRING, head->tk.content); break;
+                case tokenTypeChar: imm = makeImmediate(TYPE_CHAR, head->tk.content); break;
+                case tokenTypeInt: imm = makeImmediate(TYPE_INT, head->tk.content); break;
+                case tokenTypeFloat: imm = makeImmediate(TYPE_FLOAT, head->tk.content); break;
+                case tokenTypeString: imm = makeImmediate(TYPE_STRING, head->tk.content); break;
                 default: break;
             }
+            this->irs->add({Op_push_imm, imm});
         }
-        this->irs->add(i);
     } else if (head->label == treeTypeNode_Expr) {
         this->analyze_Expr(head);
     } else if (head->label == treeTypeNode_FunctionCall) {

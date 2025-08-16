@@ -9,14 +9,13 @@ class AutoAssign {
     private:
     std::vector<
       std::pair<
-        std::vector<int>, Immediate>> data;
+        std::vector<int>, Address>> data;
     IRs * irs;
     public:
     AutoAssign(IRs * irs);
     void create();
     void add(int pos);
-    void set(const Immediate& imm);
-    void set(int i);
+    void set(const Address& addr);
     void assign();
 };
 

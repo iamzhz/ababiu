@@ -26,6 +26,7 @@ class Symbol {
     Symbol() = default;
     void insert_variable(std::string name, TypeType var_type);
     SymbolValue get_variable(std::string name);
+    std::string get_variable_mem(Value val); // val is a iv
     std::string get_variable_mem(std::string name);
 };
 
