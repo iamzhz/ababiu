@@ -128,9 +128,9 @@ void StackEraser::Handle_xxx(const IR & i) {
     }
     Value a_reg = this->loadToReg(this->pop());
     Value b_reg = this->loadToReg(this->pop());
-    this->append({op, a_reg, b_reg});
-    this->releaseReg(b_reg);
-    this->push(a_reg);
+    this->append({op, b_reg, a_reg});
+    this->releaseReg(a_reg);
+    this->push(b_reg);
 }
 void StackEraser::Handle_conditionJump_addr(const IR & i) {
     IROp op;

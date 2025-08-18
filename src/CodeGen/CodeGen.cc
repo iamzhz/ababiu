@@ -1,7 +1,9 @@
 #include "CodeGen.h"
+#include <sstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <format>
 
 std::vector<std::string> common_regs = {
     "rax", "rcx", "rdx", "r10", "r11"
@@ -32,26 +34,43 @@ CodeGen::CodeGen(IRs * irs, Symbol * symbol) {
 }
 
 void CodeGen::append(std::string ins) {
-    this->_output << ins << '\n';
+    this->_output.back().code << ins << '\n';
 }
 std::string CodeGen::get_output() {
-    int allocate = -this->symbol->i;
-    allocate = (allocate + 15) & ~15;
-    return  "section .rodata\n" +
+    std::string ret;
+    ret += "section .rodata\n" +
             this->literal.get_rodata() +
             "section .text\n"
             "extern print\n"
-            "extern input\n"
-            "global main\n"
-            "main:\n"
+            "extern input\n";
+    for (FuncData & _o : this->_output) {
+        ret += std::format(
+            "\n"
+            "global {}\n"
+            "{}:\n"
             "push rbp\n"
             "mov rbp, rsp\n"
-            "sub rsp, " + std::to_string(allocate) + "\n"
-            + this->_output.str() +
-            "xor rax, rax\n"
-            "leave\n"
-            "ret\n"
-            "\n";
+            "sub rsp, {}\n"
+            "{}"
+        , _o.name, _o.name, _o.allocate, _o.code.str());
+    }
+    return ret;
+}
+
+void CodeGen::Handle_newFunction_iv(const IR & ir) {
+    std::string func_name = ir.val0.getIdVariable().content;
+    this->_output.push_back(FuncData{
+        .name=func_name,
+        .code=std::stringstream()
+    });
+}
+
+void CodeGen::Handle_endFunction(const IR & ir) {
+    (void)ir;
+    int allocate = -this->symbol->i;
+    allocate = (allocate + 15) & ~15;
+    this->_output.back().allocate = allocate;
+    this->symbol->clear_variable();
 }
 
 void CodeGen::Handle_mov_iv_iv(const IR & ir) {
@@ -106,7 +125,7 @@ void CodeGen::Handle_compare_reg_reg(const IR & ir) {
         case Op_notEqual_reg_reg: opcode = "setne"; break;
         default: break;
     }
-    this->append("cmp " + reg1 + ", " + reg0);
+    this->append("cmp " + reg0 + ", " + reg1);
     this->append(opcode + " " + low8_reg0);
     this->append("movzx " + reg0 + ", " + low8_reg0);
 }
@@ -149,6 +168,8 @@ void CodeGen::generate() {
     int count = 0;
     using OpHandler = void (CodeGen::*)(const IR&);
     std::unordered_map<IROp, OpHandler> handlers = {
+        {Sign_newFunction_iv, &CodeGen::Handle_newFunction_iv},
+        {Sign_endFunction, &CodeGen::Handle_endFunction},
         {Op_mov_iv_iv, &CodeGen::Handle_mov_iv_iv},
         {Op_mov_iv_imm, &CodeGen::Handle_mov_iv_imm},
         {Op_mov_reg_reg, &CodeGen::Handle_xxx_reg_reg},

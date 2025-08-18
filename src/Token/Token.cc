@@ -37,6 +37,7 @@ bool Token::idToKeyword() {
             return false;
         case 6:
             if ("return" == this->content) break;
+            if ("extern" == this->content) break;
             return false;
         case 8:
             if ("continue" == this->content) break; // fall through
@@ -55,6 +56,7 @@ bool Token::idToType() {
             return false;
         case 4:
             if ("char" == this->content) break;
+            if ("void" == this->content) break;
             return false;
         case 5:
             if ("float" == this->content) break;

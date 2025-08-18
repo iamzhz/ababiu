@@ -73,6 +73,8 @@ enum IROp {
     Op_load_imm_reg,
     Op_store_iv_reg,
 
+    Sign_newFunction_iv, // iv is the name
+    Sign_endFunction,
     Sign_defineVariable_type_iv,
 };
 

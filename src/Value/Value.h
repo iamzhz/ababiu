@@ -7,7 +7,8 @@ enum TypeType {
     TYPE_INT, 
     TYPE_CHAR, 
     TYPE_FLOAT, 
-    TYPE_STRING
+    TYPE_STRING,
+    TYPE_VOID,
 };
 
 struct Immediate {

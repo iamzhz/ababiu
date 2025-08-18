@@ -1,7 +1,9 @@
 #include "Parser.h"
 
 Tree* Parser::parse_Unit() {
-    if (current.type == tokenTypeEof) return createTree(treeType_End);
-    //return this->parse_DefineFunction();
-    return this->parse_DefineFunction();
+    Tree* tr = createTree(treeTypeNode_Unit);
+    while (current.type != tokenTypeEof) {
+        tr->add(this->parse_DefineFunction());
+    }
+    return tr;
 }

@@ -64,6 +64,11 @@ Tree* Parser::parse_DefineFunction() {
     if (!this->current.matchKeyword("fn")) EXPECTED_ERROR("fn");
     this->getNextToken();
 
+    if (this->current.matchKeyword("extern")) { // fn extern
+        this->getNextToken();
+        tr->label = treeTypeNode_FunctionExtern;
+    }
+
     if (!this->current.match(tokenTypeType)) EXPECTED_ERROR("Type");
     tr->add(createTree(this->current));
     this->getNextToken();
@@ -76,7 +81,7 @@ Tree* Parser::parse_DefineFunction() {
     if (!this->current.matchSign("(")) EXPECTED_ERROR("(");
     this->getNextToken();
 
-    if (this->current.matchKeyword("void")) {
+    if (this->current.content == "void") {
         tr->add(createTree(treeTypeNode_DefineVariableList));
         this->getNextToken();
     } else if (this->current.matchSign(")")) {

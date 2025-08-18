@@ -1,0 +1,2 @@
+fn extern void print(int n);
+fn extern int input(void);

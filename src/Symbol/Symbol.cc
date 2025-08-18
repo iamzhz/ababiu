@@ -98,3 +98,13 @@ std::string Symbol::get_variable_mem(std::string name) {
     }
     return ret;
 }
+
+
+void Symbol::insert_function(std::string name, SymbolValue sv) {
+    this->table.insert({name, sv});
+}
+
+void Symbol::clear_variable() {
+    this->i = (-8);
+    this->memory_unused = {};
+}

@@ -2,14 +2,21 @@
 #define _CODEGEN_H_
 #include <sstream>
 #include <string>
+#include <utility>
 #include "../IR/IR.h"
 #include "../Symbol/Symbol.h"
 #include "../Literal/Literal.h"
 #include "../env_config/config.h"
 
+struct FuncData {
+    int allocate;
+    std::string name;
+    std::stringstream code;
+};
+
 class CodeGen {
     private:
-    std::stringstream _output;
+    std::vector<FuncData> _output;
     void append(std::string ins);
     IRs * irs;
     Symbol * symbol;
@@ -19,6 +26,8 @@ class CodeGen {
     inline std::string getReg(int n);
     std::string getReg(const Value & reg);
 
+    void Handle_newFunction_iv(const IR & ir);
+    void Handle_endFunction(const IR & ir);
     void Handle_mov_iv_iv(const IR & ir);
     void Handle_mov_iv_imm(const IR & ir);
     void Handle_xxx_reg_reg(const IR & ir);

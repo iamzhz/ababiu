@@ -12,6 +12,8 @@ enum treeType {
 };
 
 enum treeTypeNodeLabel {
+    treeTypeNode_Unit,
+
     treeTypeNode_Main,
     treeTypeNode_None,
     treeTypeNode_Epsilon,
@@ -33,6 +35,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_ExprList,
     treeTypeNode_ExprList_,
     treeTypeNode_FunctionCall,
+    treeTypeNode_FunctionExtern,
     treeTypeNode_DefineFunction,
     treeTypeNode_DefineVariable,
     treeTypeNode_DefineVariableList,

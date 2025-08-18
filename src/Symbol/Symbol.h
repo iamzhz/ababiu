@@ -11,9 +11,12 @@
 struct SymbolValue{
     bool isExist = true;
     bool isVariable; // true -> Variable;  false -> Function
-    TypeType type;
+    TypeType type; // var -> type,  func -> return type
+    // var
     int frame_offset;
     int size;
+    // func
+    std::vector<TypeType> args;
 };
 
 class Symbol {
@@ -28,6 +31,9 @@ class Symbol {
     SymbolValue get_variable(std::string name);
     std::string get_variable_mem(Value val); // val is a iv
     std::string get_variable_mem(std::string name);
+    void insert_function(std::string name, SymbolValue sv);
+
+    void clear_variable();
 };
 
 #endif

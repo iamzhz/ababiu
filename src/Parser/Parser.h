@@ -33,6 +33,7 @@ class Parser {
     Tree* parse_ExprList();
     Tree* parse_ExprList_();
     Tree* parse_FunctionCall();
+    Tree* parse_FunctionExtern();
     Tree* parse_DefineFunction();
     Tree* parse_DefineVariable();
     Tree* parse_DefineVariableList();

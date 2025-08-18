@@ -22,7 +22,9 @@ void Syntax::init() {
 }
 
 void Syntax::analyze_unit() {
-    this->analyze_DefineFunction(this->tr);
+    for (auto tr_ : this->tr->children) {
+        this->analyze_DefineFunction(tr_);
+    }
 }
 Token Syntax::getInner(Tree * tr) {
     Tree * P = tr;
