@@ -32,6 +32,7 @@ class Symbol {
     std::string get_variable_mem(Value val); // val is a iv
     std::string get_variable_mem(std::string name);
     void insert_function(std::string name, SymbolValue sv);
+    SymbolValue get(std::string name);
 
     void clear_variable();
 };

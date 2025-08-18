@@ -103,6 +103,17 @@ std::string Symbol::get_variable_mem(std::string name) {
 void Symbol::insert_function(std::string name, SymbolValue sv) {
     this->table.insert({name, sv});
 }
+SymbolValue Symbol::get(std::string name) {
+    SymbolValue sv;
+    auto f = this->table.find(name);
+    if (f == this->table.end()) {
+        sv.isExist = false;
+        return sv;
+    }
+    sv = f->second;
+    return sv;
+}
+
 
 void Symbol::clear_variable() {
     this->i = (-8);

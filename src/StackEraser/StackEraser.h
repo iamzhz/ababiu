@@ -8,6 +8,7 @@ Stack Eraser is used to convert a stack-IR to non-stack-IR
 #include <vector>
 #include "../IR/IR.h"
 #include "../Value/Value.h"
+#include "../Symbol/Symbol.h"
 #include "../env_config/config.h"
 
 class StackEraser {
@@ -15,6 +16,7 @@ class StackEraser {
     std::unordered_map<int, int> lineCast; // (line number) old IR -> new IR
     IRs * irs; // the new
     IRs * old;
+    Symbol * symbol;
     std::vector<Value> stack;
     int tempCount = 0;
     bool is_used[COMMON_REGS_NUMBER];
@@ -43,7 +45,7 @@ class StackEraser {
     Value pop();
     void push(const Value & v);
     void append(const IR & ir);
-    StackEraser(IRs * irs);
+    StackEraser(IRs * irs, Symbol * symbol);
     ~StackEraser();
     void convert();
     void replaceLineNumber();

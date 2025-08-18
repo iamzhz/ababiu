@@ -60,6 +60,7 @@ std::string CodeGen::get_output() {
 void CodeGen::Handle_newFunction_iv(const IR & ir) {
     std::string func_name = ir.val0.getIdVariable().content;
     this->_output.push_back(FuncData{
+        .allocate=0, // not important
         .name=func_name,
         .code=std::stringstream()
     });

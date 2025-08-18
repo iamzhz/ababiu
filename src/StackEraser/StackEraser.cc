@@ -1,5 +1,7 @@
 #include "StackEraser.h"
+#include <format>
 #include <string>
+#include "../SayError/SayError.h"
 
 void StackEraser::markUsed(int n) {
     if (n >= 0 && n < COMMON_REGS_NUMBER) {
@@ -21,12 +23,13 @@ Value StackEraser::getCallerReg(int number) {
     return (COMMON_REGS_NUMBER + number);
 }
 
-StackEraser::StackEraser(IRs * irs) {
+StackEraser::StackEraser(IRs * irs, Symbol * symbol) {
     this->old = irs;
     this->irs = new IRs();
     for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         this->is_used[i] = false;
     }
+    this->symbol = symbol;
 }
 void StackEraser::releaseReg(Value reg) {
     int r = reg.getReg();
@@ -148,6 +151,14 @@ void StackEraser::Handle_callParaBegin(const IR & i) {
     this->push(Value(static_cast<SpecialMark>(FUNCTION_CALL_PARA_HEAD)));
 }
 void StackEraser::Handle_call_if(const IR & i) {
+    std::string func_name = i.val0.getIdVariable().content;
+    SymbolValue func = this->symbol->get(func_name);
+    if (func.isExist == false) {
+        sayError(std::format("`{}` is not exist as a function.", func_name));
+    }
+    if (func.isVariable == true) {
+        sayError(std::format("`{}` is a variable name.", func_name));
+    }
     bool isRaxProtect = this->is_used[RAX_NUMBER];
     if (isRaxProtect) {
         this->append({Op_push_reg, Value(RAX_NUMBER)});
@@ -185,6 +196,9 @@ void StackEraser::Handle_call_if(const IR & i) {
         this->append({Op_mov_reg_reg, this->getReg(), RAX_NUMBER});
         this->append({Op_pop_reg, Value(RAX_NUMBER)});
     } else {
+        if (func.type == TYPE_VOID) {
+            return ;
+        }
         this->push(Value(RAX_NUMBER));
         this->markUsed(RAX_NUMBER);
     }

@@ -60,7 +60,7 @@ std::string compile_file(std::string filename, Symbol * symbol) {
     Syntax syntax(root, &irs, symbol);
     syntax.init();
     syntax.analyze_unit();
-    StackEraser stackeraser(&irs);
+    StackEraser stackeraser(&irs, symbol);
     stackeraser.convert();
     CodeGen codegen(&irs, symbol);
     codegen.generate();
