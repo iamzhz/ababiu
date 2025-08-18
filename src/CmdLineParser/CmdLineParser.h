@@ -10,7 +10,8 @@ class CmdLineParser {
     int argc;
     char** argv;
 
-    bool isOption(char *para);
+    bool isOption(char *para); // -x
+    bool isDoubleDash(char *para); // --xxx
     bool option(std::string first, std::string second); // return true means used `second`
     std::string deleteDash(char *para);
     public:

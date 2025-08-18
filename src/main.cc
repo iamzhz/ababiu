@@ -14,12 +14,14 @@
 #include "CodeGen/CodeGen.h"
 
 std::string compile_file(std::string filename, Symbol * symbol);
+void auto_continue_compile(std::string output_file);
 
 int main(int argc, char ** argv) {
     CmdLineParser clp(argc, argv);
     FileManager file;
     Symbol symbol;
     clp.run();
+    bool isAutoContinueCompile = clp.table.find("auto") != clp.table.end();
     auto inputFile = clp.table.find("");
     auto outputFile = clp.table.find("o");
     bool isOutputToFile = false;
@@ -28,7 +30,11 @@ int main(int argc, char ** argv) {
         return 1;
     }
     if (outputFile != clp.table.end()) {
-        isOutputToFile = file.setOutputFile(outputFile->second);
+        if (isAutoContinueCompile) {
+            isOutputToFile = file.setOutputFile("ababiu_temp.asm");
+        } else {
+            isOutputToFile = file.setOutputFile(outputFile->second);
+        }
     }
     // analyze built-in library
     compile_file("libababiu/libababiu.abb", &symbol);
@@ -39,6 +45,10 @@ int main(int argc, char ** argv) {
     } else {
         std::cout << output;
     }
+    file.closeFile();
+    if (isAutoContinueCompile) {
+        auto_continue_compile(outputFile->second);
+    }
     return 0;
 }
 
@@ -47,7 +57,6 @@ std::string compile_file(std::string filename, Symbol * symbol) {
     Lexer lexer;
     Tree * root;
     IRs irs;
-    bool isOutputToFile = false;
     bool r = file.setInputFile(filename);
     if (!r) {
         std::cerr << "Could not open file " << filename << std::endl;
@@ -65,6 +74,22 @@ std::string compile_file(std::string filename, Symbol * symbol) {
     CodeGen codegen(&irs, symbol);
     codegen.generate();
     return codegen.get_output();
+}
+
+void auto_continue_compile(std::string output_file) {
+    // check nasm & gcc
+    int nasm_return = std::system("nasm --version > /dev/null");
+    int gcc_return = std::system("gcc --version > /dev/null");
+    if (nasm_return != 0) {
+        std::cerr << "nasm is not exist.\n";
+        std::exit(1);
+    }
+    if (gcc_return != 0) {
+        std::cerr << "gcc is not exist.\n";
+        std::exit(1);
+    }
+    std::system("nasm -f elf64 ababiu_temp.asm -o ababiu_temp.o");
+    std::system(("gcc ababiu_temp.o libababiu.o -o " + output_file).c_str());
 }
 
 #endif

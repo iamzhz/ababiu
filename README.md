@@ -37,6 +37,10 @@ nasm -f elf64 assembly.asm -o a.o
 gcc a.o libababiu.o -o output
 
 ```
+or there is an easier way
+```
+./ababiu your_code.abb -o output --auto
+```
 Then you can run it by
 ```bash
 ./output
