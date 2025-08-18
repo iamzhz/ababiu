@@ -26,6 +26,12 @@ Token Lexer::getNextToken() {
     char cur;
     int tokenLine, tokenColumn;
 
+    if (this->_peek.content != "") {
+        this->current = this->_peek;
+        this->_peek.content = "";
+        return this->current;
+    }
+
     do {
         if (!isSpace(this->file->current())) break;
     }while(this->file->next()); // skip space
@@ -174,4 +180,12 @@ Token Lexer::stringToken() {
     }
     sayError(this->file->curLine, this->file->curColumn, "another \"?");
     return tk;
+}
+
+Token Lexer::peek() {
+    if (this->_peek.content != "") {
+        return this->_peek;
+    }
+    this->_peek = this->getNextToken();
+    return this->_peek;
 }

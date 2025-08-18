@@ -17,7 +17,7 @@ enum tokenType {
 
 class Token {
     public:
-    std::string content;
+    std::string content = "";
     tokenType type;
     int line;
     int column;

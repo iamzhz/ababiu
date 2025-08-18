@@ -193,8 +193,7 @@ Tree* Parser::parse_Factor() {
     Tree* tr_FunctionCall;
     Token tk = this->current;
 
-    if (this->current.matchSign("@")) {
-        this->getNextToken();
+    if (this->current.type == tokenTypeId && this->lx->peek().matchSign("(")) {
         tr_FunctionCall = this->parse_FunctionCall();
         if (tr_FunctionCall != nullptr) {
             tr->add(tr_FunctionCall);

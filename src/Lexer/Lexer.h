@@ -25,11 +25,14 @@ class Lexer {
     bool isDigit(char ch);
     bool isLetter(char ch);
     bool isSign(char ch);
+
+    Token _peek = Token();
     
     public:
     Token current;
     void setFile(FileManager& file);
     Token getNextToken();
+    Token peek();
     enum signState isSignTwoChars(char a, char b);
 };
 #endif
