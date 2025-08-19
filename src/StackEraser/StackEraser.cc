@@ -102,7 +102,10 @@ void StackEraser::append(const IR & ir) {
 void StackEraser::Handle_pop_iv(const IR & i) {
     Value v = this->pop();
     if (v.isVariable()) {
-        this->append({Op_mov_iv_iv, i.val0, v});
+        Value reg = this->getReg();
+        this->append({Op_load_iv_reg, v, reg});
+        this->append({Op_store_iv_reg, i.val0, reg});
+        this->releaseReg(reg);
     } else if (v.isImmediate()) {
         this->append({Op_mov_iv_imm, i.val0, v});
     } else if (v.isReg()) {

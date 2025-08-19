@@ -73,10 +73,6 @@ void CodeGen::Handle_endFunction(const IR & ir) {
     this->_output.back().allocate = allocate;
     this->symbol->clear_variable();
 }
-
-void CodeGen::Handle_mov_iv_iv(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->symbol->get_variable_mem(ir.val1));
-}
 void CodeGen::Handle_mov_iv_imm(const IR & ir) {
     this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->literal.get(ir.val1));
 }
@@ -86,11 +82,18 @@ void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
         case Op_mov_reg_reg: opcode = "mov"; break;
         case Op_add_reg_reg: opcode = "add"; break;
         case Op_sub_reg_reg: opcode = "sub"; break;
-        case Op_mul_reg_reg: opcode = "mul"; break;
-        case Op_div_reg_reg: opcode = "div"; break;
+        case Op_mul_reg_reg: opcode = "imul"; break;
         default: break;
     }
     this->append(opcode + ' ' + this->getReg(ir.val0) + ", " + this->getReg(ir.val1));
+}
+void CodeGen::Handle_div_reg_reg(const IR & ir) {
+    this->append("push rdx");
+    this->append("push rax");
+    this->append("mov rax, " + this->getReg(ir.val0));
+    this->append("idiv " + this->getReg(ir.val1));
+    this->append("pop rax");
+    this->append("pop rdx");
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
     this->append("mov " + this->getReg(ir.val1) + ", " + this->literal.get(ir.val0));
@@ -171,13 +174,12 @@ void CodeGen::generate() {
     std::unordered_map<IROp, OpHandler> handlers = {
         {Sign_newFunction_iv, &CodeGen::Handle_newFunction_iv},
         {Sign_endFunction, &CodeGen::Handle_endFunction},
-        {Op_mov_iv_iv, &CodeGen::Handle_mov_iv_iv},
         {Op_mov_iv_imm, &CodeGen::Handle_mov_iv_imm},
         {Op_mov_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_add_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_sub_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-        {Op_div_reg_reg, &CodeGen::Handle_xxx_reg_reg},
+        {Op_div_reg_reg, &CodeGen::Handle_div_reg_reg},
         {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
         {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
         {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},
