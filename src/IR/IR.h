@@ -53,6 +53,20 @@ enum IROp {
     Op_notEqual, // push (~1 != ~0)
     Op_notEqual_reg_reg,
 
+    // double float
+    Op_movsd_reg_reg,
+    Op_addsd_reg_reg,
+    Op_subsd_reg_reg,
+    Op_mulsd_reg_reg,
+    Op_divsd_reg_reg,
+    Op_equalsd_reg_reg,
+    Op_biggersd_reg_reg,
+    Op_biggerEqualsd_reg_reg,
+    Op_smallersd_reg_reg,
+    Op_smallerEqualsd_reg_reg,
+    Op_notEqualsd_reg_reg,
+
+    // Other
     Op_return, // return (~0)
     Op_return_imm,
     Op_return_reg,
@@ -76,6 +90,7 @@ enum IROp {
     Sign_newFunction_iv, // iv is the name
     Sign_endFunction,
     Sign_defineVariable_type_iv,
+    Sign_SentenceEnd,
 };
 
 
@@ -93,6 +108,9 @@ class IR {
     IR(IROp o, Address n, Value reg) : op(o), addr(n), val0(reg) {}
     void set_addr(Address addr);
     Address get_addr() const;
+    #ifdef DEBUG
+    void display(int count) const;
+    #endif
 };
 
 class IRs {

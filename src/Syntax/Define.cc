@@ -19,7 +19,7 @@ void Syntax::analyze_DefineVariable(Tree * tr) {
 
     this->symbol->insert_variable(var_name, type0);
 
-    this->irs->add({Sign_defineVariable_type_iv, Value(type0), Value(var_name)});
+    this->append({Sign_defineVariable_type_iv, Value(type0), Value(var_name)});
 }
 
 void Syntax::analyze_DefineVariableList(Tree * tr) {
@@ -48,8 +48,8 @@ void Syntax::analyze_DefineFunction(Tree * tr) {
     if (tr->label == treeTypeNode_FunctionExtern) {
         return ;
     }
-    this->irs->add({Sign_newFunction_iv, func_name});
+    this->append({Sign_newFunction_iv, func_name});
     this->analyze_DefineVariableList(tr->children[2]);
     this->analyze_Statements(tr->children[3]);
-    this->irs->add({Sign_endFunction});
+    this->append({Sign_endFunction});
 }

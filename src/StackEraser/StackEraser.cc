@@ -2,6 +2,9 @@
 #include <format>
 #include <string>
 #include "../SayError/SayError.h"
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 void StackEraser::markUsed(int n) {
     if (n >= 0 && n < COMMON_REGS_NUMBER) {
@@ -26,9 +29,7 @@ Value StackEraser::getCallerReg(int number) {
 StackEraser::StackEraser(IRs * irs, Symbol * symbol) {
     this->old = irs;
     this->irs = new IRs();
-    for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
-        this->is_used[i] = false;
-    }
+    this->Handle_sign_sentence_end({});
     this->symbol = symbol;
 }
 void StackEraser::releaseReg(Value reg) {
@@ -93,6 +94,9 @@ void StackEraser::push(const Value & v) {
     this->stack.push_back(v);
 }
 void StackEraser::append(const IR & ir) {
+    #ifdef DEBUG
+    ir.display(this->n);
+    #endif
     this->irs->add(ir);
 }
 void StackEraser::Handle_pop_iv(const IR & i) {
@@ -160,6 +164,9 @@ void StackEraser::Handle_call_if(const IR & i) {
         sayError(std::format("`{}` is a variable name.", func_name));
     }
     bool isRaxProtect = this->is_used[RAX_NUMBER];
+    if (!this->stack.empty()) {
+        isRaxProtect = isRaxProtect && this->stack.back() != Value(RAX_NUMBER);
+    }
     if (isRaxProtect) {
         this->append({Op_push_reg, Value(RAX_NUMBER)});
     }
@@ -213,8 +220,18 @@ void StackEraser::Handle_return(const IR & i) {
     Value v_reg = this->loadToReg(v);
     this->append({Op_return_reg, v_reg});
 }
+void StackEraser::Handle_sign_sentence_end(const IR & ir) {
+    (void)ir;
+    this->stack = {};
+    for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
+        this->is_used[i] = false;
+    }
+}
 void StackEraser::convert() {
-    int n = 0;
+    n = 0; // this->n
+    #ifdef DEBUG
+    std::cout << "---------------" << std::endl;
+    #endif
     Value v;
     using OpHandler = void (StackEraser::*)(const IR&);
     std::unordered_map<IROp, OpHandler> handlers = {
@@ -237,6 +254,7 @@ void StackEraser::convert() {
         {Sign_callParaBegin, &StackEraser::Handle_callParaBegin},
         {Op_call_if, &StackEraser::Handle_call_if},
         {Op_return, &StackEraser::Handle_return},
+        {Sign_SentenceEnd, &StackEraser::Handle_sign_sentence_end},
     };
     for (IR i : this->old->content) {
         this->lineCast.insert({n, this->irs->pos});

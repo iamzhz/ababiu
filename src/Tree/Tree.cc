@@ -1,7 +1,9 @@
 #include "Tree.h"
 #include "../PointerManager/PointerManager.h"
 #include "../Token/Token.h"
+#ifdef DEBUG
 #include <iostream>
+#endif
 
 PointerManager<Tree*> pmTree;
 Token noneTokenClass;
@@ -50,6 +52,8 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_Continue: return "Continue";
         case treeTypeNode_Return: return "Return";
         case treeTypeNode_None: return "None";
+        case treeTypeNode_Unit: return "Unit";
+        case treeTypeNode_FunctionExtern: return "FunctionExtern";
     }
     return "Unkown";
 }

@@ -1,5 +1,7 @@
 #include "IR.h"
+#ifdef DEBUG
 #include <iostream>
+#endif
 
 
 void IR::set_addr(Address addr) {
@@ -54,9 +56,9 @@ std::string IROpToText(IROp n) {
         case Op_smallerEqual: return "smallerEqual";
         case Op_notEqual: return "notEqual";
         case Op_power: return "power";
-        case Op_jump_imm: return "jump_imm";
-        case Op_jumpIfNot_imm: return "jumpIfNot_imm";
-        case Op_jumpIf_imm: return "jumpIf_imm";
+        case Op_jump_addr: return "jump_addr";
+        case Op_jumpIfNot_addr: return "jumpIfNot_addr";
+        case Op_jumpIf_addr: return "jumpIf_addr";
         case Sign_callParaBegin: return "callParaBegin";
         case Op_load_iv_reg: return "load_iv_reg";
         case Op_load_imm_reg: return "load_imm_reg";
@@ -68,31 +70,43 @@ std::string IROpToText(IROp n) {
         case Op_smallerEqual_reg_reg:  return "smallerEqual_reg_reg";
         case Op_notEqual_reg_reg:  return "notEqual_reg_reg";
         case Op_power_reg_reg:  return "power_reg_reg";
-        case Op_jumpIf_imm_reg: return "jump_imm_reg";
-        case Op_jumpIfNot_imm_reg: return "jumpIfNot_imm_reg";
+        case Op_jumpIf_addr_reg: return "jump_addr_reg";
+        case Op_jumpIfNot_addr_reg: return "jumpIfNot_addr_reg";
         case Sign_defineVariable_type_iv: return "defineVariable_type_iv";
+        case Op_pop_reg: return "pop_reg";
+        case Op_movsd_reg_reg: return "movsd_reg_reg";
+        case Op_addsd_reg_reg: return "addsd_reg_reg";
+        case Op_subsd_reg_reg: return "subsd_reg_reg";
+        case Op_mulsd_reg_reg: return "mulsd_reg_reg";
+        case Op_divsd_reg_reg: return "divsd_reg_reg";
+        case Op_equalsd_reg_reg: return "equalsd_reg_reg";
+        case Op_biggersd_reg_reg: return "biggersd_reg_reg";
+        case Op_biggerEqualsd_reg_reg: return "biggerEqualsd_reg_reg";
+        case Op_smallersd_reg_reg: return "smallersd_reg_reg";
+        case Op_smallerEqualsd_reg_reg: return "smallerEqualsd_reg_reg";
+        case Op_notEqualsd_reg_reg: return "notEqualsd_reg_reg";
+        case Op_return: return "return";
+        case Op_return_imm: return "return_imm";
+        case Op_return_reg: return "return_reg";
+        case Sign_newFunction_iv: return "newFunction_iv";
+        case Sign_endFunction: return "endFunction";
+        case Sign_SentenceEnd: return "SentenceEnd";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
-void outIdVaiable(IdVariable iv) {
-    std::cout << iv.content << "  ";
-}
-void outImmediate(Immediate imm) {
-    std::cout << imm.content << "  ";
+void IR::display(int count) const {
+    auto & ir = *this;
+    std::cout << count << ":\t" << IROpToText(ir.op) << "\t";
+    if (IROpToText(ir.op).find("jump") != std::string::npos) {
+        std::cout << ir.addr.line << "\t";
+    }
+    std::cout << ir.val0.toString() << "\t" << ir.val1.toString() << std::endl;
 }
 void IRs::display() {
     int count = 0;
     for (auto ir : this->content) {
-        std::cout << count << ':' << IROpToText(ir.op) << std::endl;
-        outIdVaiable(ir.iv0);
-        outIdVaiable(ir.iv1);
-        outImmediate(ir.imm0);
-        if (ir.reg0.isReg())
-            std::cout << ir.reg0.getReg() << "   ";
-        if (ir.reg1.isReg())
-            std::cout << ir.reg1.getReg() << "   " << std::endl;
-        else std::cout << std::endl;
-        count ++;
+        ir.display(count);
+        ++ count;
     }
     return ;
 }

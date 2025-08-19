@@ -19,6 +19,7 @@ class StackEraser {
     Symbol * symbol;
     std::vector<Value> stack;
     int tempCount = 0;
+    int n;
     bool is_used[COMMON_REGS_NUMBER];
     std::unordered_set<int> stack_used; // stand for the real memory stack
     void markUsed(int n);
@@ -39,6 +40,7 @@ class StackEraser {
     void Handle_callParaBegin(const IR & ir);
     void Handle_call_if(const IR & ir);
     void Handle_return(const IR & ir);
+    void Handle_sign_sentence_end(const IR & ir);
     
 
     public:

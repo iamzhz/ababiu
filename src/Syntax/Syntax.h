@@ -14,6 +14,9 @@ class Syntax {
     // for jumping
     AutoAssign * start; // start of a loop
     AutoAssign * end;
+    #ifdef DEBUG
+    int count = 0;
+    #endif
     public:
     Syntax(Tree * tr, IRs * irs, Symbol * symbol);
     ~Syntax();
@@ -46,6 +49,8 @@ class Syntax {
     void analyze_DefineVariable(Tree * tr);
     void analyze_DefineVariableList(Tree * tr);
     void analyze_DefineFunction(Tree * tr);
+
+    int append(const IR & ir);
     
 };
 

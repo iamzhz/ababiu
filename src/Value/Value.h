@@ -61,6 +61,9 @@ class Value {
     Value& operator=(const Immediate & o);
     Value& operator=(const IdVariable & o);
     Value& operator=(const std::string & o);
+    bool operator==(const Value & o);
+    bool operator!=(const Value & o);
+
     bool isVariable();
     bool isImmediate();
     bool isReg();
@@ -68,6 +71,9 @@ class Value {
     const Immediate& getImmediate() const;
     const IdVariable& getIdVariable() const;
     const int& getReg() const;
+    #ifdef DEBUG
+    std::string toString() const ;
+    #endif
 };
 
 #endif

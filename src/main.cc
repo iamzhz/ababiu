@@ -1,5 +1,3 @@
-#ifndef TEST
-
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -91,5 +89,3 @@ void auto_continue_compile(std::string output_file) {
     std::system("nasm -f elf64 ababiu_temp.asm -o ababiu_temp.o");
     std::system(("gcc ababiu_temp.o libababiu.o -o " + output_file).c_str());
 }
-
-#endif
