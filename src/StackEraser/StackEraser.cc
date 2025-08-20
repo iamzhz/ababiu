@@ -158,16 +158,65 @@ void StackEraser::Handle_div(const IR & i) {
         this->append({Op_push_reg, Value(RDX_NUMBER)});
         isPopRdx = true;
     }
-    this->append({Op_cdq});
-    this->append({Op_idiv_val, b});
+    this->is_used[RAX_NUMBER] = true;
+    this->is_used[RDX_NUMBER] = true;
+    this->append({Op_cqo});
+    if (b.isImmediate()) {
+        Value b_reg = this->loadToReg(b);
+        this->append({Op_idiv_val, b_reg});
+        this->releaseReg(b_reg);
+    } else {
+        this->append({Op_idiv_val, b});
+    }
     if (isPopRdx) {
         this->append({Op_pop_reg, Value(RDX_NUMBER)});
+    } else {
+        this->is_used[RDX_NUMBER] = false;
     }
     if (isPopRax) {
         this->push(this->loadToReg(Value(RAX_NUMBER)));
         this->append({Op_pop_reg, Value(RAX_NUMBER)});
     } else {
         this->push(Value(RAX_NUMBER));
+    }
+}
+void StackEraser::Handle_mod(const IR & ir) {
+    (void)ir;
+    // a % b
+    Value b = this->pop();
+    Value a = this->pop();
+    bool isPopRax = false, isPopRdx = false;
+    if (a != Value(RAX_NUMBER)) {
+        if (this->is_used[RAX_NUMBER]) {
+            this->append({Op_push_reg, Value(RAX_NUMBER)});
+            isPopRax = true;
+        }
+        this->loadToReg(a, Value(RAX_NUMBER));
+    }
+    if (this->is_used[RDX_NUMBER]) {
+        this->append({Op_push_reg, Value(RDX_NUMBER)});
+        isPopRdx = true;
+    }
+    this->is_used[RAX_NUMBER] = true;
+    this->is_used[RDX_NUMBER] = true;
+    this->append({Op_cqo});
+    if (b.isImmediate()) {
+        Value b_reg = this->loadToReg(b);
+        this->append({Op_idiv_val, b_reg});
+        this->releaseReg(b_reg);
+    } else {
+        this->append({Op_idiv_val, b});
+    }
+    if (isPopRdx) {
+        this->push(this->loadToReg(Value(RDX_NUMBER)));
+        this->append({Op_pop_reg, Value(RDX_NUMBER)});
+    } else {
+        this->push(Value(RDX_NUMBER));
+    }
+    if (isPopRax) {
+        this->append({Op_pop_reg, Value(RAX_NUMBER)});
+    } else {
+        this->is_used[RAX_NUMBER] = false;
     }
 }
 void StackEraser::Handle_power(const IR & ir) {
@@ -282,6 +331,7 @@ void StackEraser::convert() {
         {Op_sub, &StackEraser::Handle_xxx},
         {Op_mul, &StackEraser::Handle_xxx},
         {Op_div, &StackEraser::Handle_div},
+        {Op_mod, &StackEraser::Handle_mod},
         {Op_equal, &StackEraser::Handle_xxx},
         {Op_bigger, &StackEraser::Handle_xxx},
         {Op_biggerEqual, &StackEraser::Handle_xxx},

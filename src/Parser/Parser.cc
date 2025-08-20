@@ -137,7 +137,7 @@ Tree* Parser::parse_Times_() {
     Tree* tr = createTree(treeTypeNode_Times_);
     Tree* tr_Power;
     Tree* tr_Times_;
-    if (tk.matchSign("*") || tk.matchSign("/")) {
+    if (tk.matchSign("*") || tk.matchSign("/") || tk.matchSign("%")) {
         tr->add(createTree(tk));
         this->getNextToken();
     } else {

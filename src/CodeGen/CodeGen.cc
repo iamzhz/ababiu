@@ -100,9 +100,9 @@ void CodeGen::Handle_idiv_val(const IR & ir) {
         sayError("Unkown type");
     }
 }
-void CodeGen::Handle_cdq(const IR & ir) {
+void CodeGen::Handle_cqo(const IR & ir) {
     (void)ir;
-    this->append("cdq");
+    this->append("cqo");
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
     this->append("mov " + this->getReg(ir.val1) + ", " + this->literal.get(ir.val0));
@@ -189,7 +189,7 @@ void CodeGen::generate() {
         {Op_sub_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_idiv_val, &CodeGen::Handle_idiv_val},
-        {Op_cdq, &CodeGen::Handle_cdq},
+        {Op_cqo, &CodeGen::Handle_cqo},
         {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
         {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
         {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},

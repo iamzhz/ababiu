@@ -187,7 +187,8 @@ void Syntax::analyze_Times(Tree * tr) {
     while (s->label != treeTypeNode_Epsilon) {
         // OP
         if (s->children[0]->tk.matchSign("*")) op = Op_mul;
-        else op = Op_div; // when s->children[0]->tk.matchSign("/")
+        else if (s->children[0]->tk.matchSign("/")) op = Op_div;
+        else if (s->children[0]->tk.matchSign("%")) op = Op_mod;
         // another Power
         this->analyze_Power(s->children[1]);
         // add

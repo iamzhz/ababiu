@@ -89,7 +89,8 @@ std::string IROpToText(IROp n) {
         case Sign_newFunction_iv: return "newFunction_iv";
         case Sign_endFunction: return "endFunction";
         case Sign_SentenceEnd: return "SentenceEnd";
-        case Op_cdq: return "cqd";
+        case Op_cqo: return "cqo";
+        case Op_mod: return "mod";
     }
     return "Error: IR.cc::IRs::display();\n";
 }
