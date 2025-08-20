@@ -30,7 +30,8 @@ class CodeGen {
     void Handle_endFunction(const IR & ir);
     void Handle_mov_iv_imm(const IR & ir);
     void Handle_xxx_reg_reg(const IR & ir);
-    void Handle_div_reg_reg(const IR & ir);
+    void Handle_idiv_val(const IR & ir);
+    void Handle_cdq(const IR & ir);
     void Handle_load_imm_reg(const IR & ir);
     void Handle_load_iv_reg(const IR & ir);
     void Handle_store_iv_reg(const IR & ir);

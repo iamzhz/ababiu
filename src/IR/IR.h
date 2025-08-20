@@ -37,7 +37,8 @@ enum IROp {
     Op_mul, // push (~1 * ~0)
     Op_mul_reg_reg,
     Op_div, // push (~1 / ~0)
-    Op_div_reg_reg,
+    Op_idiv_val,
+    Op_cdq,
     Op_call_if,
     Op_equal, // push (~1 == ~0)
     Op_equal_reg_reg,

@@ -36,6 +36,7 @@ class StackEraser {
     void Handle_push_imm(const IR & ir);
     void Handle_push_iv(const IR & ir);
     void Handle_xxx(const IR & ir);
+    void Handle_div(const IR & ir);
     void Handle_conditionJump_addr(const IR & ir);
     void Handle_callParaBegin(const IR & ir);
     void Handle_call_if(const IR & ir);

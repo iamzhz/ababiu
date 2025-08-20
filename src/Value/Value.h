@@ -64,10 +64,10 @@ class Value {
     bool operator==(const Value & o);
     bool operator!=(const Value & o);
 
-    bool isVariable();
-    bool isImmediate();
-    bool isReg();
-    bool isParaHead();
+    bool isVariable() const;
+    bool isImmediate() const;
+    bool isReg() const;
+    bool isParaHead() const;
     const Immediate& getImmediate() const;
     const IdVariable& getIdVariable() const;
     const int& getReg() const;

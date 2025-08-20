@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <format>
+#include "../SayError/SayError.h"
 
 std::vector<std::string> common_regs = {
     "rax", "rcx", "rdx", "r10", "r11"
@@ -87,13 +88,20 @@ void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
     }
     this->append(opcode + ' ' + this->getReg(ir.val0) + ", " + this->getReg(ir.val1));
 }
-void CodeGen::Handle_div_reg_reg(const IR & ir) {
-    this->append("push rdx");
-    this->append("push rax");
-    this->append("mov rax, " + this->getReg(ir.val0));
-    this->append("idiv " + this->getReg(ir.val1));
-    this->append("pop rax");
-    this->append("pop rdx");
+void CodeGen::Handle_idiv_val(const IR & ir) {
+    if (ir.val0.isReg()) {
+        this->append("idiv " + this->getReg(ir.val0));
+    } else if (ir.val0.isImmediate()) {
+        this->append("idiv " + ir.val0.getImmediate().content);
+    } else if (ir.val0.isVariable()) {
+        this->append("idiv " + this->symbol->get_variable_mem(ir.val0));
+    }else {
+        sayError("Unkown type");
+    }
+}
+void CodeGen::Handle_cdq(const IR & ir) {
+    (void)ir;
+    this->append("cdq");
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
     this->append("mov " + this->getReg(ir.val1) + ", " + this->literal.get(ir.val0));
@@ -179,7 +187,8 @@ void CodeGen::generate() {
         {Op_add_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_sub_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
-        {Op_div_reg_reg, &CodeGen::Handle_div_reg_reg},
+        {Op_idiv_val, &CodeGen::Handle_idiv_val},
+        {Op_cdq, &CodeGen::Handle_cdq},
         {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
         {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
         {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},

@@ -84,16 +84,16 @@ bool Value::operator==(const Value & o) {
 bool Value::operator!=(const Value & o) {
     return !this->operator==(o);
 }
-bool Value::isVariable() {
+bool Value::isVariable() const {
     return std::holds_alternative<IdVariable>(data_);
 }
-bool Value::isImmediate() {
+bool Value::isImmediate() const {
     return std::holds_alternative<Immediate>(data_);
 }
-bool Value::isReg() {
+bool Value::isReg() const {
     return std::holds_alternative<int>(data_);
 }
-bool Value::isParaHead() {
+bool Value::isParaHead() const {
     if (!std::holds_alternative<SpecialMark>(data_)) {
         return false;
     }

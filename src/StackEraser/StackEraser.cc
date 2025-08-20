@@ -19,6 +19,7 @@ Value StackEraser::getReg() {
             return i;
         }
     }
+    sayError("Spill is not supported now.");
     return (-1); // TODO
 }
 Value StackEraser::getCallerReg(int number) {
@@ -126,7 +127,7 @@ void StackEraser::Handle_xxx(const IR & i) {
         case Op_add: op = Op_add_reg_reg;  break;
         case Op_sub: op = Op_sub_reg_reg;  break;
         case Op_mul: op = Op_mul_reg_reg;  break;
-        case Op_div: op = Op_div_reg_reg;  break;
+        //case Op_div: op = Op_div_reg_reg;  break;
         case Op_equal: op = Op_equal_reg_reg;  break;
         case Op_bigger: op = Op_bigger_reg_reg;  break;
         case Op_biggerEqual: op = Op_biggerEqual_reg_reg;  break;
@@ -141,6 +142,35 @@ void StackEraser::Handle_xxx(const IR & i) {
     this->append({op, b_reg, a_reg});
     this->releaseReg(a_reg);
     this->push(b_reg);
+}
+void StackEraser::Handle_div(const IR & i) {
+    (void)i;
+    // a / b
+    Value b = this->pop();
+    Value a = this->pop();
+    bool isPopRax = false, isPopRdx = false;
+    if (a != Value(RAX_NUMBER)) {
+        if (this->is_used[RAX_NUMBER]) {
+            this->append({Op_push_reg, Value(RAX_NUMBER)});
+            isPopRax = true;
+        }
+        this->loadToReg(a, Value(RAX_NUMBER));
+    }
+    if (this->is_used[RDX_NUMBER]) {
+        this->append({Op_push_reg, Value(RDX_NUMBER)});
+        isPopRdx = true;
+    }
+    this->append({Op_cdq});
+    this->append({Op_idiv_val, b});
+    if (isPopRdx) {
+        this->append({Op_pop_reg, Value(RDX_NUMBER)});
+    }
+    if (isPopRax) {
+        this->push(this->loadToReg(Value(RAX_NUMBER)));
+        this->append({Op_pop_reg, Value(RAX_NUMBER)});
+    } else {
+        this->push(Value(RAX_NUMBER));
+    }
 }
 void StackEraser::Handle_conditionJump_addr(const IR & i) {
     IROp op;
@@ -244,7 +274,7 @@ void StackEraser::convert() {
         {Op_add, &StackEraser::Handle_xxx},
         {Op_sub, &StackEraser::Handle_xxx},
         {Op_mul, &StackEraser::Handle_xxx},
-        {Op_div, &StackEraser::Handle_xxx},
+        {Op_div, &StackEraser::Handle_div},
         {Op_equal, &StackEraser::Handle_xxx},
         {Op_bigger, &StackEraser::Handle_xxx},
         {Op_biggerEqual, &StackEraser::Handle_xxx},
