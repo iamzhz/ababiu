@@ -3,23 +3,12 @@
 **(目前还很简陋呢)**  
 **现在只支持 x86_64 的 Linux**
   
-为了构建这个项目, 你需要有 `make`, `cmake` 或 `xmake` 其中之一.  
+为了构建这个项目, 你需要有 `make`.  
 这个项目运行时依赖 `nasm` 和 `ld`.  
 ## 构建项目
 如果你用 `make`:
 ``` bash
 make
-```
-或者是 `cmake`:
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-```
-再或者你用 `xmake`:
-```bash
-xmake
 ```
 这会产生一个名为 `ababiu` 的可执行文件.  
 > [!TIP]
