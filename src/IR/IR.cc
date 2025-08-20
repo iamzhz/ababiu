@@ -68,7 +68,6 @@ std::string IROpToText(IROp n) {
         case Op_smaller_reg_reg:  return "smaller_reg_reg";
         case Op_smallerEqual_reg_reg:  return "smallerEqual_reg_reg";
         case Op_notEqual_reg_reg:  return "notEqual_reg_reg";
-        case Op_power_reg_reg:  return "power_reg_reg";
         case Op_jumpIf_addr_reg: return "jump_addr_reg";
         case Op_jumpIfNot_addr_reg: return "jumpIfNot_addr_reg";
         case Sign_defineVariable_type_iv: return "defineVariable_type_iv";

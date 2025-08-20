@@ -43,7 +43,8 @@ std::string CodeGen::get_output() {
             this->literal.get_rodata() +
             "section .text\n"
             "extern print\n"
-            "extern input\n";
+            "extern input\n"
+            "extern pow\n";
     for (FuncData & _o : this->_output) {
         ret += std::format(
             "\n"

@@ -72,7 +72,6 @@ enum IROp {
     Op_return_reg,
 
     Op_power, // push (~1 ** ~0)
-    Op_power_reg_reg,
 
     Op_jump_addr, // jump to addr 
     Op_jumpIfNot_addr, // jump to addr if not ~0

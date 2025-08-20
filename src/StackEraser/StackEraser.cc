@@ -127,14 +127,12 @@ void StackEraser::Handle_xxx(const IR & i) {
         case Op_add: op = Op_add_reg_reg;  break;
         case Op_sub: op = Op_sub_reg_reg;  break;
         case Op_mul: op = Op_mul_reg_reg;  break;
-        //case Op_div: op = Op_div_reg_reg;  break;
         case Op_equal: op = Op_equal_reg_reg;  break;
         case Op_bigger: op = Op_bigger_reg_reg;  break;
         case Op_biggerEqual: op = Op_biggerEqual_reg_reg;  break;
         case Op_smaller: op = Op_smaller_reg_reg;  break;
         case Op_smallerEqual: op = Op_smallerEqual_reg_reg;  break;
         case Op_notEqual: op = Op_notEqual_reg_reg;  break;
-        case Op_power: op = Op_power_reg_reg;  break;
         default: break;
     }
     Value a_reg = this->loadToReg(this->pop());
@@ -171,6 +169,15 @@ void StackEraser::Handle_div(const IR & i) {
     } else {
         this->push(Value(RAX_NUMBER));
     }
+}
+void StackEraser::Handle_power(const IR & ir) {
+    (void)ir;
+    Value b = this->pop();
+    Value a = this->pop();
+    this->Handle_callParaBegin({});
+    this->push(a);
+    this->push(b);
+    this->Handle_call_if({Op_call_if, Value("pow")});
 }
 void StackEraser::Handle_conditionJump_addr(const IR & i) {
     IROp op;
@@ -281,7 +288,7 @@ void StackEraser::convert() {
         {Op_smaller, &StackEraser::Handle_xxx},
         {Op_smallerEqual, &StackEraser::Handle_xxx},
         {Op_notEqual, &StackEraser::Handle_xxx},
-        {Op_power, &StackEraser::Handle_xxx},
+        {Op_power, &StackEraser::Handle_power},
         {Op_jumpIf_addr, &StackEraser::Handle_conditionJump_addr},
         {Op_jumpIfNot_addr, &StackEraser::Handle_conditionJump_addr},
         {Sign_callParaBegin, &StackEraser::Handle_callParaBegin},

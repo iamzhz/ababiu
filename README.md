@@ -14,14 +14,6 @@ make
 > [!TIP]
 > 咱要把生成的 `ababiu` 文件挪到主目录下(即和 libababiu/ 目录同级), 因为它会用到一些 libababiu 的内容.  
 
-## 使用之前
-为了准备 Ababiu 的静态库, 请执行
-```bash
-gcc -c libababiu/io.c -o io.o
-nasm -f elf64 libababiu/start.asm -o start.o
-ar rcs libababiu.a start.o io.o
-```
-
 ## 该编译你的代码了
 (有一个测试文件 `test.abb`, 咱可以试试)  
 ```bash
