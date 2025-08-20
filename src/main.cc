@@ -75,17 +75,17 @@ std::string compile_file(std::string filename, Symbol * symbol) {
 }
 
 void auto_continue_compile(std::string output_file) {
-    // check nasm & gcc
+    // check nasm & ld
     int nasm_return = std::system("nasm --version > /dev/null");
-    int gcc_return = std::system("gcc --version > /dev/null");
+    int ld_return = std::system("ld --version > /dev/null");
     if (nasm_return != 0) {
         std::cerr << "nasm is not exist.\n";
         std::exit(1);
     }
-    if (gcc_return != 0) {
-        std::cerr << "gcc is not exist.\n";
+    if (ld_return != 0) {
+        std::cerr << "ld is not exist.\n";
         std::exit(1);
     }
     std::system("nasm -f elf64 ababiu_temp.asm -o ababiu_temp.o");
-    std::system(("gcc ababiu_temp.o libababiu.o -o " + output_file).c_str());
+    std::system(("ld ababiu_temp.o -o " + output_file + " -L. -lc -lababiu -dynamic-linker /lib64/ld-linux-x86-64.so.2").c_str());
 }

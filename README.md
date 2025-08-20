@@ -1,50 +1,53 @@
 # Ababiu
-It is a program for a programming language named `Ababiu`.  
-**(This project is WIP.)**  
+这是名为 Ababiu 编程语言的编译器.  
+**(目前还很简陋呢)**  
+**现在只支持 x86_64 的 Linux**
   
-To compile this project, you should have `make`, `cmake` or `xmake`.  
-To compile your Ababiu code, you should have `nasm` and `gcc`.  
-## Build this project
-If you use `makefile`:
+为了构建这个项目, 你需要有 `make`, `cmake` 或 `xmake` 其中之一.  
+这个项目运行时依赖 `nasm` 和 `ld`.  
+## 构建项目
+如果你用 `make`:
 ``` bash
 make
 ```
-If you use `cmake`:
+或者是 `cmake`:
 ```bash
 mkdir build
 cd build
 cmake ..
 cmake --build .
 ```
-If you use `xmake`:
+再或者你用 `xmake`:
 ```bash
 xmake
 ```
-It will generate a executable file named `ababiu`.
+这会产生一个名为 `ababiu` 的可执行文件.  
+> [!TIP]
+> 咱要把生成的 `ababiu` 文件挪到主目录下(即和 libababiu/ 目录同级), 因为它会用到一些 libababiu 的内容.  
 
-## Prepare before use
-You should run
+## 使用之前
+为了准备 Ababiu 的静态库, 请执行
 ```bash
-gcc -c libababiu/libababiu.c -o libababiu.o
+gcc -c libababiu/io.c -o io.o
+nasm -f elf64 libababiu/start.asm -o start.o
+ar rcs libababiu.a start.o io.o
 ```
-to prepare the library of Ababiu.
 
-## Compile your code
-(There is a test file `test.abb`, you can try it)  
-``` bash
-./ababiu your_code.abb -o assembly.asm  # compile to assembly code
-nasm -f elf64 assembly.asm -o a.o
-gcc a.o libababiu.o -o output
-
-```
-or there is an easier way
-```
+## 该编译你的代码了
+(有一个测试文件 `test.abb`, 咱可以试试)  
+```bash
 ./ababiu your_code.abb -o output --auto
 ```
-Then you can run it by
+这其实等效于
+``` bash
+./ababiu your_code.abb -o assembly.asm  # 把 ababiu 代码编译到汇编
+nasm -f elf64 assembly.asm -o a.o # 把汇编编译为目标文件
+ld a.o -o output -L. -lc -lababiu -dynamic-linker /lib64/ld-linux-x86-64.so.2 # 链接
+```
+然后可以这样来运行
 ```bash
 ./output
 ```
 ## File
-`src/` is the source code.  
-`libababiu/` is the library of Ababiu.
+`src/` 是放编译器代码的地方.  
+`libababiu/` 是放 ababiu 的 built-in 函数的地方.  
