@@ -23,6 +23,7 @@ class CodeGen {
     Literal literal;
 
     std::string getReg(bool isLow8, int n);
+    inline std::string getReg(bool isLow8, Value reg);
     inline std::string getReg(int n);
     std::string getReg(const Value & reg);
 

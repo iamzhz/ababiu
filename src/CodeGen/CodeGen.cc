@@ -6,21 +6,28 @@
 #include <format>
 #include "../SayError/SayError.h"
 
-std::vector<std::string> common_regs = {
-    "rax", "rcx", "rdx", "r10", "r11"
-};
-std::vector<std::string> common_low8_regs = {
-    "al", "cl", "dl", "r10b", "r11b"
-};
-std::vector<std::string> call_regs = {
-    "rdi", "rsi", "rdx", "rcx", "r8", "r9"
-};
+std::vector<std::string> regs_string = {
+    "rax", "r10", "r9", "r8", 
+    "rcx", "rdx", "rsi", "rdi",
+    
+    "r11",
 
+    "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", 
+    "xmm5", "xmm6", "xmm7", "xmm8", "xmm9", 
+    "xmm10", "xmm11", "xmm12", "xmm13", "xmm14",
+};
+std::vector<std::string> low8_regs_string = {
+    "al", "r10b", "r11b", "r9b", "r8b",
+    "cl", "dl", "rsi", "dil",
+};
 std::string CodeGen::getReg(bool isLow8, int n) {
     if (n >= 0 && n < COMMON_REGS_NUMBER) {
-        return isLow8?common_low8_regs[n]:common_regs[n];
+        return isLow8?low8_regs_string[n]:regs_string[n];
     }
-    return call_regs[n-COMMON_REGS_NUMBER];
+    return regs_string[COMMON_REGS_NUMBER];
+}
+inline std::string CodeGen::getReg(bool isLow8, Value reg) {
+    return this->getReg(isLow8, reg.getReg());
 }
 inline std::string CodeGen::getReg(int n) {
     return this->getReg(false, n);
@@ -128,7 +135,7 @@ void CodeGen::Handle_compare_reg_reg(const IR & ir) {
     std::string opcode;
     std::string reg0 = this->getReg(ir.val0);
     std::string reg1 = this->getReg(ir.val1);
-    std::string low8_reg0 = common_low8_regs[ir.val0.getReg()];
+    std::string low8_reg0 = this->getReg(true, ir.val0);
     switch (ir.op) {
         case Op_equal_reg_reg: opcode = "sete"; break;
         case Op_bigger_reg_reg: opcode = "setg"; break;

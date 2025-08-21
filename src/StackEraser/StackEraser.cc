@@ -16,15 +16,16 @@ Value StackEraser::getReg() {
     for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
         if (!this->is_used[i]) {
             this->is_used[i] = true;
-            return i;
+            return Value(i);
         }
     }
     sayError("Spill is not supported now.");
     return (-1); // TODO
 }
 Value StackEraser::getCallerReg(int number) {
-    // reverse of RDI, RSI, RDX, RCX, R8, R9
-    return (COMMON_REGS_NUMBER + number);
+    // RDI, RSI, RDX, RCX, R8, R9
+    int call_regs[] = {RDI_NUMBER, RSI_NUMBER, RDX_NUMBER, RCX_NUMBER, R8_NUMBER, R9_NUMBER};
+    return Value(call_regs[number]);
 }
 
 StackEraser::StackEraser(IRs * irs, Symbol * symbol) {
@@ -45,19 +46,22 @@ void StackEraser::releaseReg(Value reg) {
 Value StackEraser::loadToReg(Value t) {
     return this->loadToReg(t, this->getReg());
 }
-
 Value StackEraser::loadToReg(Value t, Value reg) {
+    return this->loadToReg(t, reg, false);
+}
+Value StackEraser::loadToReg(Value t, Value reg, bool isMustToReg) {
     IR ir;
     if (t.isVariable()) {
         this->append({Op_load_iv_reg, t, reg});
     } else if (t.isImmediate()) {
         this->append({Op_load_imm_reg, t, reg});
     } else if (t.isReg()) {
-        if (reg.getReg() < COMMON_REGS_NUMBER) {
+        if (isMustToReg) {
+            this->append({Op_mov_reg_reg, reg, t});
+        } else {
             this->releaseReg(reg);
             return t;
         }
-        this->append({Op_mov_reg_reg, reg, t});
     }
     return reg;
 }
@@ -252,13 +256,7 @@ void StackEraser::Handle_call_if(const IR & i) {
     if (func.isVariable == true) {
         sayError(std::format("`{}` is a variable name.", func_name));
     }
-    bool isRaxProtect = this->is_used[RAX_NUMBER];
-    if (!this->stack.empty()) {
-        isRaxProtect = isRaxProtect && this->stack.back() != Value(RAX_NUMBER);
-    }
-    if (isRaxProtect) {
-        this->append({Op_push_reg, Value(RAX_NUMBER)});
-    }
+    // deal with parameters
     std::vector<Value> parameters; // reverse of real parameters
     // reverse of RDI, RSI, RDX, RCX, R8, R9
     std::vector<Value> last6; // for register (reverse)
@@ -274,11 +272,20 @@ void StackEraser::Handle_call_if(const IR & i) {
 
     last6.assign(parameters.end() - last6_size, parameters.end());
     parameters.erase(parameters.end() - last6_size, parameters.end());
-
+    // caller save: RAX, RCX, RDX, RSI, RDI, R8-R10 (number 0-7)
+    bool isCallerSave[COMMON_REGS_NUMBER];
+    for (int save_reg = 0;  save_reg < COMMON_REGS_NUMBER;  ++ save_reg) {
+        if (this->is_used[save_reg]) {
+            isCallerSave[save_reg] = true;
+            this->append({Op_push_reg, Value(save_reg)});
+        } else {
+            isCallerSave[save_reg] = false;
+        }
+    }
     // deal with register paras
     int reg_para_count = 0;
     for (auto it = last6.rbegin(); it != last6.rend(); ++it) {
-        this->loadToReg(*it, this->getCallerReg(reg_para_count));
+        this->loadToReg(*it, this->getCallerReg(reg_para_count), true);
         reg_para_count ++;
     }
     // deal with stack paras
@@ -287,14 +294,26 @@ void StackEraser::Handle_call_if(const IR & i) {
         this->append({Op_push_reg, reg});
         this->releaseReg(reg);
     }
-    this->append(i); // call func
-    if (isRaxProtect) {
-        this->append({Op_mov_reg_reg, this->getReg(), RAX_NUMBER});
+    // call func
+    this->append(i);
+    // save regs
+    for (int save_reg = COMMON_REGS_NUMBER-1;  save_reg > 0;  -- save_reg) {
+        if (isCallerSave[save_reg]) {
+            this->append({Op_pop_reg, Value(save_reg)});
+        }
+    }
+    if (func.type == TYPE_VOID) {
+        if (isCallerSave[RAX_NUMBER]) {
+            this->append({Op_pop_reg, Value(RAX_NUMBER)});
+        }
+        return ;
+    }
+    if (isCallerSave[RAX_NUMBER]) {
+        Value reg = this->getReg();
+        this->append({Op_mov_reg_reg, reg, RAX_NUMBER});
+        this->push(reg);
         this->append({Op_pop_reg, Value(RAX_NUMBER)});
     } else {
-        if (func.type == TYPE_VOID) {
-            return ;
-        }
         this->push(Value(RAX_NUMBER));
         this->markUsed(RAX_NUMBER);
     }

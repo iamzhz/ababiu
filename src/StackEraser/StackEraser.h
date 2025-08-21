@@ -28,6 +28,7 @@ class StackEraser {
     void releaseReg(Value reg);
     Value loadToReg(Value t);
     Value loadToReg(Value t, Value reg);
+    Value loadToReg(Value t, Value reg, bool isMustToReg);
     inline bool isStackUsed(int n); // n is a negative
     int getStack();
     void releaseStack(int n);

@@ -19,6 +19,10 @@ int main(int argc, char ** argv) {
     FileManager file;
     Symbol symbol;
     clp.run();
+    if (clp.table.find("version") != clp.table.end()) {
+        std::cout << "Ababiu Version: 0.0.1-pre-alpha\n\n";
+        return 0;
+    }
     bool isAutoContinueCompile = clp.table.find("auto") != clp.table.end();
     auto inputFile = clp.table.find("");
     auto outputFile = clp.table.find("o");
