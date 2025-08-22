@@ -56,17 +56,16 @@ enum IROp {
     Op_notEqual_reg_reg,
 
     // double float
-    Op_movsd_reg_reg,
     Op_addsd_reg_reg,
     Op_subsd_reg_reg,
     Op_mulsd_reg_reg,
     Op_divsd_reg_reg,
-    Op_equalsd_reg_reg,
-    Op_biggersd_reg_reg,
-    Op_biggerEqualsd_reg_reg,
-    Op_smallersd_reg_reg,
-    Op_smallerEqualsd_reg_reg,
-    Op_notEqualsd_reg_reg,
+    //Op_equalsd_reg_reg,
+    //Op_biggersd_reg_reg,
+    //Op_biggerEqualsd_reg_reg,
+    //Op_smallersd_reg_reg,
+    //Op_smallerEqualsd_reg_reg,
+    //Op_notEqualsd_reg_reg,
 
     // Other
     Op_return, // return (~0)

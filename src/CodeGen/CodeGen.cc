@@ -24,7 +24,7 @@ std::string CodeGen::getReg(bool isLow8, int n) {
     if (n >= 0 && n < COMMON_REGS_NUMBER) {
         return isLow8?low8_regs_string[n]:regs_string[n];
     }
-    return regs_string[COMMON_REGS_NUMBER];
+    return regs_string[n];
 }
 inline std::string CodeGen::getReg(bool isLow8, Value reg) {
     return this->getReg(isLow8, reg.getReg());
@@ -83,18 +83,52 @@ void CodeGen::Handle_endFunction(const IR & ir) {
     this->symbol->clear_variable();
 }
 void CodeGen::Handle_mov_iv_imm(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->literal.get(ir.val1));
+    std::string opcode;
+    if (this->symbol->get_variable(ir.val0).type == TYPE_FLOAT) {
+        opcode = "movsd";
+    } else {
+        opcode = "mov";
+    }
+    this->append(std::format("{} {},{}",
+        opcode,
+        this->symbol->get_variable_mem(ir.val0),
+        this->literal.get(ir.val1)
+    ));
 }
 void CodeGen::Handle_xxx_reg_reg(const IR & ir) {
     std::string opcode;
     switch (ir.op) {
-        case Op_mov_reg_reg: opcode = "mov"; break;
+        case Op_mov_reg_reg: {
+            int reg_int = ir.val0.getReg();
+            if (reg_int >= XMM0_NUMBER && reg_int < XMM0_NUMBER + XMM_NUMBER) {
+                opcode = "movsd";
+            } else {
+                opcode = "mov";
+            }
+            break;
+        }
         case Op_add_reg_reg: opcode = "add"; break;
         case Op_sub_reg_reg: opcode = "sub"; break;
         case Op_mul_reg_reg: opcode = "imul"; break;
         default: break;
     }
     this->append(opcode + ' ' + this->getReg(ir.val0) + ", " + this->getReg(ir.val1));
+}
+void CodeGen::Handle_xxxsd_reg_reg(const IR & ir) {
+    std::string opcode;
+    switch (ir.op) {
+        case Op_addsd_reg_reg: opcode = "add"; break;
+        case Op_subsd_reg_reg: opcode = "sub"; break;
+        case Op_mulsd_reg_reg: opcode = "mul"; break;
+        case Op_divsd_reg_reg: opcode = "div"; break;
+        default:
+            sayError("CodeGen::Handle_xxxsd_reg_reg()");
+    }
+    this->append(std::format("{}sd {}, {}",
+        opcode,
+        this->getReg(ir.val0),
+        this->getReg(ir.val1)
+    ));
 }
 void CodeGen::Handle_idiv_val(const IR & ir) {
     if (ir.val0.isReg()) {
@@ -112,13 +146,43 @@ void CodeGen::Handle_cqo(const IR & ir) {
     this->append("cqo");
 }
 void CodeGen::Handle_load_imm_reg(const IR & ir) {
-    this->append("mov " + this->getReg(ir.val1) + ", " + this->literal.get(ir.val0));
+    std::string opcode;
+    if (ir.val0.getImmediate().type == TYPE_FLOAT) {
+        opcode = "movsd";
+    } else {
+        opcode = "mov";
+    }
+    this->append(std::format("{} {},{}",
+        opcode,
+        this->getReg(ir.val1),
+        this->literal.get(ir.val0)
+    ));
 }
 void CodeGen::Handle_load_iv_reg(const IR & ir) {
-    this->append("mov " + this->getReg(ir.val1) + ", " + this->symbol->get_variable_mem(ir.val0));
+    std::string opcode;
+    if (this->symbol->get_variable(ir.val0).type == TYPE_FLOAT) {
+        opcode = "movsd";
+    } else {
+        opcode = "mov";
+    }
+    this->append(std::format("{} {},{}",
+        opcode,
+        this->getReg(ir.val1),
+        this->symbol->get_variable_mem(ir.val0))
+    );
 }
 void CodeGen::Handle_store_iv_reg(const IR & ir) {
-    this->append("mov " + this->symbol->get_variable_mem(ir.val0) + ", " + this->getReg(ir.val1));
+    std::string opcode;
+    if (this->symbol->get_variable(ir.val0).type == TYPE_FLOAT) {
+        opcode = "movsd";
+    } else {
+        opcode = "mov";
+    }
+    this->append(std::format("{} {},{}",
+        opcode,
+        this->symbol->get_variable_mem(ir.val0),
+        this->getReg(ir.val1)
+    ));
 }
 void CodeGen::Handle_jump_addr(const IR & ir) {
     this->append("jmp L" + std::to_string(this->irs->marks[ir.get_addr().line]));
@@ -197,6 +261,10 @@ void CodeGen::generate() {
         {Op_mul_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_idiv_val, &CodeGen::Handle_idiv_val},
         {Op_cqo, &CodeGen::Handle_cqo},
+        {Op_addsd_reg_reg, &CodeGen::Handle_xxxsd_reg_reg},
+        {Op_subsd_reg_reg, &CodeGen::Handle_xxxsd_reg_reg},
+        {Op_mulsd_reg_reg, &CodeGen::Handle_xxxsd_reg_reg},
+        {Op_divsd_reg_reg, &CodeGen::Handle_xxxsd_reg_reg},
         {Op_load_imm_reg, &CodeGen::Handle_load_imm_reg},
         {Op_load_iv_reg, &CodeGen::Handle_load_iv_reg},
         {Op_store_iv_reg, &CodeGen::Handle_store_iv_reg},

@@ -25,6 +25,7 @@ void Symbol::insert_variable(std::string name, TypeType var_type) {
     switch (var_type) {
         case TYPE_CHAR: size = CHAR_SIZE; break;
         case TYPE_INT: size = INT_SIZE; break;
+        case TYPE_FLOAT: size = FLOAT_SIZE; break;
         default: break; 
         // TODO
     }
@@ -66,6 +67,18 @@ SymbolValue Symbol::get_variable(std::string name) {
     }
     sv = f->second;
     return sv;
+}
+SymbolValue Symbol::get_variable(Value val) {
+    if (val.isVariable()) {
+        return this->get_variable(val.getIdVariable().content);
+    }
+    return {.isExist = false,
+            .isVariable = false,// not important
+            .type = TYPE_UNKNOWN,
+            .frame_offset = 0,
+            .size = 0,
+            .args = {},
+    };
 }
 std::string Symbol::get_variable_mem(Value val) {
     if (!val.isVariable()) {

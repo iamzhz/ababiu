@@ -11,6 +11,7 @@ Stack Eraser is used to convert a stack-IR to non-stack-IR
 #include "../Symbol/Symbol.h"
 #include "../env_config/config.h"
 
+#define ALL_REGS_NUMBER (COMMON_REGS_NUMBER+1+XMM_NUMBER)
 class StackEraser {
     private:
     std::unordered_map<int, int> lineCast; // (line number) old IR -> new IR
@@ -20,10 +21,13 @@ class StackEraser {
     std::vector<Value> stack;
     int tempCount = 0;
     int n;
-    bool is_used[COMMON_REGS_NUMBER];
+    bool is_used[ALL_REGS_NUMBER]; // `1`(R11) is just to stay and do not use
     std::unordered_set<int> stack_used; // stand for the real memory stack
+    bool isFloat(Value val) const;
     void markUsed(int n);
-    Value getReg();
+    Value getReg(); // for integer
+    Value getFloatReg();
+    Value getReg(Value from);
     Value getCallerReg(int number);
     void releaseReg(Value reg);
     Value loadToReg(Value t);

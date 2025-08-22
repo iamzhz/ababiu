@@ -6,8 +6,24 @@
 #include <iostream>
 #endif
 
+bool StackEraser::isFloat(Value val) const {
+    if (val.isImmediate()) {
+        return val.getImmediate().type == TYPE_FLOAT;
+    }
+    if (val.isReg()) {
+        int reg_int = val.getReg();
+        return reg_int >= XMM0_NUMBER && reg_int < XMM0_NUMBER + XMM_NUMBER;
+    }
+    if (val.isVariable()) {
+        std::string var_name = val.getIdVariable().content;
+        SymbolValue sv = this->symbol->get_variable(var_name);
+        return sv.isExist && sv.isVariable && sv.type == TYPE_FLOAT;
+    }
+    return false;
+}
+
 void StackEraser::markUsed(int n) {
-    if (n >= 0 && n < COMMON_REGS_NUMBER) {
+    if (n >= 0 && n < ALL_REGS_NUMBER) {
         this->is_used[n] = true;
     }
 }
@@ -21,6 +37,22 @@ Value StackEraser::getReg() {
     }
     sayError("Spill is not supported now.");
     return (-1); // TODO
+}
+Value StackEraser::getFloatReg() {
+    for (int i = XMM0_NUMBER;  i < ALL_REGS_NUMBER;  i ++) {
+        if (!this->is_used[i]) {
+            this->is_used[i] = true;
+            return Value(i);
+        }
+    }
+    sayError("Spill is not supported now.");
+    return (-1); // TODO
+}
+Value StackEraser::getReg(Value from) {
+    if (this->isFloat(from)) {
+        return this->getFloatReg();
+    }
+    return this->getReg();
 }
 Value StackEraser::getCallerReg(int number) {
     // RDI, RSI, RDX, RCX, R8, R9
@@ -36,7 +68,7 @@ StackEraser::StackEraser(IRs * irs, Symbol * symbol) {
 }
 void StackEraser::releaseReg(Value reg) {
     int r = reg.getReg();
-    if (r < COMMON_REGS_NUMBER && r >= 0) {
+    if (r <= ALL_REGS_NUMBER && r >= 0) {
         this->is_used[r] = false;
     } else {
         // TODO
@@ -44,7 +76,7 @@ void StackEraser::releaseReg(Value reg) {
 }
 
 Value StackEraser::loadToReg(Value t) {
-    return this->loadToReg(t, this->getReg());
+    return this->loadToReg(t, this->getReg(t));
 }
 Value StackEraser::loadToReg(Value t, Value reg) {
     return this->loadToReg(t, reg, false);
@@ -107,11 +139,18 @@ void StackEraser::append(const IR & ir) {
 void StackEraser::Handle_pop_iv(const IR & i) {
     Value v = this->pop();
     if (v.isVariable()) {
-        Value reg = this->getReg();
+        Value reg = this->getReg(v);
         this->append({Op_load_iv_reg, v, reg});
         this->append({Op_store_iv_reg, i.val0, reg});
         this->releaseReg(reg);
     } else if (v.isImmediate()) {
+        if (this->isFloat(v)) {
+            Value v_reg = this->getFloatReg();
+            this->append({Op_load_imm_reg, v, v_reg});
+            this->append({Op_store_iv_reg, i.val0, v_reg});
+            this->releaseReg(v_reg);
+            return ;
+        }
         this->append({Op_mov_iv_imm, i.val0, v});
     } else if (v.isReg()) {
         this->append({Op_store_iv_reg, i.val0, v});
@@ -127,6 +166,28 @@ void StackEraser::Handle_push_iv(const IR & i) {
 }
 void StackEraser::Handle_xxx(const IR & i) {
     IROp op;
+    Value a_reg = this->loadToReg(this->pop());
+    Value b_reg = this->loadToReg(this->pop());
+    // check if b_reg is a float
+    if (b_reg.getReg() >= XMM0_NUMBER && b_reg.getReg() < XMM0_NUMBER + XMM_NUMBER) {
+        switch (i.op) {
+            case Op_add:
+                this->append({Op_addsd_reg_reg, b_reg, a_reg});
+                break;
+            case Op_sub:
+                this->append({Op_subsd_reg_reg, b_reg, a_reg});
+                break;
+            case Op_mul:
+                this->append({Op_mulsd_reg_reg, b_reg, a_reg});
+                break;
+            default:
+                sayError("Float is not support this operating.");
+        }
+        this->releaseReg(a_reg);
+        this->push(b_reg);
+        return ;
+    }
+    // if not, then
     switch (i.op) {
         case Op_add: op = Op_add_reg_reg;  break;
         case Op_sub: op = Op_sub_reg_reg;  break;
@@ -139,8 +200,6 @@ void StackEraser::Handle_xxx(const IR & i) {
         case Op_notEqual: op = Op_notEqual_reg_reg;  break;
         default: break;
     }
-    Value a_reg = this->loadToReg(this->pop());
-    Value b_reg = this->loadToReg(this->pop());
     this->append({op, b_reg, a_reg});
     this->releaseReg(a_reg);
     this->push(b_reg);
@@ -150,6 +209,16 @@ void StackEraser::Handle_div(const IR & i) {
     // a / b
     Value b = this->pop();
     Value a = this->pop();
+    // check a is a float
+    if (this->isFloat(a)) {
+        Value a_reg = this->loadToReg(a);
+        Value b_reg = this->loadToReg(b);
+        this->append({Op_divsd_reg_reg, a_reg, b_reg});
+        this->releaseReg(b_reg);
+        this->push(a_reg);
+        return ;
+    }
+    // if not, then
     bool isPopRax = false, isPopRdx = false;
     if (a != Value(RAX_NUMBER)) {
         if (this->is_used[RAX_NUMBER]) {
@@ -331,7 +400,7 @@ void StackEraser::Handle_return(const IR & i) {
 void StackEraser::Handle_sign_sentence_end(const IR & ir) {
     (void)ir;
     this->stack = {};
-    for (int i = 0;  i < COMMON_REGS_NUMBER;  i ++) {
+    for (int i = 0;  i < ALL_REGS_NUMBER;  i ++) {
         this->is_used[i] = false;
     }
 }

@@ -29,7 +29,25 @@ pass function:
 #define R11_NUMBER 8
 #define EXCHANGE_REG_NUMBER R11_NUMBER // only for exchange, not use
 
+#define XMM0_NUMBER 9
+#define XMM1_NUMBER 10
+#define XMM2_NUMBER 11
+#define XMM3_NUMBER 12
+#define XMM4_NUMBER 13
+#define XMM5_NUMBER 14
+#define XMM6_NUMBER 15
+#define XMM7_NUMBER 16
+#define XMM8_NUMBER 17
+#define XMM9_NUMBER 18
+#define XMM10_NUMBER 19
+#define XMM11_NUMBER 20
+#define XMM12_NUMBER 21
+#define XMM13_NUMBER 22
+#define XMM14_NUMBER 23
+#define XMM15_NUMBER 24
+
 #define INT_SIZE 8
 #define CHAR_SIZE 1
+#define FLOAT_SIZE 8
 
 #endif

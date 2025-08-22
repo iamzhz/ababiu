@@ -61,7 +61,6 @@ void Syntax::analyze_Statements(Tree * tr) {
 void Syntax::analyze_Sentences(Tree * tr) {
     for (Tree * child : tr->children) {
         this->analyze_Sentence(child);
-        this->append({Sign_SentenceEnd});
     }
 }
 void Syntax::analyze_Sentence(Tree * tr) {
@@ -69,37 +68,38 @@ void Syntax::analyze_Sentence(Tree * tr) {
     switch (head->label) {
         case treeTypeNode_If:
             this->analyze_If(head);
-            return ;
+            break;
         case treeTypeNode_While:
             this->analyze_While(head);
-            return ;
+            break;
         case treeTypeNode_DoWhile:
             this->analyze_DoWhile(head);
-            return ;
+            break;
         case treeTypeNode_For:
             this->analyze_For(head);
-            return ;
+            break;
         case treeTypeNode_Break:
             this->analyze_Break();
-            return ;
+            break;
         case treeTypeNode_Continue:
             this->analyze_Continue();
-            return ;
+            break;
         case treeTypeNode_Return:
             this->analyze_Return(head);
-            return ;
+            break;
         case treeTypeNode_Expr:
             this->analyze_Expr(head);
-            return ;
+            break;
         case treeTypeNode_DefineVariable:
             this->analyze_DefineVariable(head);
-            return ;
+            break;
         default:
+            sayError(head->children[0]->tk.line, 
+            head->children[0]->tk.column, 
+            "Wrong keyword.");
             return ; // if my code works well, it'll never run this
     }
-    sayError(head->children[0]->tk.line, 
-        head->children[0]->tk.column, 
-        "Wrong keyword.");
+    this->append({Sign_SentenceEnd});
 }
 void Syntax::analyze_FunctionCall(Tree * tr) {
     std::string function_name;
