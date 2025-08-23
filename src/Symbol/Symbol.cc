@@ -3,6 +3,9 @@
 #include <stdexcept>
 #include <string>
 
+Symbol::Symbol() {
+    this->new_scope();
+}
 int Symbol::assign_memory(int addr, int rest, int size, int & used) {
     int frame_offset;
     used = size;
@@ -19,6 +22,7 @@ int Symbol::assign_memory(int addr, int rest, int size, int & used) {
 
 void Symbol::insert_variable(std::string name, TypeType var_type) {
     SymbolValue sv;
+    ScopeValue & scope = this->table.back();
     int size;
     sv.isVariable = true;
     sv.type = var_type;
@@ -30,42 +34,40 @@ void Symbol::insert_variable(std::string name, TypeType var_type) {
         // TODO
     }
     /* find suitable memory address */
-    auto it = this->memory_unused.begin();
-    for (; it != this->memory_unused.end();  ++ it) {
+    auto it = scope.memory_unused.begin();
+    for (; it != scope.memory_unused.end();  ++ it) {
         if (it->second >= size) {
             int used;
             sv.frame_offset = this->assign_memory(it->first, it->second, size, used);
             it->second -= used;
             if (it->second == 0) {
-                this->memory_unused.erase(it);
+                scope.memory_unused.erase(it);
             }
             break;
         }
     }
     // if cannot find suitable memory to stay
-    if (it == this->memory_unused.end()) {
+    if (it == scope.memory_unused.end()) {
         if (size == 8) {
-            sv.frame_offset = this->i;
+            sv.frame_offset = scope.i;
         } else {
             int used;
-            sv.frame_offset = this->assign_memory(this->i, 8, size, used);
-            this->memory_unused.push_back({this->i, (8-used)});
+            sv.frame_offset = this->assign_memory(scope.i, 8, size, used);
+            scope.memory_unused.push_back({scope.i, (8-used)});
         }
-        this->i -= 8;
+        scope.i -= 8;
     }
     //
     sv.size = size;
-    this->table.insert({name, sv});
+    scope.map.insert({name, sv});
 }
 
 SymbolValue Symbol::get_variable(std::string name) {
-    SymbolValue sv;
-    auto f = this->table.find(name);
-    if (f == this->table.end()) {
+    SymbolValue sv = this->get(name);
+    if (sv.isExist && !sv.isVariable) {
         sv.isExist = false;
         return sv;
     }
-    sv = f->second;
     return sv;
 }
 SymbolValue Symbol::get_variable(Value val) {
@@ -114,21 +116,32 @@ std::string Symbol::get_variable_mem(std::string name) {
 
 
 void Symbol::insert_function(std::string name, SymbolValue sv) {
-    this->table.insert({name, sv});
+    ScopeValue & scope = this->table[0];
+    scope.map.insert({name, sv});
 }
 SymbolValue Symbol::get(std::string name) {
-    SymbolValue sv;
-    auto f = this->table.find(name);
-    if (f == this->table.end()) {
-        sv.isExist = false;
-        return sv;
+    for (auto it = this->table.rbegin();  it != this->table.rend();  ++ it) {
+        ScopeValue & scope = *it;
+        auto result = scope.map.find(name);
+        if (result != scope.map.end()) {
+            return result->second;
+        }
     }
-    sv = f->second;
+    // Cannot find out
+    SymbolValue sv;
+    sv.isExist = false;
     return sv;
 }
 
-
-void Symbol::clear_variable() {
-    this->i = (-8);
-    this->memory_unused = {};
+void Symbol::new_scope() {
+    this->table.push_back({
+        .map = {},
+        .i = (-8),
+        .memory_unused = {}
+    });
+}
+int Symbol::exit_scope() {
+    int i = this->table.back().i;
+    this->table.pop_back();
+    return i;
 }

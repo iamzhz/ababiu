@@ -18,15 +18,20 @@ struct SymbolValue{
     // func
     std::vector<TypeType> args;
 };
+struct ScopeValue {
+    std::unordered_map<std::string, SymbolValue> map;
+    int i;
+    // first->addr; second->unused_bytes_number
+    std::vector<std::pair<int, int>> memory_unused;
+};
 
 class Symbol {
     private:
-    std::unordered_map<std::string, SymbolValue> table;
-    std::vector<std::pair<int, int>> memory_unused; // first->addr; second->unused_bytes_number
     int assign_memory(int addr, int rest, int size, int & used);
     public:
-    int i = (-8);
-    Symbol() = default;
+    std::vector<ScopeValue> table;
+    //int i = (-8);
+    Symbol();
     void insert_variable(std::string name, TypeType var_type);
     SymbolValue get_variable(std::string name);
     SymbolValue get_variable(Value val);
@@ -35,7 +40,8 @@ class Symbol {
     void insert_function(std::string name, SymbolValue sv);
     SymbolValue get(std::string name);
 
-    void clear_variable();
+    void new_scope();
+    int exit_scope();
 };
 
 #endif

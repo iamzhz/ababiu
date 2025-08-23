@@ -29,6 +29,7 @@ class CodeGen {
 
     void Handle_newFunction_iv(const IR & ir);
     void Handle_endFunction(const IR & ir);
+    void Handle_sign_defineVariable_type_iv(const IR & ir);
     void Handle_mov_iv_imm(const IR & ir);
     void Handle_xxx_reg_reg(const IR & ir);
     void Handle_xxxsd_reg_reg(const IR & ir);

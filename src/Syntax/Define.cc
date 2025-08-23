@@ -17,8 +17,6 @@ void Syntax::analyze_DefineVariable(Tree * tr) {
 
     type0 = typeConvert(t);
 
-    this->symbol->insert_variable(var_name, type0);
-
     this->append({Sign_defineVariable_type_iv, Value(type0), Value(var_name)});
 }
 

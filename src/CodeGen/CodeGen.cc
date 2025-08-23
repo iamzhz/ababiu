@@ -68,6 +68,7 @@ std::string CodeGen::get_output() {
 
 void CodeGen::Handle_newFunction_iv(const IR & ir) {
     std::string func_name = ir.val0.getIdVariable().content;
+    this->symbol->new_scope();
     this->_output.push_back(FuncData{
         .allocate=0, // not important
         .name=func_name,
@@ -77,10 +78,14 @@ void CodeGen::Handle_newFunction_iv(const IR & ir) {
 
 void CodeGen::Handle_endFunction(const IR & ir) {
     (void)ir;
-    int allocate = -this->symbol->i;
+    int allocate = -this->symbol->exit_scope();
     allocate = (allocate + 15) & ~15;
     this->_output.back().allocate = allocate;
-    this->symbol->clear_variable();
+}
+void CodeGen::Handle_sign_defineVariable_type_iv(const IR & ir) {
+    TypeType var_type = ir.val0.getType();
+    std::string var_name = ir.val1.getIdVariable().content;
+    this->symbol->insert_variable(var_name, var_type);
 }
 void CodeGen::Handle_mov_iv_imm(const IR & ir) {
     std::string opcode;
@@ -254,6 +259,7 @@ void CodeGen::generate() {
     std::unordered_map<IROp, OpHandler> handlers = {
         {Sign_newFunction_iv, &CodeGen::Handle_newFunction_iv},
         {Sign_endFunction, &CodeGen::Handle_endFunction},
+        {Sign_defineVariable_type_iv, &CodeGen::Handle_sign_defineVariable_type_iv},
         {Op_mov_iv_imm, &CodeGen::Handle_mov_iv_imm},
         {Op_mov_reg_reg, &CodeGen::Handle_xxx_reg_reg},
         {Op_add_reg_reg, &CodeGen::Handle_xxx_reg_reg},

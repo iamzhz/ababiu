@@ -71,6 +71,7 @@ class Value {
     const Immediate& getImmediate() const;
     const IdVariable& getIdVariable() const;
     const int& getReg() const;
+    const TypeType& getType() const;
     #ifdef DEBUG
     std::string toString() const ;
     #endif

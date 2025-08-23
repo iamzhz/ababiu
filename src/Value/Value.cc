@@ -108,6 +108,9 @@ const IdVariable& Value::getIdVariable() const {
 const int& Value::getReg() const {
     return std::get<int>(data_);
 }
+const TypeType& Value::getType() const {
+    return std::get<TypeType>(data_);
+}
 
 #ifdef DEBUG
 std::string Value::toString() const {
