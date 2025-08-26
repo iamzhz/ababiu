@@ -352,11 +352,22 @@ void StackEraser::Handle_call_if(const IR & i) {
             isCallerSave[save_reg] = false;
         }
     }
+
     int int_count = 0; // to 5 (total 6)
     int float_count = 0; // to 7 (total 7)
     bool isCallerSaveFloat[8] = {0};
+    auto origin_para = func.args.begin();
     for (auto it = parameters.rbegin();  it != parameters.rend();  ++ it) {
+        // check args before use
+        if (origin_para == func.args.end()) {
+            sayError("Too many args");
+            break;
+        }
+        // check the type and choose the suitable register
         if (this->isFloat(*it)) {
+            if (origin_para->type != TYPE_FLOAT) {
+                sayError("Wrong arg type, should be " + TypeTypeToString(origin_para->type));
+            }
             Value reg = this->getCallerFloatReg(float_count);
             int reg_int = reg.getReg();
             if (this->is_used[reg_int]) {
@@ -367,13 +378,20 @@ void StackEraser::Handle_call_if(const IR & i) {
             this->loadToReg(*it, reg);
             ++ float_count;
         } else {
+            if (origin_para->type != TYPE_INT) {
+                sayError("Wrong arg type, should be " + TypeTypeToString(origin_para->type));
+            }
             // int
             Value reg = this->getCallerReg(int_count);
             // common regs have been saved now, use them freely!
             this->loadToReg(*it, reg);
             ++ int_count;
         }
+        ++ origin_para;
         // TODO: limit of 6 and 7
+    }
+    if (origin_para != func.args.end()) {
+        sayError("Too few args");
     }
     /*
     // deal with register paras

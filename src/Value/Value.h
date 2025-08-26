@@ -11,6 +11,8 @@ enum TypeType {
     TYPE_VOID,
 };
 
+std::string TypeTypeToString(TypeType t);
+
 struct Immediate {
     TypeType type;
     std::string content;

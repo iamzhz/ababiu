@@ -1,6 +1,18 @@
 #include "Value.h"
 #include <string>
 
+std::string TypeTypeToString(TypeType t) {
+    switch (t) {
+        case TYPE_UNKNOWN: return "UNKNOWN";
+        case TYPE_VOID: return "void";
+        case TYPE_INT: return "int";
+        case TYPE_FLOAT: return "float";
+        case TYPE_CHAR: return "char";
+        case TYPE_STRING: return "string";
+    }
+    return "UNKNOWN";
+}
+
 TypeType getImmediateType(const Immediate& imm) {
     return imm.type;
 }
