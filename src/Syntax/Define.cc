@@ -26,10 +26,13 @@ void Syntax::analyze_DefineVariableList(Tree * tr) {
     }
 }
 
-std::vector<TypeType> DefineVariableList2Types(Tree * tr) {
-    std::vector<TypeType> result;
+std::vector<FunctionArg> DefineVariableList2Types(Tree * tr) {
+    std::vector<FunctionArg> result;
     for (Tree * tr_ : tr->children) {
-        result.push_back(typeConvert(tr_->children[0]->tk.content));
+        result.push_back({
+            .type = typeConvert(tr_->children[0]->tk.content),
+            .name = tr_->children[1]->tk.content
+        });
     }
     return result;
 }
@@ -47,7 +50,7 @@ void Syntax::analyze_DefineFunction(Tree * tr) {
         return ;
     }
     this->append({Sign_newFunction_iv, func_name});
-    this->analyze_DefineVariableList(tr->children[2]);
+    //this->analyze_DefineVariableList(tr->children[2]);
     this->analyze_Statements(tr->children[3]);
     this->append({Sign_endFunction});
 }

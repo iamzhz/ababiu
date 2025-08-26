@@ -12,9 +12,10 @@ std::vector<std::string> regs_string = {
     
     "r11",
 
-    "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", 
-    "xmm5", "xmm6", "xmm7", "xmm8", "xmm9", 
-    "xmm10", "xmm11", "xmm12", "xmm13", "xmm14",
+    "xmm0", "xmm1", "xmm2", "xmm3", 
+    "xmm4", "xmm5", "xmm6", "xmm7", 
+    "xmm8", "xmm9", "xmm10", "xmm11", 
+    "xmm12", "xmm13", "xmm14", "xmm15"
 };
 std::vector<std::string> low8_regs_string = {
     "al", "r10b", "r11b", "r9b", "r8b",
@@ -74,6 +75,37 @@ void CodeGen::Handle_newFunction_iv(const IR & ir) {
         .name=func_name,
         .code=std::stringstream()
     });
+    SymbolValue func = this->symbol->get(func_name);
+    // rdi, rsi, rdx, rcx, r8, r9
+    int int_regs[] = {
+        RDI_NUMBER, RSI_NUMBER, RDX_NUMBER, 
+        RCX_NUMBER, R8_NUMBER, R9_NUMBER,
+    };
+    int float_regs[] = {
+        XMM0_NUMBER, XMM1_NUMBER, XMM2_NUMBER, XMM3_NUMBER,
+        XMM4_NUMBER, XMM5_NUMBER, XMM6_NUMBER, XMM7_NUMBER,
+    };
+    int int_count = 0;
+    int float_count = 0;
+    for (const FunctionArg & arg : func.args) {
+        if (arg.type == TYPE_INT) {
+            this->symbol->insert_variable(arg.name, TYPE_INT);
+            this->append(std::format(
+                "mov {}, {}",
+                this->symbol->get_variable_mem(arg.name),
+                this->getReg(int_regs[int_count])
+            ));
+            ++ int_count;
+        } else if (arg.type == TYPE_FLOAT) {
+            this->symbol->insert_variable(arg.name, TYPE_FLOAT);
+            this->append(std::format(
+                "movsd {}, {}",
+                this->symbol->get_variable_mem(arg.name),
+                this->getReg(float_regs[float_count])
+            ));
+            ++ float_count;
+        }
+    }
 }
 
 void CodeGen::Handle_endFunction(const IR & ir) {
@@ -94,7 +126,7 @@ void CodeGen::Handle_mov_iv_imm(const IR & ir) {
     } else {
         opcode = "mov";
     }
-    this->append(std::format("{} {},{}",
+    this->append(std::format("{} {}, {}",
         opcode,
         this->symbol->get_variable_mem(ir.val0),
         this->literal.get(ir.val1)
@@ -157,7 +189,7 @@ void CodeGen::Handle_load_imm_reg(const IR & ir) {
     } else {
         opcode = "mov";
     }
-    this->append(std::format("{} {},{}",
+    this->append(std::format("{} {}, {}",
         opcode,
         this->getReg(ir.val1),
         this->literal.get(ir.val0)
@@ -170,7 +202,7 @@ void CodeGen::Handle_load_iv_reg(const IR & ir) {
     } else {
         opcode = "mov";
     }
-    this->append(std::format("{} {},{}",
+    this->append(std::format("{} {}, {}",
         opcode,
         this->getReg(ir.val1),
         this->symbol->get_variable_mem(ir.val0))

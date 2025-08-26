@@ -59,6 +59,13 @@ Value StackEraser::getCallerReg(int number) {
     int call_regs[] = {RDI_NUMBER, RSI_NUMBER, RDX_NUMBER, RCX_NUMBER, R8_NUMBER, R9_NUMBER};
     return Value(call_regs[number]);
 }
+Value StackEraser::getCallerFloatReg(int number) {
+    int call_regs[] = {
+        XMM0_NUMBER, XMM1_NUMBER, XMM2_NUMBER, XMM3_NUMBER, 
+        XMM4_NUMBER, XMM5_NUMBER, XMM6_NUMBER, XMM7_NUMBER
+    };
+    return Value(call_regs[number]);
+}
 
 StackEraser::StackEraser(IRs * irs, Symbol * symbol) {
     this->old = irs;
@@ -327,20 +334,14 @@ void StackEraser::Handle_call_if(const IR & i) {
     }
     // deal with parameters
     std::vector<Value> parameters; // reverse of real parameters
-    // reverse of RDI, RSI, RDX, RCX, R8, R9
-    std::vector<Value> last6; // for register (reverse)
     int paras_size = 0;
-    int last6_size;
     Value para;
     while (!(para = this->pop()).isParaHead()) {
         parameters.push_back(para);
         paras_size ++;
     }
-    if (paras_size >= 6) last6_size = 6;
-    else last6_size = paras_size;
-
-    last6.assign(parameters.end() - last6_size, parameters.end());
-    parameters.erase(parameters.end() - last6_size, parameters.end());
+    //last6.assign(parameters.end() - last6_size, parameters.end());
+    // parameters.erase(parameters.end() - last6_size, parameters.end());
     // caller save: RAX, RCX, RDX, RSI, RDI, R8-R10 (number 0-7)
     bool isCallerSave[COMMON_REGS_NUMBER];
     for (int save_reg = 0;  save_reg < COMMON_REGS_NUMBER;  ++ save_reg) {
@@ -351,6 +352,30 @@ void StackEraser::Handle_call_if(const IR & i) {
             isCallerSave[save_reg] = false;
         }
     }
+    int int_count = 0; // to 5 (total 6)
+    int float_count = 0; // to 7 (total 7)
+    bool isCallerSaveFloat[8] = {0};
+    for (auto it = parameters.rbegin();  it != parameters.rend();  ++ it) {
+        if (this->isFloat(*it)) {
+            Value reg = this->getCallerFloatReg(float_count);
+            int reg_int = reg.getReg();
+            if (this->is_used[reg_int]) {
+                // need to save before use
+                isCallerSaveFloat[float_count] = true;
+                this->append({Op_push_reg, reg});
+            }
+            this->loadToReg(*it, reg);
+            ++ float_count;
+        } else {
+            // int
+            Value reg = this->getCallerReg(int_count);
+            // common regs have been saved now, use them freely!
+            this->loadToReg(*it, reg);
+            ++ int_count;
+        }
+        // TODO: limit of 6 and 7
+    }
+    /*
     // deal with register paras
     int reg_para_count = 0;
     for (auto it = last6.rbegin(); it != last6.rend(); ++it) {
@@ -362,10 +387,17 @@ void StackEraser::Handle_call_if(const IR & i) {
         Value reg = this->loadToReg(stack_para);
         this->append({Op_push_reg, reg});
         this->releaseReg(reg);
-    }
+    }*/
     // call func
     this->append(i);
     // save regs
+    // save float regs before, the common regs
+    for (int i = 0;  i < 8;  ++ i) {
+        if (isCallerSaveFloat[i]) {
+            this->append({Op_pop_reg, Value(XMM0_NUMBER+i)});
+        }
+    }
+    // common regs
     for (int save_reg = COMMON_REGS_NUMBER-1;  save_reg > 0;  -- save_reg) {
         if (isCallerSave[save_reg]) {
             this->append({Op_pop_reg, Value(save_reg)});

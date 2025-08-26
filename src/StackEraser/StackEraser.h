@@ -29,6 +29,7 @@ class StackEraser {
     Value getFloatReg();
     Value getReg(Value from);
     Value getCallerReg(int number);
+    Value getCallerFloatReg(int number);
     void releaseReg(Value reg);
     Value loadToReg(Value t);
     Value loadToReg(Value t, Value reg);

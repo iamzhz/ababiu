@@ -8,6 +8,11 @@
 #include "../Value/Value.h"
 #include "../env_config/config.h"
 
+struct FunctionArg {
+    TypeType type;
+    std::string name;
+};
+
 struct SymbolValue{
     bool isExist = true;
     bool isVariable; // true -> Variable;  false -> Function
@@ -16,7 +21,7 @@ struct SymbolValue{
     int frame_offset;
     int size;
     // func
-    std::vector<TypeType> args;
+    std::vector<FunctionArg> args;
 };
 struct ScopeValue {
     std::unordered_map<std::string, SymbolValue> map;
