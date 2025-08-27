@@ -32,7 +32,7 @@ Tree* Parser::parse_Assign_() {
     
     Tree* tr = createTree(treeTypeNode_Assign_);
     Tree* tr_Compare;
-    if (tk.matchSign("=")) {
+    if (tk.matchSign("=") || tk.matchSign("+=") || tk.matchSign("-=") || tk.matchSign("*=") || tk.matchSign("/=")) {
         tr->add(createTree(tk));
         this->getNextToken();
     } else {

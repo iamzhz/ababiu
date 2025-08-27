@@ -211,6 +211,21 @@ void StackEraser::Handle_xxx(const IR & i) {
     this->releaseReg(a_reg);
     this->push(b_reg);
 }
+void StackEraser::Handle_xxx_iv(const IR & ir) {
+    IROp op;
+    switch (ir.op) {
+        case Op_add_iv: op = Op_add_reg_reg; break;
+        case Op_sub_iv: op = Op_sub_reg_reg; break;
+        case Op_mul_iv: op = Op_mul_reg_reg; break;
+        default: break;
+    }
+    Value v0_reg = this->loadToReg(ir.val0);
+    Value v1_reg = this->loadToReg(this->pop());
+    this->append({op, v0_reg, v1_reg});
+    this->append({Op_store_iv_reg, ir.val0, v0_reg});
+    this->releaseReg(v0_reg);
+    this->releaseReg(v1_reg);
+}
 void StackEraser::Handle_div(const IR & i) {
     (void)i;
     // a / b
@@ -477,6 +492,9 @@ void StackEraser::convert() {
         {Op_smallerEqual, &StackEraser::Handle_xxx},
         {Op_notEqual, &StackEraser::Handle_xxx},
         {Op_power, &StackEraser::Handle_power},
+        {Op_add_iv, &StackEraser::Handle_xxx_iv},
+        {Op_sub_iv, &StackEraser::Handle_xxx_iv},
+        {Op_mul_iv, &StackEraser::Handle_xxx_iv},
         {Op_jumpIf_addr, &StackEraser::Handle_conditionJump_addr},
         {Op_jumpIfNot_addr, &StackEraser::Handle_conditionJump_addr},
         {Sign_callParaBegin, &StackEraser::Handle_callParaBegin},

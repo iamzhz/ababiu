@@ -42,6 +42,7 @@ class StackEraser {
     void Handle_push_imm(const IR & ir);
     void Handle_push_iv(const IR & ir);
     void Handle_xxx(const IR & ir);
+    void Handle_xxx_iv(const IR & ir); // iv *= (~0)
     void Handle_div(const IR & ir);
     void Handle_mod(const IR & ir);
     void Handle_power(const IR & ir);

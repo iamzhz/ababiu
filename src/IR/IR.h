@@ -57,6 +57,9 @@ enum IROp {
 
     Op_increment_iv,
     Op_decrement_iv,
+    Op_add_iv, // iv += (~0)
+    Op_sub_iv, // iv -= (~0)
+    Op_mul_iv, // iv *= (~0)
 
     // double float
     Op_addsd_reg_reg,

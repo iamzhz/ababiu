@@ -139,9 +139,21 @@ void Syntax::analyze_Assign(Tree * tr) {
     if (tk.type != tokenTypeId) {
         sayError(tk.line, tk.column, "Should be an Id");
     }
-    // assign_ -> children[0] is token `=`
+    // assign_ -> children[0] is token `=`, `+=` or `-=`
+    std::string sign = assign_->children[0]->tk.content;
+    //
+    if (sign == "/=") {
+        this->append({Op_push_iv, Value(tk.content)});
+    }
     this->analyze_Compare(assign_->children[1]);
-    this->append({Op_pop_iv, tk.content});
+    if (sign == "=") this->append({Op_pop_iv, tk.content});
+    else if (sign == "+=") this->append({Op_add_iv, tk.content});
+    else if (sign == "-=") this->append({Op_sub_iv, tk.content});
+    else if (sign == "*=") this->append({Op_mul_iv, tk.content});
+    else if (sign == "/=") {
+        this->append({Op_div});
+        this->append({Op_pop_iv, Value(tk.content)});
+    }
 }
 void Syntax::analyze_Compare(Tree * tr) {
     IROp op;
@@ -253,7 +265,6 @@ void Syntax::analyze_Increment(Tree * tr) {
         this->append({Op_pop_iv, iv});
         return ;
     }
-    return ;
 }
 /*
 
