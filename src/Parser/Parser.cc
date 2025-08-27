@@ -7,8 +7,16 @@ Parser::Parser(Lexer* lx) {
     this->getNextToken();
 }
 
+// Expr -> Assign | Increment
 Tree* Parser::parse_Expr() {
     Tree* tr = createTree(treeTypeNode_Expr);
+    // check Increment before
+    if (this->current.matchSign("++") || this->current.matchSign("--") || this->current.matchSign("**")) {
+        Tree* tr_Increment = this->parse_Increment();
+        CHECK_nullptr(Increment);
+        tr->add(tr_Increment);
+        return tr;
+    }
     Tree* tr_Assign = this->parse_Assign();
     CHECK_nullptr(Assign);
     tr->add(tr_Assign);
@@ -276,13 +284,6 @@ Tree* Parser::parse_Sentence() {
         if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
         this->getNextToken();
         return tr;
-    } else if (this->current.type == tokenTypeSign) {
-        if (this->current.matchSign("++") || this->current.matchSign("--") || this->current.matchSign("**")) {
-            Tree* tr_Increment = this->parse_Increment();
-            CHECK_nullptr(Increment);
-            tr->add(tr_Increment);
-            return tr;
-        }
     }
         
     tr_Expr = this->parse_Expr();
