@@ -12,7 +12,6 @@ enum signState {
 
 class Lexer {
     private:
-    bool isCalculableLast = false;
 
     FileManager* file;
     Token intToken();

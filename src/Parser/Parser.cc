@@ -232,7 +232,7 @@ Tree* Parser::parse_Factor() {
 Tree* Parser::parse_Sentence() {
     Tree* tr = createTree(treeTypeNode_Sentence);
     Tree* tr_Expr;
-    if (this->current.type == tokenTypeKeyword) {
+    if (this->current.type == tokenTypeKeyword) { // control
         if (this->current.matchKeyword("if")) {
             Tree* tr_If = this->parse_If();
             CHECK_nullptr(If);
@@ -269,13 +269,20 @@ Tree* Parser::parse_Sentence() {
             tr->add(tr_Return);
             return tr;
         }
-    } else if (this->current.type == tokenTypeType) {
+    } else if (this->current.type == tokenTypeType) { // int x; char y; float z;
         Tree* tr_DefineVariable = this->parse_DefineVariable();
         CHECK_nullptr(DefineVariable);
         tr->add(tr_DefineVariable);
         if (!this->current.matchSign(";")) EXPECTED_ERROR(";");
         this->getNextToken();
         return tr;
+    } else if (this->current.type == tokenTypeSign) {
+        if (this->current.matchSign("++") || this->current.matchSign("--") || this->current.matchSign("**")) {
+            Tree* tr_Increment = this->parse_Increment();
+            CHECK_nullptr(Increment);
+            tr->add(tr_Increment);
+            return tr;
+        }
     }
         
     tr_Expr = this->parse_Expr();
@@ -324,5 +331,23 @@ Tree* Parser::parse_Statements() {
 
     this->getNextToken();
 
+    return tr;
+}
+
+// ++ var
+// -- var
+// ** var (var ** 2)
+Tree* Parser::parse_Increment() {
+    Tree* tr = createTree(treeTypeNode_Increment);
+    tr->add(createTree(this->current));
+    this->getNextToken();
+    if (this->current.type == tokenTypeEof) {
+        return nullptr;
+    }
+    if (this->current.type != tokenTypeId) {
+        this->parserError("Should be an Id");
+    }
+    tr->add(createTree(this->current));
+    this->getNextToken();
     return tr;
 }

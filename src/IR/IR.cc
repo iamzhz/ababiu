@@ -91,6 +91,8 @@ std::string IROpToText(IROp n) {
         case Sign_SentenceEnd: return "SentenceEnd";
         case Op_cqo: return "cqo";
         case Op_mod: return "mod";
+        case Op_increment_iv: return "increment_iv";
+        case Op_decrement_iv: return "decrement_iv";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

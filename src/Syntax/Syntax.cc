@@ -93,6 +93,9 @@ void Syntax::analyze_Sentence(Tree * tr) {
         case treeTypeNode_DefineVariable:
             this->analyze_DefineVariable(head);
             break;
+        case treeTypeNode_Increment:
+            this->analyze_Increment(head);
+            break;
         default:
             sayError(head->children[0]->tk.line, 
             head->children[0]->tk.column, 
@@ -232,6 +235,25 @@ void Syntax::analyze_Factor(Tree * tr) {
     } else if (head->label == treeTypeNode_FunctionCall) {
         this->analyze_FunctionCall(head);
     }// else if ()
+}
+
+void Syntax::analyze_Increment(Tree * tr) {
+    std::string sign = tr->children[0]->tk.content;
+    Value iv = Value(tr->children[1]->tk.content);
+    if (sign == "++") {
+        this->append({Op_increment_iv, iv});
+        return ;
+    } else if (sign == "--") {
+        this->append({Op_decrement_iv, iv});
+        return ;
+    } else if (sign == "**") { // ** var (means `var = var * var`)
+        this->append({Op_push_iv, iv});
+        this->append({Op_push_iv, iv});
+        this->append({Op_mul});
+        this->append({Op_pop_iv, iv});
+        return ;
+    }
+    return ;
 }
 /*
 

@@ -45,6 +45,7 @@ class Syntax {
     void analyze_Times(Tree * tr);
     void analyze_Power(Tree * tr);
     void analyze_Factor(Tree * tr);
+    void analyze_Increment(Tree * tr);
 
     void analyze_DefineVariable(Tree * tr);
     void analyze_DefineVariableList(Tree * tr);

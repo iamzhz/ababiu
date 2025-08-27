@@ -54,6 +54,7 @@ std::string treeTypeNodeLabelToText(treeTypeNodeLabel label) {
         case treeTypeNode_None: return "None";
         case treeTypeNode_Unit: return "Unit";
         case treeTypeNode_FunctionExtern: return "FunctionExtern";
+        case treeTypeNode_Increment: return "Increment";
     }
     return "Unkown";
 }

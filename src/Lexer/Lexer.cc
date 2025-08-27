@@ -48,22 +48,14 @@ Token Lexer::getNextToken() {
     cur = this->file->current();
     if (this->isDigit(cur)) {
         tk = this->intToken();
-        this->isCalculableLast = true;
-    } else if (cur == '-' && !this->isCalculableLast) {
-        tk = this->intToken();
-        this->isCalculableLast = true;
     } else if (this->isLetter(cur) || cur == '_') {
         tk = this->idToken();
-        this->isCalculableLast = true;
     } else if (cur == '\'') {
         tk = this->charToken(); 
-        this->isCalculableLast = true;
     } else if (cur == '\"') {
         tk = this->stringToken();
-        this->isCalculableLast = true;
     } else if (this->isSign(cur)) {
         tk = this->signToken();
-        this->isCalculableLast = false;
     } else {
         tk.type = tokenTypeEof;
         this->file->next();
@@ -81,13 +73,12 @@ Token Lexer::intToken() {
     char cur;
     tk.type = tokenTypeInt;
     cur = this->file->current();
-    // this->isDigit(cur) || cur == '-'
     tk.addToContent(cur);
     while (this->file->next()) {
         cur = this->file->current();
         if (this->isDigit(cur)) {
             tk.addToContent(cur);
-        }else if ('.' == cur) { // if is float
+        } else if ('.' == cur) { // if is float
         tk.type = tokenTypeFloat;
             tk.addToContent(cur);
             this->file->next();

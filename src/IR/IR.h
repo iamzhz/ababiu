@@ -55,6 +55,9 @@ enum IROp {
     Op_notEqual, // push (~1 != ~0)
     Op_notEqual_reg_reg,
 
+    Op_increment_iv,
+    Op_decrement_iv,
+
     // double float
     Op_addsd_reg_reg,
     Op_subsd_reg_reg,

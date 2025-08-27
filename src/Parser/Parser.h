@@ -38,6 +38,8 @@ class Parser {
     Tree* parse_DefineVariable();
     Tree* parse_DefineVariableList();
 
+    Tree* parse_Increment();
+
     Tree* parse_If();
     Tree* parse_Else();
     Tree* parse_While();

@@ -284,6 +284,18 @@ void CodeGen::Handle_return_reg(const IR & ir) {
     this->append("leave");
     this->append("ret");
 }
+void CodeGen::Handle_increment_iv(const IR & ir) {
+    this->append(std::format(
+        "inc {}",
+        this->symbol->get_variable_mem(ir.val0)
+    ));
+}
+void CodeGen::Handle_decrement_iv(const IR & ir) {
+    this->append(std::format(
+        "dec {}",
+        this->symbol->get_variable_mem(ir.val0)
+    ));
+}
 
 void CodeGen::generate() {
     int count = 0;
@@ -323,6 +335,8 @@ void CodeGen::generate() {
         {Op_call_if, &CodeGen::Handle_call_if},
         {Op_return_imm, &CodeGen::Handle_return_imm},
         {Op_return_reg, &CodeGen::Handle_return_reg},
+        {Op_increment_iv, &CodeGen::Handle_increment_iv},
+        {Op_decrement_iv, &CodeGen::Handle_decrement_iv},
     };
     for (IR ir : this->irs->content) {
         auto mark = this->irs->marks.find(count);

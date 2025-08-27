@@ -57,7 +57,7 @@ enum signState Lexer::isSignTwoChars(char a, char b) {
         case '/':
             switch (b) {
                 case '=': return signStateRight;
-                case '/': // commit
+                case '/': // comment
                     this->file->skipToNextLine();
                     return signStateCommit;
                 default: return signStateWrong;
