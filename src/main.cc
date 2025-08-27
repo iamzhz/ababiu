@@ -20,7 +20,7 @@ int main(int argc, char ** argv) {
     Symbol symbol;
     clp.run();
     if (clp.table.find("version") != clp.table.end()) {
-        std::cout << "Ababiu Version: 0.0.1-pre-alpha\n\n";
+        std::cout << "Ababiu Version: 0.0.2-pre-alpha\n\n";
         return 0;
     }
     bool isAutoContinueCompile = clp.table.find("auto") != clp.table.end();
