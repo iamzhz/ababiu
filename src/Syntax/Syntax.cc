@@ -157,9 +157,24 @@ void Syntax::analyze_Assign(Tree * tr) {
     }
 }
 void Syntax::analyze_Compare(Tree * tr) {
-    IROp op;
+    IROp op = Op_none;
     Tree * compare_; // Compare'
     Token * signToken;
+    Tree * head = tr->children[0];
+    // case 1: Token(Int/Float)
+    if (head->type == treeType_Token) {
+        if (head->tk.type == tokenTypeInt || head->tk.type == tokenTypeFloat) {
+            // considered Expr as Factor to deal
+            this->analyze_Factor(tr);
+        }
+        return ;
+    }
+    // case 2: Negative
+    if (head->label == treeTypeNode_Negative) {
+        this->analyze_Negative(head);
+        return ;
+    }
+    // case 3: 
     // if Compare' is ε
     if (tr->children[1]->label == treeTypeNode_Epsilon) {
         this->analyze_Add(tr->children[0]);
@@ -264,6 +279,11 @@ void Syntax::analyze_Increment(Tree * tr) {
         this->append({Op_pop_iv, iv});
     }
     this->append({Op_push_iv, iv});
+}
+
+void Syntax::analyze_Negative(Tree * tr) {
+    this->analyze_Expr(tr->children[0]);
+    this->append({Op_negative});
 }
 /*
 

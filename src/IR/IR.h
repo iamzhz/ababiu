@@ -61,6 +61,9 @@ enum IROp {
     Op_sub_iv, // iv -= (~0)
     Op_mul_iv, // iv *= (~0)
 
+    Op_negative,  // push -(~0)
+    Op_neg_reg,
+
     // double float
     Op_addsd_reg_reg,
     Op_subsd_reg_reg,

@@ -19,7 +19,6 @@ class StackEraser {
     IRs * old;
     Symbol * symbol;
     std::vector<Value> stack;
-    int tempCount = 0;
     int n;
     bool is_used[ALL_REGS_NUMBER]; // `1`(R11) is just to stay and do not use
     std::unordered_set<int> stack_used; // stand for the real memory stack
@@ -43,6 +42,7 @@ class StackEraser {
     void Handle_push_iv(const IR & ir);
     void Handle_xxx(const IR & ir);
     void Handle_xxx_iv(const IR & ir); // iv *= (~0)
+    void Handle_negative(const IR & ir);
     void Handle_div(const IR & ir);
     void Handle_mod(const IR & ir);
     void Handle_power(const IR & ir);

@@ -172,7 +172,7 @@ void StackEraser::Handle_push_iv(const IR & i) {
     this->push(Value(i.val0));
 }
 void StackEraser::Handle_xxx(const IR & i) {
-    IROp op;
+    IROp op = Op_none;
     Value a_reg = this->loadToReg(this->pop());
     Value b_reg = this->loadToReg(this->pop());
     // check if b_reg is a float
@@ -212,7 +212,7 @@ void StackEraser::Handle_xxx(const IR & i) {
     this->push(b_reg);
 }
 void StackEraser::Handle_xxx_iv(const IR & ir) {
-    IROp op;
+    IROp op = Op_none;
     switch (ir.op) {
         case Op_add_iv: op = Op_add_reg_reg; break;
         case Op_sub_iv: op = Op_sub_reg_reg; break;
@@ -225,6 +225,19 @@ void StackEraser::Handle_xxx_iv(const IR & ir) {
     this->append({Op_store_iv_reg, ir.val0, v0_reg});
     this->releaseReg(v0_reg);
     this->releaseReg(v1_reg);
+}
+void StackEraser::Handle_negative(const IR & ir) {
+    (void)ir;
+    Value v = this->pop();
+    if (v.isImmediate()) { // if is -n (e.g. -1024)
+        Immediate imm = v.getImmediate();
+        this->push(makeImmediate(imm.type, "-" + imm.content));
+        return ;
+    }
+    // else
+    Value v_reg = this->loadToReg(v);
+    this->append({Op_neg_reg, v_reg});
+    this->push(v_reg);
 }
 void StackEraser::Handle_div(const IR & i) {
     (void)i;
@@ -324,7 +337,7 @@ void StackEraser::Handle_power(const IR & ir) {
     this->Handle_call_if({Op_call_if, Value("pow")});
 }
 void StackEraser::Handle_conditionJump_addr(const IR & i) {
-    IROp op;
+    IROp op = Op_none;
     switch (i.op) {
         case Op_jumpIf_addr: op = Op_jumpIf_addr_reg; break;
         case Op_jumpIfNot_addr: op = Op_jumpIfNot_addr_reg; break;
@@ -349,17 +362,15 @@ void StackEraser::Handle_call_if(const IR & i) {
     }
     // deal with parameters
     std::vector<Value> parameters; // reverse of real parameters
-    int paras_size = 0;
     Value para;
     while (!(para = this->pop()).isParaHead()) {
         parameters.push_back(para);
-        paras_size ++;
     }
     //last6.assign(parameters.end() - last6_size, parameters.end());
     // parameters.erase(parameters.end() - last6_size, parameters.end());
     // caller save: RAX, RCX, RDX, RSI, RDI, R8-R10 (number 0-7)
     bool isCallerSave[COMMON_REGS_NUMBER];
-    for (int save_reg = 0;  save_reg < COMMON_REGS_NUMBER;  ++ save_reg) {
+    for (int save_reg = 1;  save_reg < COMMON_REGS_NUMBER;  ++ save_reg) {
         if (this->is_used[save_reg]) {
             isCallerSave[save_reg] = true;
             this->append({Op_push_reg, Value(save_reg)});
@@ -407,6 +418,10 @@ void StackEraser::Handle_call_if(const IR & i) {
     }
     if (origin_para != func.args.end()) {
         sayError("Too few args");
+    }
+    if (this->is_used[0]) {
+        this->append({Op_push_iv, Value(0)});
+        isCallerSave[0] = true;
     }
     /*
     // deal with register paras
@@ -485,6 +500,7 @@ void StackEraser::convert() {
         {Op_mul, &StackEraser::Handle_xxx},
         {Op_div, &StackEraser::Handle_div},
         {Op_mod, &StackEraser::Handle_mod},
+        {Op_negative, &StackEraser::Handle_negative},
         {Op_equal, &StackEraser::Handle_xxx},
         {Op_bigger, &StackEraser::Handle_xxx},
         {Op_biggerEqual, &StackEraser::Handle_xxx},

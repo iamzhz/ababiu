@@ -60,6 +60,13 @@ Tree* Parser::parse_Compare() {
     Tree* tr_Add;
     Tree* tr_Compare_;
 
+    if (this->current.matchSign("-")) { // Negative
+        Tree* tr_Negative = this->parse_Negative();
+        CHECK_nullptr(Negative);
+        tr->add(tr_Negative);
+        return tr;
+    }
+    // else
     tr_Add = this->parse_Add();
     CHECK_nullptr(Add);
     tr->add(tr_Add);
@@ -350,5 +357,18 @@ Tree* Parser::parse_Increment() {
     }
     tr->add(createTree(this->current));
     this->getNextToken();
+    return tr;
+}
+
+Tree* Parser::parse_Negative() {
+    Tree* tr = createTree(treeTypeNode_Negative);
+    Tree* tr_Expr;
+    if (!this->current.matchSign("-")) {
+        this->parserError("Should be `-`");
+    }
+    this->getNextToken();
+    tr_Expr = this->parse_Expr();
+    CHECK_nullptr(Expr);
+    tr->add(tr_Expr);
     return tr;
 }

@@ -296,6 +296,12 @@ void CodeGen::Handle_decrement_iv(const IR & ir) {
         this->symbol->get_variable_mem(ir.val0)
     ));
 }
+void CodeGen::Handle_neg_reg(const IR & ir) {
+    this->append(std::format(
+        "neg {}",
+        this->getReg(ir.val0)
+    ));
+}
 
 void CodeGen::generate() {
     int count = 0;
@@ -337,6 +343,7 @@ void CodeGen::generate() {
         {Op_return_reg, &CodeGen::Handle_return_reg},
         {Op_increment_iv, &CodeGen::Handle_increment_iv},
         {Op_decrement_iv, &CodeGen::Handle_decrement_iv},
+        {Op_neg_reg, &CodeGen::Handle_neg_reg},
     };
     for (IR ir : this->irs->content) {
         auto mark = this->irs->marks.find(count);

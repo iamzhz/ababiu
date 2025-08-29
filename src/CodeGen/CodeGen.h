@@ -52,6 +52,7 @@ class CodeGen {
     void Handle_return_reg(const IR & ir);
     void Handle_increment_iv(const IR & ir);
     void Handle_decrement_iv(const IR & ir);
+    void Handle_neg_reg(const IR & ir);
     
     public:
     CodeGen(IRs * irs, Symbol * symbol);

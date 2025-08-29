@@ -96,6 +96,8 @@ std::string IROpToText(IROp n) {
         case Op_add_iv: return "add_iv";
         case Op_sub_iv: return "sub_iv";
         case Op_mul_iv: return "mul_iv";
+        case Op_negative: return "negative";
+        case Op_neg_reg: return "neg_reg";
     }
     return "Error: IR.cc::IRs::display();\n";
 }

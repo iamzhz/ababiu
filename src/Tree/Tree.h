@@ -41,6 +41,7 @@ enum treeTypeNodeLabel {
     treeTypeNode_DefineVariableList,
 
     treeTypeNode_Increment,
+    treeTypeNode_Negative,
 
     treeTypeNode_If,
     treeTypeNode_Else,
